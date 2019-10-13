@@ -17,7 +17,6 @@ public class CharacterController : MonoBehaviour
 
     void Start()
     {
-        //        animator = GetComponent<Animator>();
         animator = GetComponentInChildren<Animator>();
         rigidbody = GetComponent<Rigidbody>();
 
@@ -39,7 +38,6 @@ public class CharacterController : MonoBehaviour
         Vector3 movement = moveInput * movementSpeed;
         Vector3 horizVel = new Vector3(rigidbody.velocity.x, 0f, rigidbody.velocity.z);
 
-//        Debug.Log("horizVel: " + horizVel + " movement: " + movement);
 
         if (horizVel.sqrMagnitude < movement.sqrMagnitude)
         {
@@ -66,22 +64,8 @@ public class CharacterController : MonoBehaviour
         }
         animator.transform.localEulerAngles = Vector3.Lerp(animator.transform.localEulerAngles,
                 targetRot, rotSpeed * Time.fixedDeltaTime);
-        /*
-        Vector3 ourLocalScale = transform.localScale;
 
-        if (horizontal > 0)
-        {
-            ourLocalScale.x = 1;
-            transform.localScale = ourLocalScale;
-        }
-        if (horizontal < 0)
-        {
-            ourLocalScale.x = -1;
-            transform.localScale = ourLocalScale;
-        }
-        */
         bool bJumping = Input.GetButtonDown("Jump");
-//        Debug.Log("isGrounded:" + isGrounded);
 
         if (bJumping && isGrounded)
         {
