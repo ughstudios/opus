@@ -10,7 +10,5 @@ public class ItemData
     public string itemName;
     [SerializeField]
     public int itemCount;
-    [SerializeField]
-    public Sprite itemIcon;
 
 }
