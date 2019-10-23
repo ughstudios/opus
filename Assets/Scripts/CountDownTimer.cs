@@ -10,20 +10,38 @@ public class CountDownTimer : MonoBehaviour
 
     public Slider waterBar;
     public Slider foodBar;
+
+    private float waterTime = 0f;
+    private float foodTime = 0f;
+
+
+
     
 
     void Start()
     {
-        currentTime = startingTime;
+        waterTime = startingTime;
+        foodTime = startingTime;
 
     }
 
     void Update()
     {
-        currentTime -= 1 * Time.deltaTime;
-        
+        waterTime -= 1 * Time.deltaTime;
+        foodTime -= 1 * Time.deltaTime;
 
-        waterBar.value = currentTime;
-        foodBar.value = currentTime;
+
+        waterBar.value = waterTime;
+        foodBar.value = foodTime;
+    }
+
+    public void UpdateWater(float waterValue)
+    {
+        if(waterTime < 94)
+        {
+            waterTime += waterValue;
+        }
+            
+        print(waterTime);
     }
 }
