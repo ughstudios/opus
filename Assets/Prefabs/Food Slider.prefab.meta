@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Prefabs/Food Slider.prefab.meta
 guid: 76e679e5546fca540881f05d94442884
+=======
+guid: 2c3f9af4b1bffb8489b5cdda50db262e
+>>>>>>> parent of e402d66... Revert "added ui for inventory system.":Assets/Prefabs/UI_InventoryItem_Prefab.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
