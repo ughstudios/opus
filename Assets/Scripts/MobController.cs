@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class MobController : MonoBehaviour
+public class MobController : DamageableEntity
 {
     public float movementSpeed = 5f;
     public float moveForceMult = 1f;
@@ -18,8 +18,10 @@ public class MobController : MonoBehaviour
 
     protected Vector3 moveInput = Vector3.zero;
 
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
 
