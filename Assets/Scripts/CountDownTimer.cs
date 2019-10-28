@@ -44,4 +44,14 @@ public class CountDownTimer : MonoBehaviour
             
         print(waterTime);
     }
+
+    public void UpdateFood(float foodValue)
+    {
+        if (foodTime < 94)
+        {
+            foodTime += foodValue;
+        }
+
+        print("Food" + foodTime);
+    }
 }

@@ -31,7 +31,6 @@ public class WaterCollision : MonoBehaviour
     {
         if (hit.transform.gameObject.name == "Character")
         {
-            print("Character hit water");
             countDown.UpdateWater(waterValue);
             Destroy(this.gameObject);
         }

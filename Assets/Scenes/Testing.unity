@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.004091649, g: 0.00022389572, b: 0.00000005721514,
+  m_IndirectSpecularColor: {r: 0.0040916484, g: 0.00022389562, b: 0.00000005721514,
     a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -380,6 +380,7 @@ GameObject:
   - component: {fileID: 290150792}
   - component: {fileID: 290150791}
   - component: {fileID: 290150794}
+  - component: {fileID: 290150795}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -449,6 +450,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   water: {fileID: 5150813167448345965, guid: 2d9dc6f517c7ccf4bab4cda1e683292e, type: 3}
   waterSpawner: 15
+--- !u!114 &290150795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290150790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed973d5b62ea15b4fab81993f779b5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  food: {fileID: 2976833494505947820, guid: f37b62b8a766d9b41a37118b864b7b57, type: 3}
+  foodSpawner: 15
 --- !u!1 &487830510
 GameObject:
   m_ObjectHideFlags: 0
