@@ -12,9 +12,12 @@ public class Item : MonoBehaviour
     {
         GameObject go = col.gameObject;
         Inventory inventory = go.GetComponent<Inventory>();
-        inventory.AddItemToInventory(item);
+        if (inventory != null)
+        {
+            inventory.AddItemToInventory(item);
 
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }
     }
 
 

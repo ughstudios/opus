@@ -51,11 +51,13 @@ public class MobController : DamageableEntity
 
         if (horizMoveInput.sqrMagnitude > Mathf.Epsilon)
         {
-            animator.SetBool("Walking?", true);
+            if (animator != null)
+                animator.SetBool("Walking?", true);
         }
         else
         {
-            animator.SetBool("Walking?", false);
+            if (animator != null)
+                animator.SetBool("Walking?", false);
         }
 
         if (horizMoveInput.x > Mathf.Epsilon)
@@ -67,8 +69,9 @@ public class MobController : DamageableEntity
         {
             targetRot = leftRot;
         }
-        animator.transform.localEulerAngles = Vector3.Lerp(animator.transform.localEulerAngles,
-                targetRot, rotSpeed * Time.fixedDeltaTime);
+        if (animator != null)
+            animator.transform.localEulerAngles = Vector3.Lerp(animator.transform.localEulerAngles,
+                    targetRot, rotSpeed * Time.fixedDeltaTime);
         bool bJumping = moveInput.y > Mathf.Epsilon;
 
         if (bJumping && isGrounded)
@@ -85,7 +88,6 @@ public class MobController : DamageableEntity
         }
 
     }
-
 
     protected virtual bool IsFalling()
     {
