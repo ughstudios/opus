@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1085461326358753031}
-  m_LocalRotation: {x: 0.68178374, y: -0.18753989, z: -0.6817834, w: -0.18753992}
+  m_LocalRotation: {x: 0.68178415, y: -0.18753839, z: -0.68178374, w: -0.18753873}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -50,10 +50,10 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.5
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c44595d2085e543b7368142a3c1126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dayLength: 60
+  dayLength: 30
   dayTimeProportion: 0.5
   time: 0
   numDays: 0
@@ -123,6 +123,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotAxis: {x: 1, y: 0, z: 0}
   baseRot: {x: 0, y: 90, z: 0}
-  normal: {r: 1, g: 1, b: 1, a: 1}
-  twilight: {r: 1, g: 0, b: 0, a: 1}
-  twilightProportion: 0.1
+  normal: {r: 1, g: 1, b: 0.8745098, a: 1}
+  twilight: {r: 1, g: 0.49803922, b: 0, a: 1}
+  twilightProportion: 0.25

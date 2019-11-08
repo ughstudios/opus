@@ -20,6 +20,7 @@ public class SunController : MonoBehaviour
     void Start()
     {
         light = GetComponent<Light>();
+        light.type = LightType.Directional;
     }
 
     // Update is called once per frame
@@ -28,6 +29,7 @@ public class SunController : MonoBehaviour
         if (DayNightCycle.cycle == null)
             return;
 
+        // Sun angle
         float time = DayNightCycle.cycle.time;
         float dayLength = DayNightCycle.cycle.dayLength;
         float noon = dayLength / 2f;
@@ -54,6 +56,34 @@ public class SunController : MonoBehaviour
 
         transform.eulerAngles = orientation;
 
-        //TODO: Twilight
+        // Twilight color-change
+        float dayTimeLength = dayEnd - dayStart;
+        float twilightTime = dayTimeLength * twilightProportion;
+
+        if (time > dayStart + twilightTime && time < dayEnd - twilightTime)
+        {
+            light.color = normal;
+        }
+        else if (time < dayStart - twilightTime || time > dayEnd + twilightTime)
+        {
+            light.color = Color.black;
+        }
+        else if (time > dayStart && time < dayStart + twilightTime)
+        {
+            light.color = Color.Lerp(twilight, normal, (time - dayStart) / twilightTime);
+        }
+        else if (time > dayEnd - twilightTime && time < dayEnd)
+        {
+            light.color = Color.Lerp(normal, twilight, (time - (dayEnd - twilightTime)) / twilightTime);
+        }
+        else if (time > dayStart - twilightTime && time < dayStart)
+        {
+            light.color = Color.Lerp(Color.black, twilight, 
+                    (time - (dayStart - twilightTime)) / twilightTime);
+        }
+        else if (time > dayEnd && time < dayEnd + twilightTime)
+        {
+            light.color = Color.Lerp(twilight, Color.black, (time - dayEnd) / twilightTime);
+        }
     }
 }
