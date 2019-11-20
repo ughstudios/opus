@@ -44,7 +44,7 @@ public class Inventory : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (ItemData item in InventoryItems)
+        foreach (ItemData item in GetInventory())
         {
             GameObject go = Instantiate(UI_InventoryItemPrefab);
 
@@ -56,14 +56,14 @@ public class Inventory : MonoBehaviour
             go.transform.SetParent(InventoryPanel_UI.transform);
 
             Button button = go.GetComponent<Button>();
-            button.onClick.AddListener(ItemClicked);
+            button.onClick.AddListener(delegate{ItemClicked(item);});
         }
 
     }
 
-    private void ItemClicked()
+    private void ItemClicked(ItemData item)
     {
-        
+        Debug.Log(item.itemName);
     }
 
     public void AddItemToInventory(ItemData item)
@@ -85,7 +85,6 @@ public class Inventory : MonoBehaviour
         TextMeshProUGUI text = ui_item.GetComponent<TextMeshProUGUI>();
         text.color = new Color32(0, 255, 0, 255);
         text.SetText("Added " + item.itemName + " x" + item.itemCount);
-
 
         ui_item.transform.SetParent(Inventory_ScrolLView.transform);
 
@@ -125,7 +124,6 @@ public class Inventory : MonoBehaviour
         {
             if (item.itemName == inItemName)
             {
-
                 itemOut = item;
                 return true;
             }

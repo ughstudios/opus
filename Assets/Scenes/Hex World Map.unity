@@ -619,6 +619,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 68069409}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &70235649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1150461584060438, guid: 836ca07fc69b4184ca14265c7d24030d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1364752471}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &70235650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70235649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &70235651
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70235649}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.044424, y: 1.3069226, z: 1.9945222}
+  m_Center: {x: -0.11545077, y: 0.22501089, z: -0.10834625}
 --- !u!1001 &71887775
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1575,6 +1611,42 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 05c3b35dce48bfb44a9ce93ae526df18, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa6105287f77b1240a0017f7d23434c2, type: 3}
+--- !u!1 &201698799 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1106205639809762, guid: c53e680fdc8fae04d91b4ce9e548d2df,
+    type: 3}
+  m_PrefabInstance: {fileID: 1371544745}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &201698800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201698799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &201698801
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201698799}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6109846, y: 3.5298572, z: 3.9817624}
+  m_Center: {x: -0.019050837, y: 0.4600162, z: -0.45571715}
 --- !u!1001 &210283758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3572,6 +3644,42 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a57c77f070e349e428256669c403a9c5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 836ca07fc69b4184ca14265c7d24030d, type: 3}
+--- !u!1 &490070832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1835125518048470, guid: c04be9f92ebf58b46b2204ac3aaa8785,
+    type: 3}
+  m_PrefabInstance: {fileID: 1229534755}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &490070833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490070832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &490070834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490070832}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25469458, y: 0.2545847, z: 0.30942103}
+  m_Center: {x: 0.01961578, y: 0.11474148, z: -0.008720234}
 --- !u!1 &490251497 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1882949367459502, guid: 7adcc5ca25de8e543ad11014ec7de3d3,
@@ -5214,6 +5322,42 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &670542732 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1835125518048470, guid: c04be9f92ebf58b46b2204ac3aaa8785,
+    type: 3}
+  m_PrefabInstance: {fileID: 80600229}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &670542733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670542732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &670542734
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670542732}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25469458, y: 0.2545847, z: 0.30942103}
+  m_Center: {x: 0.01961578, y: 0.11474148, z: -0.008720234}
 --- !u!1001 &677655344
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5267,6 +5411,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d82a0024cf3346b4695544dd461fb02b, type: 3}
+--- !u!1 &692620945 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4856015674655441940, guid: eaa45ce738b50ca4db8aa915cda3bfad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1724091599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &692620946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692620945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &692620947
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692620945}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5, y: 5, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &699435311 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4905684144481780, guid: dc00aab85b301f242896a77c4b442ec0,
@@ -5609,6 +5789,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 725610348}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &729219080 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6440935169947086457, guid: 752346b0191318b48960f1977be1efba,
+    type: 3}
+  m_PrefabInstance: {fileID: 830743878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &729219081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729219080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &729219082
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729219080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0842003, y: 0.32641378, z: 1.0883809}
+  m_Center: {x: 0.003181667, y: 0.11820707, z: -0.014798613}
 --- !u!4 &731015864 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9218157112541545065, guid: 0923ece8cebcbd34f94c0c3e656b67f5,
@@ -5621,6 +5837,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1976321135}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &743102588 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6440935169947086457, guid: 752346b0191318b48960f1977be1efba,
+    type: 3}
+  m_PrefabInstance: {fileID: 6441363767855536430}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &743102589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743102588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &743102590
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743102588}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0842003, y: 0.3264138, z: 1.0883809}
+  m_Center: {x: 0.003181667, y: 0.11820707, z: -0.014783354}
 --- !u!4 &751970148 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4956255927207046, guid: c04be9f92ebf58b46b2204ac3aaa8785,
@@ -6232,6 +6484,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c04be9f92ebf58b46b2204ac3aaa8785, type: 3}
+--- !u!1 &815770561 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1835125518048470, guid: c04be9f92ebf58b46b2204ac3aaa8785,
+    type: 3}
+  m_PrefabInstance: {fileID: 529960279}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &815770562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815770561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &815770563
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815770561}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25469455, y: 0.25458467, z: 0.309421}
+  m_Center: {x: 0.019615779, y: 0.11473766, z: -0.008720233}
 --- !u!4 &819573101 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: b58e7fdfb89fbc549b36a69243aee4c0,
@@ -8348,6 +8636,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1122145637}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1081143076 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6440935169947086457, guid: 752346b0191318b48960f1977be1efba,
+    type: 3}
+  m_PrefabInstance: {fileID: 218377410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1081143077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081143076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1081143078
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081143076}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0842003, y: 0.32641378, z: 1.0883809}
+  m_Center: {x: 0.0031892965, y: 0.11819944, z: -0.014798613}
 --- !u!1001 &1081310034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8426,6 +8750,42 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a57c77f070e349e428256669c403a9c5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a33ce58c20826a4ea7253f84444654b, type: 3}
+--- !u!1 &1083558351 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5759977361528057852, guid: 2b8a184c9b5788d4d9adc9eec0e678a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1296382536}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1083558352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083558351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1083558353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083558351}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.76394, y: 2.4819753, z: 1.6131619}
+  m_Center: {x: 0.13583046, y: 1.1917931, z: -0.045538783}
 --- !u!4 &1088891358 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4437459323509006, guid: 0de8a3d472546b04aa775e83b052764e,
@@ -8694,6 +9054,78 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 98733393}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1118288620 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1228419803925864, guid: 21cba551342e0284a87bcb1672a662d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1468260643}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1118288621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118288620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1118288622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118288620}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.84034896, y: 0.6849088, z: 0.84034896}
+  m_Center: {x: 0, y: 0.3278937, z: 0.000007659197}
+--- !u!1 &1121792258 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1732752170155260, guid: d82a0024cf3346b4695544dd461fb02b,
+    type: 3}
+  m_PrefabInstance: {fileID: 160991524}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1121792259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121792258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1121792260
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1121792258}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9273212, y: 2.1412866, z: 1.782403}
+  m_Center: {x: 0.09541914, y: 1.0706433, z: -0.035087436}
 --- !u!1001 &1122145637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8993,6 +9425,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01bdef6597b249b44a9530ab656246fc, type: 3}
+--- !u!1 &1130772538 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1835125518048470, guid: c04be9f92ebf58b46b2204ac3aaa8785,
+    type: 3}
+  m_PrefabInstance: {fileID: 1723699983}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1130772539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130772538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1130772540
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130772538}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25469458, y: 0.2545847, z: 0.30942103}
+  m_Center: {x: 0.01961578, y: 0.11474148, z: -0.008720234}
 --- !u!1 &1130805949 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1625937032768237879, guid: 7a688fce9095c6143a785631154401ee,
@@ -9398,15 +9866,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4646933745565138, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 59.69785
+      value: 58.33
       objectReference: {fileID: 0}
     - target: {fileID: 4646933745565138, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 34.74649
+      value: 37.79
       objectReference: {fileID: 0}
     - target: {fileID: 4646933745565138, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -140.29826
+      value: -140.82
       objectReference: {fileID: 0}
     - target: {fileID: 4646933745565138, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
       propertyPath: m_LocalRotation.x
@@ -10504,6 +10972,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 830743878}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1344544538 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1228419803925864, guid: 21cba551342e0284a87bcb1672a662d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 287409409}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1344544539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344544538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1344544540
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344544538}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.84034896, y: 0.68490875, z: 0.84034896}
+  m_Center: {x: 0.0000076297, y: 0.32788986, z: 0.00000765309}
 --- !u!1001 &1353995839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10992,6 +11496,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 383830622}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1420754756 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1978445070297066, guid: 4983f395b2610de4e9f688a87bbd9af9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1165290794}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1420754757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420754756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1420754758
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420754756}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.1630793, y: 2.4565117, z: 3.5311728}
+  m_Center: {x: -0.11502105, y: -0.14521527, z: -0.15903205}
 --- !u!1001 &1421854432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13964,6 +14504,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25c10d2b27262d04abab1f5c405c5819, type: 3}
+--- !u!1 &1764170035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1732752170155260, guid: d82a0024cf3346b4695544dd461fb02b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2009517338}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1764170036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764170035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1764170037
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764170035}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9273212, y: 2.1412866, z: 1.782403}
+  m_Center: {x: 0.09541914, y: 1.0706433, z: -0.035087436}
 --- !u!1001 &1784747575
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14264,6 +14840,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 529960279}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1865308911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1228419803925864, guid: 21cba551342e0284a87bcb1672a662d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 210283758}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1865308912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865308911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1865308913
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865308911}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.84034896, y: 0.6849088, z: 0.84034896}
+  m_Center: {x: 0, y: 0.3278937, z: 0.000000029802322}
 --- !u!4 &1866724933 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4949955557972128, guid: c7821bc923171f24094e69062402d005,
@@ -15261,6 +15873,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 456839036}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1962803701 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1228419803925864, guid: 21cba551342e0284a87bcb1672a662d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 285816511}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1962803702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962803701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &1962803703
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962803701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.84034896, y: 0.6849088, z: 0.84034896}
+  m_Center: {x: 0, y: 0.3278937, z: 0.000000029802322}
 --- !u!4 &1964234186 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3517568983782060299, guid: 8301adba4d3b0e74cbf9a404307e23e5,
@@ -15380,8 +16028,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ResourceTimerSeconds: 60
   item:
-    itemName: Stone
-    itemCount: 5
+    itemName: 
+    itemCount: 0
     itemIcon: {fileID: 0}
 --- !u!1001 &1976321135
 PrefabInstance:
@@ -16941,6 +17589,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2127690528}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2127937854 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1106205639809762, guid: c53e680fdc8fae04d91b4ce9e548d2df,
+    type: 3}
+  m_PrefabInstance: {fileID: 1559621479}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2127937855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127937854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  item:
+    itemName: WoodLogs
+    itemCount: 15
+    itemIcon: {fileID: 21300000, guid: 050e8ec1b528aa24f887b49879242718, type: 3}
+--- !u!65 &2127937856
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127937854}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.6109846, y: 3.5298572, z: 3.9817624}
+  m_Center: {x: -0.019050837, y: 0.46001238, z: -0.45571715}
 --- !u!4 &2132187320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4345878849055200, guid: fa6105287f77b1240a0017f7d23434c2,
