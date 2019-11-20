@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 2728694950465021233}
   - component: {fileID: 1425149360239091002}
   m_Layer: 0
-  m_Name: Character2
-  m_TagString: Untagged
+  m_Name: Character
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,6 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30a1126654eace4e9ddf912312fba82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  maxHealth: 100
+  damage: 0
   movementSpeed: 5
   moveForceMult: 1
   jumpSpeed: 5
@@ -144,6 +147,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39fbbe4cd246417429476edc05be251e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InventoryItems: []
+  Inventory_ScrolLView: {fileID: 0}
+  UI_Item_Prefab: {fileID: 0}
+  Pickup_UI: {fileID: 0}
+  Inventory_UI: {fileID: 0}
+  InventoryPanel_UI: {fileID: 0}
+  UI_InventoryItemPrefab: {fileID: 0}
 --- !u!1 &2728694951191761126
 GameObject:
   m_ObjectHideFlags: 0
