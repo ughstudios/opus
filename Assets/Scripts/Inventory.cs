@@ -64,6 +64,11 @@ public class Inventory : MonoBehaviour
     private void ItemClicked(ItemData item)
     {
         Debug.Log(item.itemName);
+        if (item.itemName == "Food")
+        {
+            RemoveCountOfItemFromInventory(1, item);
+            
+        }
     }
 
     public void AddItemToInventory(ItemData item)
