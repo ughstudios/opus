@@ -15,6 +15,10 @@ public class MobController : DamageableEntity
     public Vector3 rightRot = Vector3.zero;
     public Vector3 leftRot = new Vector3(0f, 180f, 0f);
     public float rotSpeed = 10f;
+    public float groundCheckDist = 0.05f;
+    public float groundCheckRadius = 0.5f;
+    public Vector3 groundCheckOffset = Vector3.zero;
+    protected Collider groundCollider;
 
     protected Vector3 moveInput = Vector3.zero;
 
@@ -28,18 +32,13 @@ public class MobController : DamageableEntity
         targetRot = rightRot;
     }
 
-    protected virtual void OnCollisionStay(Collision collisionInfo)
-    {
-        isGrounded = true;
-    }
-
     protected virtual void FixedUpdate()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
         Vector3 horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
         if (horizMoveInput.sqrMagnitude > 1)
             horizMoveInput.Normalize();
+
+        GroundCheck();
 
         Vector3 movement = horizMoveInput * movementSpeed;
         Vector3 horizVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -78,7 +77,6 @@ public class MobController : DamageableEntity
         {
             //rigidbody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
             rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
-            isGrounded = false;
         }
 
         if (horizMoveInput.sqrMagnitude < Mathf.Epsilon && !bJumping && !IsFalling() && isGrounded)
@@ -87,6 +85,22 @@ public class MobController : DamageableEntity
             rb.angularVelocity = Vector3.zero;
         }
 
+    }
+
+    protected virtual void GroundCheck()
+    {
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position + groundCheckOffset, groundCheckRadius,
+                Vector3.down, out hit, groundCheckDist))
+        {
+            isGrounded = true;
+            groundCollider = hit.collider;
+        }
+        else
+        {
+            isGrounded = false;
+            groundCollider = null;
+        }
     }
 
     protected virtual bool IsFalling()

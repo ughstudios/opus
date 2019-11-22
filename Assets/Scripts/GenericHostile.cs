@@ -92,4 +92,21 @@ public class GenericHostile : MobController
         else
             moveInput = wanderDir;
     }
+
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        DamageableEntity de = collision.gameObject.GetComponent<DamageableEntity>();
+
+        if (damage > 0 & de != null)
+        {
+            foreach (System.Type t in targets)
+            {
+                if (de.GetComponent(t) != null)
+                {
+                    de.TakeDamage(this, damage);
+                    break;
+                }
+            }
+        }
+    }
 }
