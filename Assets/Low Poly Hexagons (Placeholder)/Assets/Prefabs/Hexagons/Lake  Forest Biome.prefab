@@ -291,9 +291,10 @@ GameObject:
   - component: {fileID: 1767690438001432437}
   - component: {fileID: 1767690438001432438}
   - component: {fileID: 1767690438001432439}
+  - component: {fileID: 5295134524382708560}
   m_Layer: 0
-  m_Name: Bigger Hex (1)
-  m_TagString: Untagged
+  m_Name: Water Hex
+  m_TagString: Water Hex
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -372,6 +373,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300000, guid: ec55075d188c17f409c030e2fa6d4ebf, type: 3}
+--- !u!65 &5295134524382708560
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767690438001432424}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0044255, y: 0.20033738, z: 1.1540403}
+  m_Center: {x: 0, y: 0.28, z: 0.00000047683716}
 --- !u!1 &1767690438097223737
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,7 +675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 24496019105834135}
   m_Layer: 0
-  m_Name: 'Forest Hex Lake Biome '
+  m_Name: Lake  Forest Biome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

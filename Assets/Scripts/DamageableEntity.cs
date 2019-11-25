@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DamageableEntity : MonoBehaviour
 {
-    public int health;
-    public int maxHealth = 100;
+    public int health = 100;
+
+    public int MaxEverything = 100;
     public int damage = 0;
     public float damageForce = 0f;
     public float damageRecoilForce = 0f;
@@ -13,7 +14,7 @@ public class DamageableEntity : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        health = maxHealth;
+        health = MaxEverything;
     }
 
     public virtual int TakeDamage(DamageableEntity source, int damage)
