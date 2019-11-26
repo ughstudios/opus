@@ -1,24 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Item : MonoBehaviour
+[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
+public class Item : ScriptableObject
 {
+    public new string name;
+    public string description;
 
-    public ItemData item = new ItemData();
-
-
-    void OnTriggerEnter(Collider col)
-    {
-        GameObject go = col.gameObject;
-        Inventory inventory = go.GetComponent<Inventory>();
-        if (inventory != null)
-        {
-            inventory.AddItemToInventory(item);
-
-            Destroy(gameObject);
-        }
-    }
-
-
+    public Sprite icon;
+    public int food;
+    public int water;
+    public int health;
 }

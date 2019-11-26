@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
-    [SerializeField]
-    private List<ItemData> InventoryItems = new List<ItemData>();
+    private Dictionary<Item, int> InventoryItems = new Dictionary<Item, int>();
 
     public GameObject Inventory_ScrolLView;
     public GameObject UI_Item_Prefab;
@@ -22,6 +21,17 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        LoadAllItems();
+    }
+
+    private void LoadAllItems()
+    {
+        Object[] items = Resources.LoadAll("Items", typeof(Item));
+
+        foreach (var i in items)
+        {
+            InventoryItems.Add((Item)i, 0); // 0 is just to initialize the inventory with all potential items, this is a crappy way to do it but none the less will work for now. Ideally, we would not want any of these items stored in memory unless we need them. This is just a hack coz im lazy.
+        }
     }
         
     private void Update()
@@ -44,78 +54,79 @@ public class Inventory : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (ItemData item in GetInventory())
+        foreach(KeyValuePair<Item, int> entry in GetInventory())
         {
+            if (entry.Value <= 0) // This is necessary because of the LoadAllItems() method called in start. It loads all POTENTIAL items with a count of 0. It's a lazy hack but works for now. Will cause performance issues if we ever had thousands or hundreds of items. Needs to be tested for performance.
+            {
+                continue;
+            }
+
             GameObject go = Instantiate(UI_InventoryItemPrefab);
 
             Image image = go.GetComponent<Image>();
-            image.sprite = item.itemIcon;
+            image.sprite = entry.Key.icon;
 
             TextMeshProUGUI text = go.GetComponentInChildren<TextMeshProUGUI>();
-            text.text = "x" + item.itemCount;
+            text.text = "x" + entry.Value;
             go.transform.SetParent(InventoryPanel_UI.transform);
 
             Button button = go.GetComponent<Button>();
-            button.onClick.AddListener(delegate{ItemClicked(item);});
+            button.onClick.AddListener(delegate{ItemClicked(entry.Key);});
         }
 
     }
 
-    private void ItemClicked(ItemData item)
+    private void ItemClicked(Item item)
     {
-        Debug.Log(item.itemName);
-        if (item.itemName == "Food")
-        {
-            RemoveCountOfItemFromInventory(1, item);
-            
-        }
+        Debug.Log(item.name);
     }
 
-    public void AddItemToInventory(ItemData item)
+    public void AddItemToInventory(int addcount, string itemName)
     {
         Pickup_UI.SetActive(true);
 
-        ItemData theFoundItem = new ItemData();
-        bool itemFound = GetItemByItemName(item.itemName, ref theFoundItem);
-        if (itemFound)
-        {
-            theFoundItem.itemCount += item.itemCount;
-        }
-        else
-        {
-            InventoryItems.Add(item);
-        }
+        Item item = GetItemByItemName(itemName);
+        Debug.Log(item.description);
+        int newValue = InventoryItems[item] += addcount;
+
+        SetNewValueForInventoryItemByItemName(itemName, newValue);
 
         GameObject ui_item = Instantiate(UI_Item_Prefab);
         TextMeshProUGUI text = ui_item.GetComponent<TextMeshProUGUI>();
         text.color = new Color32(0, 255, 0, 255);
-        text.SetText("Added " + item.itemName + " x" + item.itemCount);
+        text.SetText("Added " + item.name + " x" + newValue);
 
         ui_item.transform.SetParent(Inventory_ScrolLView.transform);
 
         StartCoroutine(HideAfterInventoryChange(ui_item));
     }
 
-    public void RemoveCountOfItemFromInventory(int removecount, ItemData item)
+    public int GetItemCountByName(string itemName)
+    {
+        foreach(KeyValuePair<Item, int> entry in GetInventory())
+        {
+            if (entry.Key.name == itemName)
+            {
+                return entry.Value;
+            }
+        }
+        return 0;
+    }
+
+    public void RemoveCountOfItemFromInventory(int removecount, string itemName)
     {
 
         Pickup_UI.SetActive(false);
         
-        ItemData theFoundItem = new ItemData();
-        bool itemFound = GetItemByItemName(item.itemName, ref theFoundItem);
-        if (itemFound)
-        {
-            theFoundItem.itemCount -= removecount;
-            if (theFoundItem.itemCount <= 0)
-            {
-                InventoryItems.Remove(theFoundItem);
-            }
-        }
+        Item item = GetItemByItemName(itemName);
+        int newValue = InventoryItems[item] -= removecount;
 
+        SetNewValueForInventoryItemByItemName(itemName, newValue);
+       
         GameObject ui_item = Instantiate(UI_Item_Prefab);
         TextMeshProUGUI text = ui_item.GetComponent<TextMeshProUGUI>();
         text.color = new Color32(255, 0, 0, 255);
-        text.SetText("Removed " + item.itemName + " x" + item.itemCount);
+        text.SetText("Removed " + item.name + " x" + newValue);
 
         ui_item.transform.SetParent(Inventory_ScrolLView.transform);
 
@@ -123,23 +134,27 @@ public class Inventory : MonoBehaviour
 
     }
 
-    public bool GetItemByItemName(string inItemName, ref ItemData itemOut)
+    public void SetNewValueForInventoryItemByItemName(string inItemName, int newValue)
     {
-        foreach (ItemData item in GetInventory())
-        {
-            if (item.itemName == inItemName)
-            {
-                itemOut = item;
-                return true;
-            }
-        }
-
-        return false;
+        Item item = GetItemByItemName(inItemName);
+        InventoryItems[item] = newValue;
     }
 
-    public List<ItemData> GetInventory()
+    public Item GetItemByItemName(string inItemName)
     {
-        return this.InventoryItems;
+        foreach(KeyValuePair<Item, int> entry in GetInventory())
+        {
+            if (entry.Key.name == inItemName)
+            {
+                return entry.Key;
+            }
+        }
+        return null;
+    }
+
+    public Dictionary<Item, int> GetInventory()
+    {
+        return InventoryItems;
     }
 
     IEnumerator HideAfterInventoryChange(GameObject ui_item)

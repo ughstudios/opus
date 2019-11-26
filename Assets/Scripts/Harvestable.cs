@@ -7,7 +7,7 @@ public class Harvestable : MonoBehaviour
 {
     public float ResourceTimerSeconds = 60;
     [SerializeField]
-    public ItemData item = new ItemData();
+    public Item item;
     private bool bHarvested = false;
 
     void Start()
@@ -27,7 +27,8 @@ public class Harvestable : MonoBehaviour
             if (Input.GetButtonDown("Gather"))
             {
                 Inventory inventory = col.gameObject.GetComponent<Inventory>();
-                inventory.AddItemToInventory(item);
+                Debug.Log("item name: " + item.name);
+                inventory.AddItemToInventory(1, item.name);
                 bHarvested = true;
             }
         }
