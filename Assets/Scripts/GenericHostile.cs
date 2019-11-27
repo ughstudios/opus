@@ -15,6 +15,7 @@ public class GenericHostile : MobController
     protected GameObject[] potentialTargets = new GameObject[32];
     protected int numPotentialTargets;
     protected Vector3 wanderDir;
+    protected float searchRange;
 
     protected override void Start()
     {
@@ -22,6 +23,8 @@ public class GenericHostile : MobController
 
         StartCoroutine(CheckForTargets());
         StartCoroutine(PickWanderDir());
+
+        searchRange = Mathf.Max(daySearchRange, nightSearchRange);
     }
 
     protected virtual IEnumerator PickWanderDir()
@@ -42,9 +45,11 @@ public class GenericHostile : MobController
         {
             yield return new WaitForSeconds(searchInterval);
 
-            float searchRange = DayNightCycle.cycle.IsDayTime() ? 
-                    daySearchRange : nightSearchRange;
-
+            if (DayNightCycle.cycle != null)
+            {
+                searchRange = DayNightCycle.cycle.IsDayTime() ?
+                        daySearchRange : nightSearchRange;
+            }
             Collider[] cols = Physics.OverlapSphere(transform.position, searchRange);
             target = null;
             numPotentialTargets = 0;

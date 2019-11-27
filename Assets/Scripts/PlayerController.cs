@@ -48,10 +48,22 @@ public class PlayerController : MobController
         SceneManager.LoadScene("GameOver");
     }
 
+    private bool IsUnder(Collider col)
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + groundCheckOffset, groundCheckRadius,
+                Vector3.down, groundCheckDist);
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider == col)
+                return true;
+        }
+        return false;
+    }
+
     protected override void OnCollisionEnter(Collision collision)
     {
         GroundCheck();
-        if (collision.collider == groundCollider)
+        if (IsUnder(collision.collider))
             base.OnCollisionEnter(collision);
     }
 }

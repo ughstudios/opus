@@ -30,6 +30,8 @@ public class MobController : DamageableEntity
         rb = GetComponent<Rigidbody>();
 
         targetRot = rightRot;
+
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     protected virtual void FixedUpdate()
@@ -85,6 +87,13 @@ public class MobController : DamageableEntity
             rb.angularVelocity = Vector3.zero;
         }
 
+    }
+
+    protected override void OnDeath()
+    {
+        rb.constraints -= RigidbodyConstraints.FreezeRotation;
+
+        base.OnDeath();
     }
 
     protected virtual void GroundCheck()

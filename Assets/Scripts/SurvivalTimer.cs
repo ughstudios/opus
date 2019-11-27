@@ -45,9 +45,13 @@ public class SurvivalTimer : MonoBehaviour
             foodBar.value = playerController.food;
 
 
-            if (playerController.water <= 0 || playerController.food <= 0) 
+            if (playerController.water <= 0) 
             {
                 waterBar.value = 0;
+                playerController.TakeDamage(playerController, 3);
+            }
+            if (playerController.food <= 0)
+            {
                 foodBar.value = 0;
                 playerController.TakeDamage(playerController, 3);
             }

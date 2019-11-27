@@ -47,6 +47,7 @@ public class DamageableEntity : MonoBehaviour
     protected virtual void OnDeath()
     {
         Destroy(gameObject, 2f);
+        Destroy(this);
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
