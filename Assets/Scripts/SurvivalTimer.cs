@@ -41,10 +41,6 @@ public class SurvivalTimer : MonoBehaviour
             playerController.water -= 5;
             playerController.food -= 5;
 
-            waterBar.value = playerController.water;
-            foodBar.value = playerController.food;
-
-
             if (playerController.water <= 0) 
             {
                 waterBar.value = 0;
@@ -56,8 +52,14 @@ public class SurvivalTimer : MonoBehaviour
                 playerController.TakeDamage(playerController, 3);
             }
 
-            healthBar.value = playerController.health;
         }
+    }
+
+    private void Update()
+    {
+        waterBar.value = playerController.water;
+        foodBar.value = playerController.food;
+        healthBar.value = playerController.health;
     }
 
 }
