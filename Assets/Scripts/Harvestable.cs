@@ -7,17 +7,15 @@ public class Harvestable : MonoBehaviour
 {
     public float ResourceTimerSeconds = 60;
     [SerializeField]
-    public Item item;
-    private bool bHarvested = false;
-
-    void Start()
-    {
-        StartCoroutine(ResourceTimer());
-    }
+    public List<Item> items;
+    public bool canHarvest = true;
+    [Tooltip("Numbers less than 1 are infinite")]
+    public int maxSpawns = 0;
+    private int numSpawns = 0;
 
     void OnTriggerStay(Collider col)
     {
-        if (bHarvested)
+        if (!canHarvest)
         {
             return;
         }
@@ -27,37 +25,40 @@ public class Harvestable : MonoBehaviour
             if (Input.GetButtonDown("Gather"))
             {
                 Inventory inventory = col.gameObject.GetComponent<Inventory>();
-                Debug.Log("item name: " + item.name);
-                inventory.AddItemToInventory(1, item.name);
-                bHarvested = true;
+                foreach (Item item in items)
+                {
+                    Debug.Log("item name: " + item.name);
+                    inventory.AddItemToInventory(1, item.name);
+                }
+                canHarvest = false;
+
+                if (maxSpawns > 0 && numSpawns >= maxSpawns)
+                {
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    StartCoroutine(RespawnTimer());
+                }
             }
         }
     }
 
-    IEnumerator ResourceTimer()
+    private IEnumerator RespawnTimer()
     {
-        while (true)
+        Renderer[] rs = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in rs)
         {
-            if (bHarvested)
-            {
-                Renderer[] rs = GetComponentsInChildren<Renderer>();
-                foreach (Renderer r in rs)
-                {
-                    r.enabled = false;
-                }
-
-                yield return new WaitForSeconds(ResourceTimerSeconds);
-
-                foreach (Renderer r in rs)
-                {
-                    r.enabled = true;
-                }
-
-                bHarvested = false;
-            }
-
-            yield return new WaitForEndOfFrame();
-            
+            r.enabled = false;
         }
+
+        yield return new WaitForSeconds(ResourceTimerSeconds);
+
+        foreach (Renderer r in rs)
+        {
+            r.enabled = true;
+        }
+        canHarvest = true;
+        numSpawns++;
     }
 }
