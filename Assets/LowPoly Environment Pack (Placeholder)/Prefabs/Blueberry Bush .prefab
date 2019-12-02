@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5763125944477751748}
   - component: {fileID: 5736548026098942916}
   - component: {fileID: 5746391270585887212}
+  - component: {fileID: 4353498115400801923}
+  - component: {fileID: 670260979087823190}
   m_Layer: 0
   m_Name: 'Blueberry Bush '
   m_TagString: Untagged
@@ -83,6 +85,36 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &4353498115400801923
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759977361528057852}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 2.4819753, z: 3}
+  m_Center: {x: 0.13583046, y: 1.1917969, z: -0.045538783}
+--- !u!114 &670260979087823190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759977361528057852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  items:
+  - {fileID: 11400000, guid: 7e1bdc66d2ff748da9dcb0417fb1738e, type: 2}
+  canHarvest: 1
+  maxSpawns: 0
 --- !u!1001 &2968882510370690833
 PrefabInstance:
   m_ObjectHideFlags: 0

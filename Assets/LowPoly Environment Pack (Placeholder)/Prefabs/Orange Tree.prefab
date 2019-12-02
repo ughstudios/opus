@@ -102,6 +102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4859896879670670294}
+  - component: {fileID: 2430063626382358233}
+  - component: {fileID: 7599603079338803373}
   m_Layer: 0
   m_Name: Orange Tree
   m_TagString: Untagged
@@ -128,6 +130,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2430063626382358233
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4856015674655441940}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 5, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7599603079338803373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4856015674655441940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  items:
+  - {fileID: 11400000, guid: 6ec2ccb9f35c03d40a2ac018d079a830, type: 2}
+  canHarvest: 1
+  maxSpawns: 0
 --- !u!1 &4856114629463508748
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +667,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4859896879670670294}
     m_Modifications:
+    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
+        type: 3}
+      propertyPath: m_Name
+      value: Orange
+      objectReference: {fileID: 0}
     - target: {fileID: 8594556857270258118, guid: ba10b5aa52bfb06459fa3d502bc0c059,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -705,11 +742,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.11297231
       objectReference: {fileID: 0}
-    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
-        type: 3}
-      propertyPath: m_Name
-      value: Orange
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba10b5aa52bfb06459fa3d502bc0c059, type: 3}
 --- !u!4 &3757480021764308236 stripped
@@ -725,6 +757,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4859896879670670294}
     m_Modifications:
+    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
+        type: 3}
+      propertyPath: m_Name
+      value: Orange
+      objectReference: {fileID: 0}
     - target: {fileID: 8594556857270258118, guid: ba10b5aa52bfb06459fa3d502bc0c059,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -795,11 +832,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.11297231
       objectReference: {fileID: 0}
-    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
-        type: 3}
-      propertyPath: m_Name
-      value: Orange
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba10b5aa52bfb06459fa3d502bc0c059, type: 3}
 --- !u!4 &3757480020281570783 stripped
@@ -815,6 +847,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4859896879670670294}
     m_Modifications:
+    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
+        type: 3}
+      propertyPath: m_Name
+      value: Orange (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 8594556857270258118, guid: ba10b5aa52bfb06459fa3d502bc0c059,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -884,11 +921,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.11297231
-      objectReference: {fileID: 0}
-    - target: {fileID: 8594556857270258171, guid: ba10b5aa52bfb06459fa3d502bc0c059,
-        type: 3}
-      propertyPath: m_Name
-      value: Orange (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba10b5aa52bfb06459fa3d502bc0c059, type: 3}

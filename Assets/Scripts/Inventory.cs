@@ -17,10 +17,12 @@ public class Inventory : MonoBehaviour
     public GameObject UI_InventoryItemPrefab;
 
     private CharacterController characterController;
+    private PlayerController playerController;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        playerController = GetComponent<PlayerController>();
         LoadAllItems();
     }
 
@@ -33,7 +35,7 @@ public class Inventory : MonoBehaviour
             InventoryItems.Add((Item)i, 0); // 0 is just to initialize the inventory with all potential items, this is a crappy way to do it but none the less will work for now. Ideally, we would not want any of these items stored in memory unless we need them. This is just a hack coz im lazy.
         }
     }
-        
+
     private void Update()
     {
         if (Input.GetButtonDown("OpenInventory"))
@@ -54,7 +56,7 @@ public class Inventory : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach(KeyValuePair<Item, int> entry in GetInventory())
+        foreach (KeyValuePair<Item, int> entry in GetInventory())
         {
             if (entry.Value <= 0) // This is necessary because of the LoadAllItems() method called in start. It loads all POTENTIAL items with a count of 0. It's a lazy hack but works for now. Will cause performance issues if we ever had thousands or hundreds of items. Needs to be tested for performance.
             {
@@ -71,7 +73,7 @@ public class Inventory : MonoBehaviour
             go.transform.SetParent(InventoryPanel_UI.transform);
 
             Button button = go.GetComponent<Button>();
-            button.onClick.AddListener(delegate{ItemClicked(entry.Key);});
+            button.onClick.AddListener(delegate { ItemClicked(entry.Key); });
         }
 
     }
@@ -79,6 +81,11 @@ public class Inventory : MonoBehaviour
     private void ItemClicked(Item item)
     {
         Debug.Log(item.name);
+
+        playerController.food += item.food;
+        playerController.health += item.health;
+        playerController.water += item.water;
+
     }
 
     public void AddItemToInventory(int addcount, string itemName)
@@ -103,7 +110,7 @@ public class Inventory : MonoBehaviour
 
     public int GetItemCountByName(string itemName)
     {
-        foreach(KeyValuePair<Item, int> entry in GetInventory())
+        foreach (KeyValuePair<Item, int> entry in GetInventory())
         {
             if (entry.Key.name == itemName)
             {
@@ -117,12 +124,12 @@ public class Inventory : MonoBehaviour
     {
 
         Pickup_UI.SetActive(false);
-        
+
         Item item = GetItemByItemName(itemName);
         int newValue = InventoryItems[item] -= removecount;
 
         SetNewValueForInventoryItemByItemName(itemName, newValue);
-       
+
         GameObject ui_item = Instantiate(UI_Item_Prefab);
         TextMeshProUGUI text = ui_item.GetComponent<TextMeshProUGUI>();
         text.color = new Color32(255, 0, 0, 255);
@@ -142,7 +149,7 @@ public class Inventory : MonoBehaviour
 
     public Item GetItemByItemName(string inItemName)
     {
-        foreach(KeyValuePair<Item, int> entry in GetInventory())
+        foreach (KeyValuePair<Item, int> entry in GetInventory())
         {
             if (entry.Key.name == inItemName)
             {

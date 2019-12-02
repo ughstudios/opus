@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Tomato
   description: Red tomato
   icon: {fileID: 21300000, guid: 53c72d66cab284b3f80d38db990f2868, type: 3}
-  food: 0
-  water: 0
-  health: 0
+  food: 15
+  water: 3
+  health: 2

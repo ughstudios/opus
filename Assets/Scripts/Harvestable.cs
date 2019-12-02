@@ -47,9 +47,16 @@ public class Harvestable : MonoBehaviour
     private IEnumerator RespawnTimer()
     {
         Renderer[] rs = GetComponentsInChildren<Renderer>();
+        Collider[] cols = GetComponentsInChildren<Collider>();
         foreach (Renderer r in rs)
         {
             r.enabled = false;
+        }
+
+        // Colliders need to be turned off when despawned so we can walk through them. 
+        foreach (Collider col in cols)
+        {
+            col.enabled = false;
         }
 
         yield return new WaitForSeconds(ResourceTimerSeconds);
@@ -58,6 +65,12 @@ public class Harvestable : MonoBehaviour
         {
             r.enabled = true;
         }
+
+        foreach (Collider col in cols)
+        {
+            col.enabled = true;
+        }
+
         canHarvest = true;
         numSpawns++;
     }

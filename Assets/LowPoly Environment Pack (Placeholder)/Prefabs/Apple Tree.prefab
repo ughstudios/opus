@@ -514,6 +514,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9149959892695429754}
+  - component: {fileID: 9110216878212544244}
+  - component: {fileID: 6789055000991626733}
   m_Layer: 0
   m_Name: Apple Tree
   m_TagString: Untagged
@@ -537,6 +539,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &9110216878212544244
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9146506255709439416}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 5, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6789055000991626733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9146506255709439416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  items:
+  - {fileID: 11400000, guid: de28ec153b169864a8836f83ad97b087, type: 2}
+  canHarvest: 1
+  maxSpawns: 0
 --- !u!1 &9146556269018567762
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +762,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9143470364444881772}
     m_Modifications:
+    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
+        type: 3}
+      propertyPath: m_Name
+      value: Apple
+      objectReference: {fileID: 0}
     - target: {fileID: 7333110033222588416, guid: d26c1deb92a0f224fbba7321473b22e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -785,11 +822,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
-        type: 3}
-      propertyPath: m_Name
-      value: Apple
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d26c1deb92a0f224fbba7321473b22e2, type: 3}
 --- !u!4 &1958552381233784872 stripped
@@ -805,6 +837,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9143470364444881772}
     m_Modifications:
+    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
+        type: 3}
+      propertyPath: m_Name
+      value: Apple (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 7333110033222588416, guid: d26c1deb92a0f224fbba7321473b22e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -860,11 +897,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
-        type: 3}
-      propertyPath: m_Name
-      value: Apple (1)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d26c1deb92a0f224fbba7321473b22e2, type: 3}
 --- !u!4 &1958552381418871592 stripped
@@ -880,6 +912,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9143470364444881772}
     m_Modifications:
+    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
+        type: 3}
+      propertyPath: m_Name
+      value: Apple (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 7333110033222588416, guid: d26c1deb92a0f224fbba7321473b22e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -935,11 +972,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
-        type: 3}
-      propertyPath: m_Name
-      value: Apple (2)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d26c1deb92a0f224fbba7321473b22e2, type: 3}
 --- !u!4 &1958552381836677291 stripped
@@ -955,6 +987,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9143470364444881772}
     m_Modifications:
+    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
+        type: 3}
+      propertyPath: m_Name
+      value: Apple (3)
+      objectReference: {fileID: 0}
     - target: {fileID: 7333110033222588416, guid: d26c1deb92a0f224fbba7321473b22e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1009,11 +1046,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7333110033222588477, guid: d26c1deb92a0f224fbba7321473b22e2,
-        type: 3}
-      propertyPath: m_Name
-      value: Apple (3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d26c1deb92a0f224fbba7321473b22e2, type: 3}

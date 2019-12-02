@@ -102,6 +102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4345878849055200}
+  - component: {fileID: 9102505736577453118}
+  - component: {fileID: 2891627461243742307}
   m_Layer: 0
   m_Name: Tree_3
   m_TagString: Untagged
@@ -125,6 +127,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &9102505736577453118
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218347679047942}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5, y: 5, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2891627461243742307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218347679047942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89858dd7b6a3f44adb1760ae71d3b908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ResourceTimerSeconds: 60
+  items:
+  - {fileID: 11400000, guid: 3a8f9afb1140449db89168fac0cd1d98, type: 2}
+  canHarvest: 1
+  maxSpawns: 0
 --- !u!1 &1363467826424036
 GameObject:
   m_ObjectHideFlags: 0

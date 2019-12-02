@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Honey
   description: Honey
   icon: {fileID: 21300000, guid: 0f273ed1b78b14eabbb3a3b0682a1fc5, type: 3}
-  food: 0
-  water: 0
-  health: 0
+  food: 4
+  water: 3
+  health: 5
