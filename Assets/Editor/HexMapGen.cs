@@ -42,16 +42,14 @@ public class HexMapGen : EditorWindow
             return;
         Bounds bounds = col.bounds;
 
-        Debug.LogFormat("Bounds: {0}", bounds);
-
         GameObject root = new GameObject("HexGenRoot");
         float xLen = bounds.size.x;
         float zLen = bounds.size.z;
-        if (zLen < xLen)
+        if (xLen > zLen)
         {
-            float sideLen = (zLen / 2f) / Mathf.Cos(60f * Mathf.Deg2Rad);
-            float shortLen = (xLen - sideLen) / 2f;
+            float sideLen = (xLen / 2f);
             float medLen = zLen / 2f;
+            float shortLen = sideLen / 2f;
 
             int steps = Mathf.CeilToInt(radius/zLen) + 1;
 
@@ -72,9 +70,9 @@ public class HexMapGen : EditorWindow
         }
         if (xLen < zLen)
         {
-            float sideLen = (xLen / 2f) / Mathf.Cos(60f * Mathf.Deg2Rad);
-            float shortLen = (zLen - sideLen) / 2f;
+            float sideLen = zLen / 2f;
             float medLen = xLen / 2f;
+            float shortLen = sideLen / 2f;
 
             int steps = Mathf.CeilToInt(radius / xLen) + 1;
 

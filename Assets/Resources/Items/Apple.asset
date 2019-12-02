@@ -18,3 +18,6 @@ MonoBehaviour:
   food: 10
   water: 2
   health: 5
+  canPlant: 1
+  plantPrefab: {fileID: 6789055000991626733, guid: 25c10d2b27262d04abab1f5c405c5819,
+    type: 3}

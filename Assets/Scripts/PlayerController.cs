@@ -10,7 +10,7 @@ public class PlayerController : MobController
 
     public int water = 100;
 
-    
+    private bool canPlant = true;
 
     void OnTriggerStay(Collider collider)
     {
@@ -23,6 +23,12 @@ public class PlayerController : MobController
                 survivalTimer.update_water_bar();
             }
         }
+        canPlant = false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        canPlant = true;
     }
 
     protected override void FixedUpdate()
@@ -32,6 +38,24 @@ public class PlayerController : MobController
                 Input.GetAxisRaw("Vertical"));
 
         base.FixedUpdate();
+
+        if (canPlant && isGrounded && groundCollider != null &&
+                groundCollider.GetComponent<DamageableEntity>() == null 
+                && Input.GetButton("Gather"))
+        {
+            Inventory inv = GetComponent<Inventory>();
+            RaycastHit hit;
+            Item toPlant = inv.GetRandomPlantable();
+            if (toPlant != null && Physics.Raycast(transform.position,
+                    Vector3.down, out hit, 5f))
+            {
+                Harvestable plant = Instantiate<Harvestable>(toPlant.plantPrefab,
+                        hit.point, Quaternion.Euler(0f, Random.value * 360f, 0f));
+                plant.canHarvest = false;
+                plant.ForceUpdate();
+                inv.RemoveCountOfItemFromInventory(toPlant, 1);
+            }
+        }
     }
 
     public override int TakeDamage(DamageableEntity source, int damage)

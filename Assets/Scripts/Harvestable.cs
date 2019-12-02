@@ -32,15 +32,20 @@ public class Harvestable : MonoBehaviour
                 }
                 canHarvest = false;
 
-                if (maxSpawns > 0 && numSpawns >= maxSpawns)
-                {
-                    Destroy(gameObject);
-                }
-                else
-                {
-                    StartCoroutine(RespawnTimer());
-                }
+                ForceUpdate();
             }
+        }
+    }
+
+    public void ForceUpdate()
+    {
+        if (maxSpawns > 0 && numSpawns >= maxSpawns)
+        {
+            Destroy(gameObject);
+        }
+        else if (!canHarvest)
+        {
+            StartCoroutine(RespawnTimer());
         }
     }
 
@@ -56,7 +61,8 @@ public class Harvestable : MonoBehaviour
         // Colliders need to be turned off when despawned so we can walk through them. 
         foreach (Collider col in cols)
         {
-            col.enabled = false;
+            if (!col.isTrigger)
+                col.enabled = false;
         }
 
         yield return new WaitForSeconds(ResourceTimerSeconds);
