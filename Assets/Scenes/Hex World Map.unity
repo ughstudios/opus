@@ -7550,7 +7550,9 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: fb5ddc125e5f05b42a1269e0a08850eb, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5684061532572036699, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
+    - {fileID: 4477972424405625130, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4983f395b2610de4e9f688a87bbd9af9, type: 3}
 --- !u!1001 &986095870
 PrefabInstance:
@@ -13806,7 +13808,9 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 546fdfe5df99cb34bb14981f56cfca29, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9102505736577453118, guid: fa6105287f77b1240a0017f7d23434c2, type: 3}
+    - {fileID: 2891627461243742307, guid: fa6105287f77b1240a0017f7d23434c2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fa6105287f77b1240a0017f7d23434c2, type: 3}
 --- !u!4 &1686670391 stripped
 Transform:
@@ -16974,7 +16978,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ResourceTimerSeconds: 5
-  items: []
+  items:
+  - {fileID: 11400000, guid: 3a8f9afb1140449db89168fac0cd1d98, type: 2}
   canHarvest: 1
   maxSpawns: 0
 --- !u!65 &2070461820
