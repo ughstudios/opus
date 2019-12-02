@@ -13,4 +13,7 @@ public class Item : ScriptableObject
     public int food;
     public int water;
     public int health;
+
+    public bool canPlant;
+    public Harvestable plantPrefab;
 }

@@ -112,7 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ResourceTimerSeconds: 60
   items:
-  - {fileID: 11400000, guid: 4eccf336902b60a489337f62c5b3664d, type: 2}
+  - {fileID: 11400000, guid: bba36d96a3106be4ba90e17ef8e4816c, type: 2}
   canHarvest: 1
   maxSpawns: 0
 --- !u!1001 &331155727163794811

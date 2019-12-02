@@ -158,5 +158,31 @@ public class Inventory : MonoBehaviour
         Destroy(ui_item);
     }
 
+    public Item GetRandomPlantable()
+    {
+        List<Item> plantables = new List<Item>();
+        int numPlantables = 0;
+        foreach (KeyValuePair<Item, int> entry in GetInventory())
+        {
+            if (entry.Key.canPlant && entry.Value > 0)
+            {
+                plantables.Add(entry.Key);
+                numPlantables += entry.Value;
+            }
+        }
 
+        int num = Mathf.FloorToInt(numPlantables * Random.value);
+        if (num >= numPlantables)
+            num = numPlantables - 1;
+
+        int sum = 0;
+        for (int i = 0; i < numPlantables; i++)
+        {
+            sum += InventoryItems[plantables[i]];
+            if (sum > num)
+                return plantables[i];
+        }
+
+        return null;
+    }
 }

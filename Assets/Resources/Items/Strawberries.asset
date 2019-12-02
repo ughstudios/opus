@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e4517d8685d5e445846d72c33ac2167, type: 3}
-  m_Name: Orange
+  m_Name: Strawberries
   m_EditorClassIdentifier: 
-  name: Orange
-  description: Orange orange
-  icon: {fileID: 21300000, guid: b46b13179d17e4c068d73ac054b372f8, type: 3}
+  name: Strawberries
+  description: Red strawberries
+  icon: {fileID: 21300000, guid: b1b58d70eb3a44dcfa0ddf1cded78d5c, type: 3}
   food: 5
   water: 2
-  health: 4
+  health: 5
   canPlant: 1
-  plantPrefab: {fileID: 7599603079338803373, guid: eaa45ce738b50ca4db8aa915cda3bfad,
+  plantPrefab: {fileID: 7001492868094837642, guid: 654169430c91bab428d8fbed6785e562,
     type: 3}
