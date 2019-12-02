@@ -86,6 +86,7 @@ public class Inventory : MonoBehaviour
         playerController.health += item.health;
         playerController.water += item.water;
 
+        RemoveCountOfItemFromInventory(item, 1);
     }
 
     public void AddItemToInventory(int addcount, string itemName)
@@ -120,25 +121,9 @@ public class Inventory : MonoBehaviour
         return 0;
     }
 
-    public void RemoveCountOfItemFromInventory(int removecount, string itemName)
+    public void RemoveCountOfItemFromInventory(Item item, int count)
     {
-
-        Pickup_UI.SetActive(false);
-
-        Item item = GetItemByItemName(itemName);
-        int newValue = InventoryItems[item] -= removecount;
-
-        SetNewValueForInventoryItemByItemName(itemName, newValue);
-
-        GameObject ui_item = Instantiate(UI_Item_Prefab);
-        TextMeshProUGUI text = ui_item.GetComponent<TextMeshProUGUI>();
-        text.color = new Color32(255, 0, 0, 255);
-        text.SetText("Removed " + item.name + " x" + newValue);
-
-        ui_item.transform.SetParent(Inventory_ScrolLView.transform);
-
-        StartCoroutine(HideAfterInventoryChange(ui_item));
-
+        InventoryItems[item] -= count;
     }
 
     public void SetNewValueForInventoryItemByItemName(string inItemName, int newValue)
