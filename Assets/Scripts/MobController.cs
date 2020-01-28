@@ -34,8 +34,10 @@ public class MobController : DamageableEntity
         rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
-    protected virtual void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         Vector3 horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
         if (horizMoveInput.sqrMagnitude > 1)
             horizMoveInput.Normalize();

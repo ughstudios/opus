@@ -17,6 +17,14 @@ public class DamageableEntity : MonoBehaviour
         health = MaxEverything;
     }
 
+    protected virtual void FixedUpdate()
+    {
+        if (transform.position.y < -1000)
+        {
+            OnDeath();
+        }
+    }
+
     public virtual int TakeDamage(DamageableEntity source, int damage)
     {
         if (damage < 1)

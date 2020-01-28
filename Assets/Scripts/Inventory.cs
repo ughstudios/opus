@@ -87,6 +87,8 @@ public class Inventory : MonoBehaviour
         playerController.water += item.water;
 
         RemoveCountOfItemFromInventory(item, 1);
+
+        GenerateInventoryUI_Items();
     }
 
     public void AddItemToInventory(int addcount, string itemName)
