@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Blueberries
   m_EditorClassIdentifier: 
   name: Blueberries
+<<<<<<< Updated upstream
   description: Blue berries
   icon: {fileID: 21300000, guid: c4ad345ebbc834dff9e5864d6b445ee4, type: 3}
   food: 6
@@ -21,3 +22,10 @@ MonoBehaviour:
   canPlant: 1
   plantPrefab: {fileID: 670260979087823190, guid: 2b8a184c9b5788d4d9adc9eec0e678a9,
     type: 3}
+=======
+  description: These are blueberries.
+  icon: {fileID: 21300000, guid: c4ad345ebbc834dff9e5864d6b445ee4, type: 3}
+  food: 5
+  water: 5
+  health: 5
+>>>>>>> Stashed changes

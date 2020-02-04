@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class SurvivalTimer : MonoBehaviour
 {
-
     private PlayerController playerController;
     private GameObject player;
 
@@ -14,10 +13,17 @@ public class SurvivalTimer : MonoBehaviour
 
     public Slider healthBar;
 
-    public void update_water_bar()
+    public void reset_water_bar_to_full()
     {
         playerController.water = 100;
         waterBar.value = playerController.water;
+    }
+
+    public void update_all_bars_to_match_player_controller()
+    {
+        waterBar.value = playerController.water;
+        foodBar.value = playerController.food;
+        healthBar.value = playerController.health;
     }
 
     void Start()

@@ -9,8 +9,12 @@ public class PlayerController : MobController
     public int food = 100;
 
     public int water = 100;
+<<<<<<< Updated upstream
 
     private bool canPlant = true;
+=======
+    
+>>>>>>> Stashed changes
 
     void OnTriggerStay(Collider collider)
     {
@@ -20,7 +24,7 @@ public class PlayerController : MobController
             {
                 water = 100;
                 SurvivalTimer survivalTimer = GetComponent<SurvivalTimer>();
-                survivalTimer.update_water_bar();
+                survivalTimer.reset_water_bar_to_full();
             }
         }
         canPlant = false;

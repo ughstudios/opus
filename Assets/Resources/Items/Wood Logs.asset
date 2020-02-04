@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4517d8685d5e445846d72c33ac2167, type: 3}
   m_Name: Wood Logs
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
   name: Wood Logs
   description: Logs of wood
+=======
+  name: Wood
+  description: This is wood.
+>>>>>>> Stashed changes
   icon: {fileID: 21300000, guid: 9f6c299ae3d7d4656b196ba0d444d362, type: 3}
   food: 0
   water: 0
