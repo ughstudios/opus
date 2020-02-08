@@ -24,11 +24,9 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
-<<<<<<< Updated upstream
         playerController = GetComponent<PlayerController>();
-=======
         survivalTimer = gameObject.GetComponent<SurvivalTimer>();
->>>>>>> Stashed changes
+
         LoadAllItems();
     }
 
@@ -88,7 +86,6 @@ public class Inventory : MonoBehaviour
     {
         Debug.Log(item.name);
 
-<<<<<<< Updated upstream
         playerController.food += item.food;
         playerController.health += item.health;
         playerController.water += item.water;
@@ -195,4 +192,5 @@ public class Inventory : MonoBehaviour
 
         return null;
     }
+
 }

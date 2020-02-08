@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BeardedManStudios.Forge.Networking;
+using BeardedManStudios.Forge.Networking.Generated;
+using BeardedManStudios.Forge.Networking.Unity;
 
-public class DamageableEntity : MonoBehaviour
+public class DamageableEntity : PlayerBehavior
 {
     public int health = 100;
 

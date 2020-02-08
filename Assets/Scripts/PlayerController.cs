@@ -9,12 +9,19 @@ public class PlayerController : MobController
     public int food = 100;
 
     public int water = 100;
-<<<<<<< Updated upstream
-
     private bool canPlant = true;
-=======
-    
->>>>>>> Stashed changes
+
+    protected override void NetworkStart()
+    {
+        base.NetworkStart();
+        networkObject.position = transform.position;
+        networkObject.rotation = transform.rotation;
+        networkObject.positionInterpolation.target = transform.position;
+        networkObject.rotationInterpolation.target = transform.rotation;
+
+        networkObject.SnapInterpolations();
+    }
+       
 
     void OnTriggerStay(Collider collider)
     {
@@ -37,6 +44,14 @@ public class PlayerController : MobController
 
     protected override void FixedUpdate()
     {
+        if (!networkObject.IsOwner)
+        {
+            transform.position = networkObject.position;
+            transform.rotation = networkObject.rotation;
+
+            return;
+        }
+
         moveInput.Set(Input.GetAxisRaw("Horizontal"),
                 Input.GetButton("Jump") ? 1f : 0f,
                 Input.GetAxisRaw("Vertical"));
@@ -44,7 +59,7 @@ public class PlayerController : MobController
         base.FixedUpdate();
 
         if (canPlant && isGrounded && groundCollider != null &&
-                groundCollider.GetComponent<DamageableEntity>() == null 
+                groundCollider.GetComponent<DamageableEntity>() == null
                 && Input.GetButton("Gather"))
         {
             Inventory inv = GetComponent<Inventory>();
@@ -60,6 +75,10 @@ public class PlayerController : MobController
                 inv.RemoveCountOfItemFromInventory(toPlant, 1);
             }
         }
+
+
+        networkObject.position = transform.position;
+        networkObject.rotation = transform.rotation;
     }
 
     public override int TakeDamage(DamageableEntity source, int damage)
