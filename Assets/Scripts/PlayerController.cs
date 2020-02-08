@@ -20,8 +20,15 @@ public class PlayerController : MobController
         networkObject.rotationInterpolation.target = transform.rotation;
 
         networkObject.SnapInterpolations();
+
+        if (!networkObject.IsOwner)
+        {
+            Camera camera = transform.Find("Camera").GetComponent<Camera>();
+            camera.enabled = false;
+        }
+
     }
-       
+
 
     void OnTriggerStay(Collider collider)
     {

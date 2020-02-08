@@ -32,3 +32,74 @@
 [2/8/2020 12:42:58 PM - INFO] ========= START RUN =========
 [2/8/2020 3:04:49 PM - INFO] ========= START RUN =========
 [2/8/2020 3:04:56 PM - INFO] ========= START RUN =========
+[2/8/2020 3:59:58 PM - INFO] ========= START RUN =========
+[2/8/2020 4:00:30 PM - INFO] ========= START RUN =========
+[2/8/2020 4:04:36 PM - INFO] ========= START RUN =========
+[2/8/2020 4:04:54 PM - INFO] ========= START RUN =========
+[2/8/2020 4:05:34 PM - INFO] ========= START RUN =========
+[2/8/2020 4:07:28 PM - EXCEPTION] Message: 
+  at (wrapper managed-to-native) System.Net.Sockets.Socket.ReceiveFrom_internal(intptr,byte*,int,System.Net.Sockets.SocketFlags,System.Net.SocketAddress&,int&,bool)
+  at System.Net.Sockets.Socket.ReceiveFrom_internal (System.Net.Sockets.SafeSocketHandle safeHandle, System.Byte* buffer, System.Int32 count, System.Net.Sockets.SocketFlags flags, System.Net.SocketAddress& sockaddr, System.Int32& error, System.Boolean blocking) [0x0000c] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP, System.Net.Sockets.SocketError& errorCode) [0x00024] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP) [0x00026] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Net.EndPoint& remoteEP) [0x00000] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at BeardedManStudios.Forge.Networking.CachedUdpClient.Receive (System.Net.IPEndPoint& remoteEP, System.String& endpoint) [0x00033] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\CachedUdpClient.cs:340 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x0002d] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:252 
+  at System.Environment.get_StackTrace () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at BMSLogger.PutLogInFile (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String log) [0x00089] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:200 
+  at BMSLogger.LogException (System.String log) [0x00014] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:129 
+  at BeardedManStudios.Forge.Logging.BMSLog.InternalLog (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String text, System.Object[] args) [0x000a9] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:107 
+  at BeardedManStudios.Forge.Logging.BMSLog.LogException (System.Exception ex) [0x00001] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:54 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x00355] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:376 
+  at BeardedManStudios.Threading.Task+<>c__DisplayClass1_0.<Queue>b__0 (System.Object state) [0x0001a] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Threading\Task.cs:72 
+  at System.Threading.QueueUserWorkItemCallback.WaitCallback_Context (System.Object state) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.QueueUserWorkItemCallback.System.Threading.IThreadPoolWorkItem.ExecuteWorkItem () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ThreadPoolWorkQueue.Dispatch () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading._ThreadPoolWaitCallback.PerformWaitCallback () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+[2/8/2020 4:07:28 PM - EXCEPTION] Message: 
+  at (wrapper managed-to-native) System.Net.Sockets.Socket.ReceiveFrom_internal(intptr,byte*,int,System.Net.Sockets.SocketFlags,System.Net.SocketAddress&,int&,bool)
+  at System.Net.Sockets.Socket.ReceiveFrom_internal (System.Net.Sockets.SafeSocketHandle safeHandle, System.Byte* buffer, System.Int32 count, System.Net.Sockets.SocketFlags flags, System.Net.SocketAddress& sockaddr, System.Int32& error, System.Boolean blocking) [0x0000c] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP, System.Net.Sockets.SocketError& errorCode) [0x00024] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP) [0x00026] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Net.EndPoint& remoteEP) [0x00000] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at BeardedManStudios.Forge.Networking.CachedUdpClient.Receive (System.Net.IPEndPoint& remoteEP, System.String& endpoint) [0x00033] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\CachedUdpClient.cs:340 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x0002d] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:252 
+  at System.Environment.get_StackTrace () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at BMSLogger.PutLogInFile (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String log) [0x00089] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:200 
+  at BMSLogger.LogException (System.String log) [0x00014] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:129 
+  at BeardedManStudios.Forge.Logging.BMSLog.InternalLog (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String text, System.Object[] args) [0x000a9] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:107 
+  at BeardedManStudios.Forge.Logging.BMSLog.LogException (System.Exception ex) [0x00001] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:54 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x00355] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:376 
+  at BeardedManStudios.Threading.Task+<>c__DisplayClass1_0.<Queue>b__0 (System.Object state) [0x0001a] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Threading\Task.cs:72 
+  at System.Threading.QueueUserWorkItemCallback.WaitCallback_Context (System.Object state) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.QueueUserWorkItemCallback.System.Threading.IThreadPoolWorkItem.ExecuteWorkItem () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ThreadPoolWorkQueue.Dispatch () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading._ThreadPoolWaitCallback.PerformWaitCallback () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+[2/8/2020 4:07:29 PM - INFO] ========= START RUN =========
+[2/8/2020 4:07:35 PM - EXCEPTION] Message: 
+  at (wrapper managed-to-native) System.Net.Sockets.Socket.ReceiveFrom_internal(intptr,byte*,int,System.Net.Sockets.SocketFlags,System.Net.SocketAddress&,int&,bool)
+  at System.Net.Sockets.Socket.ReceiveFrom_internal (System.Net.Sockets.SafeSocketHandle safeHandle, System.Byte* buffer, System.Int32 count, System.Net.Sockets.SocketFlags flags, System.Net.SocketAddress& sockaddr, System.Int32& error, System.Boolean blocking) [0x0000c] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP, System.Net.Sockets.SocketError& errorCode) [0x00024] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Int32 offset, System.Int32 size, System.Net.Sockets.SocketFlags socketFlags, System.Net.EndPoint& remoteEP) [0x00026] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at System.Net.Sockets.Socket.ReceiveFrom (System.Byte[] buffer, System.Net.EndPoint& remoteEP) [0x00000] in <9f8c4786222746238eb929db40bf8dd1>:0 
+  at BeardedManStudios.Forge.Networking.CachedUdpClient.Receive (System.Net.IPEndPoint& remoteEP, System.String& endpoint) [0x00033] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\CachedUdpClient.cs:340 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x0002d] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:252 
+  at System.Environment.get_StackTrace () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at BMSLogger.PutLogInFile (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String log) [0x00089] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:200 
+  at BMSLogger.LogException (System.String log) [0x00014] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Logging\BMSLogger.cs:129 
+  at BeardedManStudios.Forge.Logging.BMSLog.InternalLog (BeardedManStudios.Forge.Logging.BMSLog+Logtype type, System.String text, System.Object[] args) [0x000a9] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:107 
+  at BeardedManStudios.Forge.Logging.BMSLog.LogException (System.Exception ex) [0x00001] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Logging\BMSLog.cs:54 
+  at BeardedManStudios.Forge.Networking.UDPClient.ReadNetwork () [0x00355] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Forge\Networking\UDPClient.cs:376 
+  at BeardedManStudios.Threading.Task+<>c__DisplayClass1_0.<Queue>b__0 (System.Object state) [0x0001a] in C:\Users\bdoom\Desktop\opus\Assets\Bearded Man Studios Inc\Scripts\Networking\Threading\Task.cs:72 
+  at System.Threading.QueueUserWorkItemCallback.WaitCallback_Context (System.Object state) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.QueueUserWorkItemCallback.System.Threading.IThreadPoolWorkItem.ExecuteWorkItem () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading.ThreadPoolWorkQueue.Dispatch () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+  at System.Threading._ThreadPoolWaitCallback.PerformWaitCallback () [0x00000] in <599589bf4ce248909b8a14cbe4a2034e>:0 
+[2/8/2020 4:07:37 PM - INFO] ========= START RUN =========
+[2/8/2020 4:07:52 PM - INFO] ========= START RUN =========
