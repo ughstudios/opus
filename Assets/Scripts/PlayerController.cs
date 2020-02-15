@@ -10,6 +10,7 @@ public class PlayerController : MobController
 
     public int water = 100;
     private bool canPlant = true;
+    public Camera camera;
 
     protected override void NetworkStart()
     {
@@ -20,12 +21,6 @@ public class PlayerController : MobController
         networkObject.rotationInterpolation.target = transform.rotation;
 
         networkObject.SnapInterpolations();
-
-        if (!networkObject.IsOwner)
-        {
-            Camera camera = transform.Find("Camera").GetComponent<Camera>();
-            camera.enabled = false;
-        }
 
     }
 
@@ -49,12 +44,22 @@ public class PlayerController : MobController
         canPlant = true;
     }
 
+    private void Update()
+    {
+        if (networkObject.IsOwner)
+        {
+            camera.enabled = true;
+        }
+    }
+
     protected override void FixedUpdate()
     {
         if (!networkObject.IsOwner)
         {
             transform.position = networkObject.position;
             transform.rotation = networkObject.rotation;
+
+            camera.enabled = false;
 
             return;
         }
