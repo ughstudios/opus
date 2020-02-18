@@ -190,9 +190,9 @@ public class TerrainManager : MonoBehaviour
 
         Dictionary<Biome, float> test = GetBiomes(new Vector3(125f, 0f, 125f));
 
-        //foreach (KeyValuePair<Biome, float> kvp in test)
-        //    Debug.Log(kvp.ToString());
-        //Debug.Log(totalBiomeFrequency);
+        foreach (KeyValuePair<Biome, float> kvp in test)
+            Debug.Log(kvp.ToString());
+        Debug.Log(totalBiomeFrequency);
     }
 
     public void SetAutomaticUpdates(bool automatic)
@@ -304,6 +304,7 @@ public class TerrainManager : MonoBehaviour
         thread.Start();
         yield return new WaitUntil(() => done);
 
+        Debug.Log(containedBiomes.Count);
         TerrainLayer[] terrainLayers = new TerrainLayer[containedBiomes.Count];
 
         for (int i = 0; i < containedBiomes.Count; i++)
@@ -387,8 +388,8 @@ public class TerrainManager : MonoBehaviour
                     maxBiomeCenterOffset;
             centerOffsets[i].y = (rng.Value() * maxBiomeCenterOffset * 2) -
                     maxBiomeCenterOffset;
-            //int index = (int)(rng.ValueUInt() % totalBiomeFrequency);
-            int index = Mathf.FloorToInt(rng.Value() * totalBiomeFrequency);
+            int index = (int)(rng.ValueUInt() % totalBiomeFrequency);
+            //int index = Mathf.FloorToInt(rng.Value() * totalBiomeFrequency);
             for (int j = 0; j < biomes.Count; j++)
             {
                 if (index >= 0 && index < biomes[j].relativeFrequency)
@@ -489,33 +490,7 @@ public class TerrainManager : MonoBehaviour
     {
         containedBiomes = new List<Biome>();
         Dictionary<Biome, float> locBiomes = null;
-
-        Vector3[] biomeTest = { new Vector3((coord.x - 0.5f) *
-                genSettings.length / noiseScale, 0f, (coord.z - 0.5f) *
-                genSettings.length / noiseScale),
-                new Vector3((coord.x - 0.5f) *
-                genSettings.length / noiseScale, 0f, (coord.z + 0.5f) *
-                genSettings.length / noiseScale),
-                new Vector3((coord.x + 0.5f) *
-                genSettings.length / noiseScale, 0f, (coord.z - 0.5f) *
-                genSettings.length / noiseScale),
-                new Vector3((coord.x + 0.5f) *
-                genSettings.length / noiseScale, 0f, (coord.z + 0.5f) *
-                genSettings.length / noiseScale)
-        };
-
-        for (int i = 0; i < 4; i++)
-        {
-            locBiomes = GetBiomes(biomeTest[i]);
-            foreach (Biome b in locBiomes.Keys)
-            {
-                if (!containedBiomes.Contains(b))
-                    containedBiomes.Add(b);
-            }
-        }
-
-        float[,,] alphamaps = new float[genSettings.alphaMapRes,
-                genSettings.alphaMapRes, containedBiomes.Count];
+        List<float[,]> maps = new List<float[,]>();
 
         float nx, nz;
         
@@ -524,24 +499,36 @@ public class TerrainManager : MonoBehaviour
             {
                 nx = coord.x - 0.5f + (float)x / (genSettings.alphaMapRes - 1);
                 nz = coord.z - 0.5f + (float)z / (genSettings.alphaMapRes - 1);
-                nx *= genSettings.length / noiseScale;
-                nz *= genSettings.length / noiseScale;
+                nx *= genSettings.length;
+                nz *= genSettings.length;
 
                 locBiomes = GetBiomes(new Vector3(nx, 0f, nz));
 
-                for (int i = 0; i < containedBiomes.Count; i++)
+                foreach (KeyValuePair<Biome, float> kvp in locBiomes)
                 {
-                    if (locBiomes.ContainsKey(containedBiomes[i]))
+                    if (!containedBiomes.Contains(kvp.Key))
                     {
-                        alphamaps[z, x, i] = locBiomes[containedBiomes[i]];
+                        maps.Add(new float[genSettings.alphaMapRes, 
+                                genSettings.alphaMapRes]);
+                        containedBiomes.Add(kvp.Key);
                     }
-                    else
-                    {
-                        alphamaps[z, x, i] = 0f;
-                    }
+                    maps[containedBiomes.IndexOf(kvp.Key)][z, x] = kvp.Value;
                 }
 
             }
+
+        float[,,] alphamaps = new float[genSettings.alphaMapRes,
+                genSettings.alphaMapRes, containedBiomes.Count];
+        
+        for (int i = 0; i < containedBiomes.Count; i++)
+        {
+            float[,] map = maps[i];
+            for (int x = 0; x < genSettings.alphaMapRes; x++)
+                for (int z = 0; z < genSettings.alphaMapRes; z++)
+                {
+                    alphamaps[x, z, i] = map[x, z];
+                }
+        }
 
         return alphamaps;
     }
