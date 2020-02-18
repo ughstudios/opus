@@ -26,14 +26,32 @@ public class DamageableEntity : PlayerBehavior
         {
             OnDeath();
         }
+        
+    }
+
+    public override void Server_TakeDamage(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            TakeDamage(null, args.GetNext<int>());
+        });
     }
 
     public virtual int TakeDamage(DamageableEntity source, int damage)
     {
+        if (!networkObject.IsServer)
+        {
+            return 0;
+        }
+
         if (damage < 1)
             return 0;
         int damageDealt = Mathf.Min(damage, health);
+       
+        
         health -= damageDealt;
+        networkObject.health = health;
+
         if (health <= 0)
         {
             OnDeath();
@@ -68,7 +86,8 @@ public class DamageableEntity : PlayerBehavior
         if (damage > 0 && 
                 (de = collision.gameObject.GetComponent<DamageableEntity>()) != null)
         {
-            de.TakeDamage(this, damage);
+            //de.TakeDamage(this, damage);
+            de.networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
         }
     }
 }

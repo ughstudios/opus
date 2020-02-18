@@ -190,9 +190,9 @@ public class TerrainManager : MonoBehaviour
 
         Dictionary<Biome, float> test = GetBiomes(new Vector3(125f, 0f, 125f));
 
-        foreach (KeyValuePair<Biome, float> kvp in test)
-            Debug.Log(kvp.ToString());
-        Debug.Log(totalBiomeFrequency);
+        //foreach (KeyValuePair<Biome, float> kvp in test)
+        //    Debug.Log(kvp.ToString());
+        //Debug.Log(totalBiomeFrequency);
     }
 
     public void SetAutomaticUpdates(bool automatic)
@@ -304,7 +304,7 @@ public class TerrainManager : MonoBehaviour
         thread.Start();
         yield return new WaitUntil(() => done);
 
-        Debug.Log(containedBiomes.Count);
+        //Debug.Log(containedBiomes.Count);
         TerrainLayer[] terrainLayers = new TerrainLayer[containedBiomes.Count];
 
         for (int i = 0; i < containedBiomes.Count; i++)
@@ -431,7 +431,7 @@ public class TerrainManager : MonoBehaviour
 
         for (int i = 1; i <= extra; i++)
         {
-            float val = 1f - ((dists[order[i]] - dists[order[0]]) / biomeBlend);
+            float val = 1f - ((dists[order[i]] - dists[order[0]]) / (biomeBlend));
 
             if (output.ContainsKey(locBiomes[order[i]]))
             {
