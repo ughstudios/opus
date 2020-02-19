@@ -15,15 +15,15 @@ public class SurvivalTimer : MonoBehaviour
 
     public void reset_water_bar_to_full()
     {
-        playerController.water = 100;
-        waterBar.value = playerController.water;
+        playerController.ResetWater();
+        waterBar.value = playerController.networkObject.water;
     }
 
     public void update_all_bars_to_match_player_controller()
     {
-        waterBar.value = playerController.water;
-        foodBar.value = playerController.food;
-        healthBar.value = playerController.health;
+        waterBar.value = playerController.networkObject.water;
+        foodBar.value = playerController.networkObject.food;
+        healthBar.value = playerController.networkObject.health;
     }
 
     void Start()
@@ -34,7 +34,15 @@ public class SurvivalTimer : MonoBehaviour
         foodBar.value = 100;
         healthBar.value = 100;
 
-        StartCoroutine(SurvivalTimerCoroutine());
+        playerController.ResetStats();
+
+        //Debug.Log("isServer: "+ playerController.networkObject.IsServer);
+        //Debug.Log("isOwner:" + playerController.networkObject.IsOwner);
+
+        if (playerController.networkObject.IsServer)
+        {
+            StartCoroutine(SurvivalTimerCoroutine());
+        }
     }
 
     IEnumerator SurvivalTimerCoroutine()
@@ -44,20 +52,26 @@ public class SurvivalTimer : MonoBehaviour
 
             yield return new WaitForSeconds(5);
 
-            playerController.water -= 5;
-            playerController.food -= 5;
 
-            if (playerController.water <= 0) 
+            playerController.ReduceWater(5);
+            playerController.ReduceFood(5);
+            
+            //playerController.networkObject.water -= 5;
+            //playerController.networkObject.food -= 5;
+
+            if (playerController.networkObject.water <= 0) 
             {
                 waterBar.value = 0;
                 playerController.TakeDamage(playerController, 3);
-                playerController.water = 0;
+                //playerController.networkObject.water = 0;
+                playerController.SetWater(0);
             }
-            if (playerController.food <= 0)
+            if (playerController.networkObject.food <= 0)
             {
                 foodBar.value = 0;
                 playerController.TakeDamage(playerController, 3);
-                playerController.food = 0;
+                //playerController.networkObject.food = 0;
+                playerController.SetFood(0);
             }
 
         }
@@ -65,9 +79,9 @@ public class SurvivalTimer : MonoBehaviour
 
     private void Update()
     {
-        waterBar.value = playerController.water;
-        foodBar.value = playerController.food;
-        healthBar.value = playerController.health;
+        waterBar.value = playerController.networkObject.water;
+        foodBar.value = playerController.networkObject.food;
+        healthBar.value = playerController.networkObject.health;
     }
 
 }

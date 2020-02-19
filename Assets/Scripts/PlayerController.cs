@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BeardedManStudios.Forge.Networking;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,11 +7,12 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MobController
 {
-    public int food = 100;
-
-    public int water = 100;
     private bool canPlant = true;
     public Camera camera;
+
+
+  
+
 
     protected override void NetworkStart()
     {
@@ -31,7 +33,7 @@ public class PlayerController : MobController
         {
             if (Input.GetButtonDown("Gather"))
             {
-                water = 100;
+                networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
                 SurvivalTimer survivalTimer = GetComponent<SurvivalTimer>();
                 survivalTimer.reset_water_bar_to_full();
             }

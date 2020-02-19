@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0.15,0.15,0]")]
+	[GeneratedInterpol("{\"inter\":[0.15,0.15,0,0,0]")]
 	public partial class PlayerNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 9;
+		public const int IDENTITY = 8;
 
 		private byte[] _dirtyFields = new byte[1];
 
@@ -108,6 +108,68 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (healthChanged != null) healthChanged(_health, timestep);
 			if (fieldAltered != null) fieldAltered("health", _health, timestep);
 		}
+		[ForgeGeneratedField]
+		private int _food;
+		public event FieldEvent<int> foodChanged;
+		public Interpolated<int> foodInterpolation = new Interpolated<int>() { LerpT = 0f, Enabled = false };
+		public int food
+		{
+			get { return _food; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_food == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x8;
+				_food = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SetfoodDirty()
+		{
+			_dirtyFields[0] |= 0x8;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_food(ulong timestep)
+		{
+			if (foodChanged != null) foodChanged(_food, timestep);
+			if (fieldAltered != null) fieldAltered("food", _food, timestep);
+		}
+		[ForgeGeneratedField]
+		private int _water;
+		public event FieldEvent<int> waterChanged;
+		public Interpolated<int> waterInterpolation = new Interpolated<int>() { LerpT = 0f, Enabled = false };
+		public int water
+		{
+			get { return _water; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_water == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x10;
+				_water = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SetwaterDirty()
+		{
+			_dirtyFields[0] |= 0x10;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_water(ulong timestep)
+		{
+			if (waterChanged != null) waterChanged(_water, timestep);
+			if (fieldAltered != null) fieldAltered("water", _water, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -120,6 +182,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			positionInterpolation.current = positionInterpolation.target;
 			rotationInterpolation.current = rotationInterpolation.target;
 			healthInterpolation.current = healthInterpolation.target;
+			foodInterpolation.current = foodInterpolation.target;
+			waterInterpolation.current = waterInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
@@ -129,6 +193,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			UnityObjectMapper.Instance.MapBytes(data, _position);
 			UnityObjectMapper.Instance.MapBytes(data, _rotation);
 			UnityObjectMapper.Instance.MapBytes(data, _health);
+			UnityObjectMapper.Instance.MapBytes(data, _food);
+			UnityObjectMapper.Instance.MapBytes(data, _water);
 
 			return data;
 		}
@@ -147,6 +213,14 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			healthInterpolation.current = _health;
 			healthInterpolation.target = _health;
 			RunChange_health(timestep);
+			_food = UnityObjectMapper.Instance.Map<int>(payload);
+			foodInterpolation.current = _food;
+			foodInterpolation.target = _food;
+			RunChange_food(timestep);
+			_water = UnityObjectMapper.Instance.Map<int>(payload);
+			waterInterpolation.current = _water;
+			waterInterpolation.target = _water;
+			RunChange_water(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -160,6 +234,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _rotation);
 			if ((0x4 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _health);
+			if ((0x8 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _food);
+			if ((0x10 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _water);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -215,6 +293,32 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_health(timestep);
 				}
 			}
+			if ((0x8 & readDirtyFlags[0]) != 0)
+			{
+				if (foodInterpolation.Enabled)
+				{
+					foodInterpolation.target = UnityObjectMapper.Instance.Map<int>(data);
+					foodInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_food = UnityObjectMapper.Instance.Map<int>(data);
+					RunChange_food(timestep);
+				}
+			}
+			if ((0x10 & readDirtyFlags[0]) != 0)
+			{
+				if (waterInterpolation.Enabled)
+				{
+					waterInterpolation.target = UnityObjectMapper.Instance.Map<int>(data);
+					waterInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_water = UnityObjectMapper.Instance.Map<int>(data);
+					RunChange_water(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -236,6 +340,16 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				_health = (int)healthInterpolation.Interpolate();
 				//RunChange_health(healthInterpolation.Timestep);
+			}
+			if (foodInterpolation.Enabled && !foodInterpolation.current.UnityNear(foodInterpolation.target, 0.0015f))
+			{
+				_food = (int)foodInterpolation.Interpolate();
+				//RunChange_food(foodInterpolation.Timestep);
+			}
+			if (waterInterpolation.Enabled && !waterInterpolation.current.UnityNear(waterInterpolation.target, 0.0015f))
+			{
+				_water = (int)waterInterpolation.Interpolate();
+				//RunChange_water(waterInterpolation.Timestep);
 			}
 		}
 

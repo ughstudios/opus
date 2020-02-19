@@ -16,14 +16,12 @@ public class Inventory : MonoBehaviour
 
     public GameObject UI_InventoryItemPrefab;
 
-    private CharacterController characterController;
     private PlayerController playerController;
 
     private SurvivalTimer survivalTimer;
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
         playerController = GetComponent<PlayerController>();
         survivalTimer = gameObject.GetComponent<SurvivalTimer>();
 
@@ -84,11 +82,16 @@ public class Inventory : MonoBehaviour
 
     private void ItemClicked(Item item)
     {
-        Debug.Log(item.name);
+        //Debug.Log(item.name);
 
-        playerController.food += item.food;
-        playerController.health += item.health;
-        playerController.water += item.water;
+
+        playerController.AddFood(item.food);
+        playerController.AddWater(item.water);
+        playerController.AddHealth(item.health);
+
+        //playerController.food += item.food;
+        //playerController.health += item.health;
+        //playerController.water += item.water;
 
         RemoveCountOfItemFromInventory(item, 1);
         GenerateInventoryUI_Items();
