@@ -47,7 +47,10 @@ public class GameMode : GameModeBehavior
         MainThreadManager.Run(() =>
         {
             GameObject go = GameObject.FindWithTag("Spawn Point");
-            spawnPoint = go.transform.position;
+            if (go)
+            {
+                spawnPoint = go.transform.position;
+            }
 
             PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
             //playerController.networkObject.position = spawnPoint;

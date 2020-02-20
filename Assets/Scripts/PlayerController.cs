@@ -105,8 +105,8 @@ public class PlayerController : MobController
 
     protected override void OnDeath()
     {
-        //base.OnDeath();
         SceneManager.LoadScene("GameOver");
+        base.OnDeath();
     }
 
     private bool IsUnder(Collider col)
