@@ -206,7 +206,7 @@ public class DamageableEntity : PlayerBehavior
                 (de = collision.gameObject.GetComponent<DamageableEntity>()) != null)
         {
             //de.TakeDamage(this, damage);
-            de.networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
+            //de.networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
         }
     }
 }
