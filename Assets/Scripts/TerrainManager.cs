@@ -8,7 +8,7 @@ public class TerrainManager : MonoBehaviour
 {
     public string seed;
 
-    public float noiseScale = 1000f;
+    public float noiseScale = 250f;
     public TerrainSettings genSettings = new TerrainSettings();
 
     public bool automaticUpdatesStart = true;
@@ -23,13 +23,16 @@ public class TerrainManager : MonoBehaviour
     public List<Biome> biomes;
     public float biomeCenterSpacing = 250f;
     public float maxBiomeCenterOffset = 100f;
-    public float biomeBlend = 50f;
-
+    public float biomeBlend = 100f;
+    
     private Dictionary<SectionCoord, TerrainSection> terrains =
-        new Dictionary<SectionCoord, TerrainSection>();
+            new Dictionary<SectionCoord, TerrainSection>();
     private Queue<SectionCoord> toCreate = new Queue<SectionCoord>();
     private Queue<SectionCoord> toRemove = new Queue<SectionCoord>();
     private List<SectionCoord> generating = new List<SectionCoord>();
+
+    private Dictionary<SectionCoord, BiomeCenter> biomeCenters =
+            new Dictionary<SectionCoord, BiomeCenter>();
 
     private bool automaticUpdates;
     private bool updateRunning = false;
@@ -46,9 +49,11 @@ public class TerrainManager : MonoBehaviour
     public class TerrainSettings
     {
         public float length = 64f;
-        public float height = 60f;
+        public float height = 256f;
         public int heightMapRes = 257;
         public int alphaMapRes = 257;
+        public int detailMapRes = 257;
+        public int detailMapResPerPatch = 16;
     }
 
     private class TerrainSection
@@ -56,14 +61,14 @@ public class TerrainManager : MonoBehaviour
         public SectionCoord coord;
         public Terrain terrain;
 
-        public TerrainSection(SectionCoord coord = null, Terrain terrain = null)
+        public TerrainSection(SectionCoord coord = new SectionCoord(), Terrain terrain = null)
         {
             this.coord = coord;
             this.terrain = terrain;
         }
     }
 
-    private class SectionCoord
+    private struct SectionCoord
     {
         public int x, z;
 
@@ -75,15 +80,24 @@ public class TerrainManager : MonoBehaviour
 
         public override bool Equals(object obj)
         {
-            SectionCoord other = obj as SectionCoord;
+            if (!(obj is SectionCoord))
+                return false;
+            SectionCoord other = (SectionCoord) obj;
 
-            return other != null && other.x == x && other.z == z;
+            return other.x == x && other.z == z;
         }
 
         public override int GetHashCode()
         {
             return x ^ ((z << 16) ^ (z >> 16));
         }
+    }
+
+    private class BiomeCenter
+    {
+        public SectionCoord coord;
+        public Biome biome;
+        public Vector3 center;
     }
 
     // Collection of pseudorandom helpers, mostly from Wikipedia
@@ -187,12 +201,6 @@ public class TerrainManager : MonoBehaviour
         }
 
         SetAutomaticUpdates(automaticUpdatesStart);
-
-        Dictionary<Biome, float> test = GetBiomes(new Vector3(125f, 0f, 125f));
-
-        //foreach (KeyValuePair<Biome, float> kvp in test)
-        //    Debug.Log(kvp.ToString());
-        //Debug.Log(totalBiomeFrequency);
     }
 
     public void SetAutomaticUpdates(bool automatic)
@@ -207,8 +215,7 @@ public class TerrainManager : MonoBehaviour
 
     public bool UpdateTerrains()
     {
-        Dictionary<SectionCoord, TerrainSection> needed = 
-                new Dictionary<SectionCoord, TerrainSection>();
+        List<SectionCoord> needed = new List<SectionCoord>();
 
         for (int i = 0; i < follow.Count; i++)
         {
@@ -217,14 +224,13 @@ public class TerrainManager : MonoBehaviour
             List<SectionCoord> coords = SectionsInRadius(SectionFor(
                     follow[i].transform.position), loadedSectionRadius);
             foreach (SectionCoord loc in coords)
-                needed.Add(loc, null);
+                needed.Add(loc);
         }
 
         List<SectionCoord> exists = terrains.Keys.ToList();
-        List<SectionCoord> need = needed.Keys.ToList();
-        List<SectionCoord> toGen = need.Except(exists).Except(toCreate).
+        List<SectionCoord> toGen = needed.Except(exists).Except(toCreate).
                 Except(toRemove).Except(generating).ToList();
-        List<SectionCoord> remove = exists.Except(need).Except(toRemove).ToList();
+        List<SectionCoord> remove = exists.Except(needed).Except(toRemove).ToList();
 
         if (toGen.Count > 0)
         {
@@ -290,33 +296,70 @@ public class TerrainManager : MonoBehaviour
         TerrainData data = new TerrainData();
         data.heightmapResolution = genSettings.heightMapRes;
         data.alphamapResolution = genSettings.alphaMapRes;
+        data.SetDetailResolution(genSettings.detailMapRes, 
+                genSettings.detailMapResPerPatch);
         data.size = new Vector3(genSettings.length, genSettings.height,
                 genSettings.length);
 
         bool done = false;
         List<Biome> containedBiomes = null;
+        List<DetailPrototypeData> detailPrototypeDatas = null;
+        List<int[,]> detailMaps = new List<int[,]>();
+
         Thread thread = new Thread(() =>
                 {
-                    heightmap = GenerateHeightmap(coord);
-                    alphamaps = GenerateAlphamaps(coord, heightmap, out containedBiomes);
+                    heightmap = GenerateHeightmap(coord, out containedBiomes);
+                    alphamaps = GenerateAlphamaps(coord, containedBiomes);
+
+                    detailMaps = GenerateDetailMaps(coord,
+                            out detailPrototypeDatas);
+
                     done = true;
                 });
         thread.Start();
         yield return new WaitUntil(() => done);
 
-        //Debug.Log(containedBiomes.Count);
         TerrainLayer[] terrainLayers = new TerrainLayer[containedBiomes.Count];
 
         for (int i = 0; i < containedBiomes.Count; i++)
             terrainLayers[i] = containedBiomes[i].terrainLayer;
 
+        DetailPrototype[] detailPrototypes = null;
+        if (detailPrototypeDatas.Count > 0)
+            detailPrototypes = new DetailPrototype[detailPrototypeDatas.Count];
+        for (int i = 0; i < detailPrototypeDatas.Count; i++)
+        {
+            DetailPrototype dp = detailPrototypes[i] = new DetailPrototype();
+            DetailPrototypeData dpd = detailPrototypeDatas[i];
+            dp.bendFactor = dpd.bendFactor;
+            dp.dryColor = dpd.dryColor;
+            dp.healthyColor = dpd.healthyColor;
+            dp.maxHeight = dpd.maxHeight;
+            dp.maxWidth = dpd.maxWidth;
+            dp.minHeight = dpd.minHeight;
+            dp.minWidth = dpd.minWidth;
+            dp.noiseSpread = dpd.noiseSpread;
+            dp.prototype = dpd.prototype;
+            dp.prototypeTexture = dpd.prototypeTexture;
+            dp.renderMode = dpd.renderMode;
+        }
+
         data.SetHeights(0, 0, heightmap);
         data.terrainLayers = terrainLayers;
         data.SetAlphamaps(0, 0, alphamaps);
+        if (detailPrototypes != null)
+        {
+            data.detailPrototypes = detailPrototypes;
+            for (int i = 0; i < detailMaps.Count; i++)
+            {
+                data.SetDetailLayer(0, 0, i, detailMaps[i]);
+            }
+        }
 
         GameObject obj = Terrain.CreateTerrainGameObject(data);
-        obj.transform.position = new Vector3(coord.x * genSettings.length, 0f,
-                coord.z * genSettings.length);
+        obj.transform.position = new Vector3(coord.x * genSettings.length -
+                genSettings.length / 2, 0f, coord.z * genSettings.length - 
+                genSettings.length / 2);
         sec.terrain = obj.GetComponent<Terrain>();
         sec.terrain.allowAutoConnect = true;
         sec.terrain.Flush();
@@ -363,55 +406,70 @@ public class TerrainManager : MonoBehaviour
         }
     }
 
+    private BiomeCenter GenerateBiomeCenter(SectionCoord coord)
+    {
+        BiomeCenter center = new BiomeCenter();
+
+        center.coord = coord;
+        NotRandom.RNG rng = new NotRandom.RNG(NotRandom.Hash2Int(seedHash,
+                    center.coord.GetHashCode()));
+
+        float nx = center.coord.x * biomeCenterSpacing + ((rng.Value() *
+                maxBiomeCenterOffset * 2) - maxBiomeCenterOffset);
+        float nz = center.coord.z * biomeCenterSpacing + ((rng.Value() *
+                maxBiomeCenterOffset * 2) - maxBiomeCenterOffset);
+
+        center.center = new Vector3(nx, 0f, nz);
+
+        int index = (int)(rng.ValueUInt() % totalBiomeFrequency);
+        for (int i = 0; i < biomes.Count; i++)
+        {
+            if (index >= 0 && index < biomes[i].relativeFrequency)
+            {
+                center.biome = biomes[i];
+                break;
+            }
+            index -= biomes[i].relativeFrequency;
+        }
+        return center;
+    }
+
     private Dictionary<Biome, float> GetBiomes(Vector3 vLoc)
     {
         Dictionary<Biome, float> output = new Dictionary<Biome, float>();
 
-        Vector2 loc = new Vector2(vLoc.x, vLoc.z);
-        Vector2 biomeLoc = loc / biomeCenterSpacing;
+        Vector3 loc = new Vector3(vLoc.x, 0f, vLoc.z);
+        Vector3 biomeLoc = loc / biomeCenterSpacing;
+        SectionCoord coord = new SectionCoord(Mathf.RoundToInt(biomeLoc.x),
+                Mathf.RoundToInt(biomeLoc.z));
 
-        Vector2Int[] seedLocs = {
-                new Vector2Int(Mathf.FloorToInt(biomeLoc.x), Mathf.FloorToInt(biomeLoc.y)),
-                new Vector2Int(Mathf.FloorToInt(biomeLoc.x), Mathf.CeilToInt(biomeLoc.y)),
-                new Vector2Int(Mathf.CeilToInt(biomeLoc.x), Mathf.FloorToInt(biomeLoc.y)),
-                new Vector2Int(Mathf.CeilToInt(biomeLoc.x), Mathf.CeilToInt(biomeLoc.y))
-        };
+        SectionCoord[] seedLocs = new SectionCoord[9];
+        BiomeCenter[] centers = new BiomeCenter[seedLocs.Length];
 
-        Vector2[] centerOffsets = new Vector2[4];
-        Biome[] locBiomes = new Biome[4];
+        float[] dists = new float[seedLocs.Length];
+        int[] order = new int[seedLocs.Length];
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < seedLocs.Length; i++)
         {
-            NotRandom.RNG rng = new NotRandom.RNG(NotRandom.Hash2Int(seedHash,
-                    NotRandom.Hash2Int(seedLocs[i].x, seedLocs[i].y)));
-            centerOffsets[i].x = (rng.Value() * maxBiomeCenterOffset * 2) - 
-                    maxBiomeCenterOffset;
-            centerOffsets[i].y = (rng.Value() * maxBiomeCenterOffset * 2) -
-                    maxBiomeCenterOffset;
-            int index = (int)(rng.ValueUInt() % totalBiomeFrequency);
-            //int index = Mathf.FloorToInt(rng.Value() * totalBiomeFrequency);
-            for (int j = 0; j < biomes.Count; j++)
+            seedLocs[i] = new SectionCoord(coord.x + i % 3 - 1,
+                    coord.z + i / 3 - 1);
+            if (!biomeCenters.TryGetValue(seedLocs[i], out centers[i]))
             {
-                if (index >= 0 && index < biomes[j].relativeFrequency)
+                centers[i] = GenerateBiomeCenter(seedLocs[i]);
+                BiomeCenter test;
+                lock(biomeCenters)
                 {
-                    locBiomes[i] = biomes[j];
-                    break;
+                    if (!biomeCenters.TryGetValue(seedLocs[i], out test))
+                        biomeCenters.Add(seedLocs[i], centers[i]);
+                    else
+                        centers[i] = test;
                 }
-                index -= biomes[j].relativeFrequency;
             }
+            dists[i] = Vector3.Distance(loc, centers[i].center);
+            order[i] = i;
         }
 
-        float[] dists = new float[4];
-        int[] order = { 0, 1, 2, 3 };
-
-        for (int i = 0; i < 4; i++)
-        {
-            dists[i] = Vector2.Distance(loc, new Vector2(
-                    seedLocs[i].x * biomeCenterSpacing + centerOffsets[i].x,
-                    seedLocs[i].y * biomeCenterSpacing + centerOffsets[i].y));
-        }
-
-        for (int i = 1; i < 4; i++)
+        for (int i = 1; i < order.Length; i++)
             for (int j = i; j > 0 && dists[order[j - 1]] > dists[order[j]]; j--)
             {
                 int k = order[j];
@@ -419,7 +477,7 @@ public class TerrainManager : MonoBehaviour
                 order[j - 1] = k;
             }
 
-        int extra = 3;
+        int extra = order.Length - 1;
 
         for (; extra >= 0; extra--)
         {
@@ -427,70 +485,86 @@ public class TerrainManager : MonoBehaviour
                 break;
         }
 
-        //output.Add(locBiomes[order[0]], 1f);
-
-        for (int i = 1; i <= extra; i++)
+        if (extra == 0)
         {
-            float val = 1f - ((dists[order[i]] - dists[order[0]]) / (biomeBlend));
+            output.Add(centers[order[0]].biome, 1f);
+            return output;
+        }
 
-            if (output.ContainsKey(locBiomes[order[i]]))
+        for (int i = 0; i <= extra; i++)
+        {
+            float val = 1f - ((dists[order[i]] - dists[order[0]]) / biomeBlend);
+
+            if (output.ContainsKey(centers[order[i]].biome))
             {
-                if (output[locBiomes[order[i]]] < val)
-                    output[locBiomes[order[i]]] = val;
+                output[centers[order[i]].biome] += val;
             }
             else
-                output.Add(locBiomes[order[i]], val);
+                output.Add(centers[order[i]].biome, val);
         }
-
-        float sum = 0f;
-        foreach (float val in output.Values)
+        Biome[] biomesOut = output.Keys.ToArray();
+        for (int i = 0; i < biomesOut.Length; i++)
         {
-            sum += val;
+            output[biomesOut[i]] = Mathf.Pow(Mathf.Clamp01(output[biomesOut[i]]), 2f);
         }
-
-        if (!output.ContainsKey(locBiomes[order[0]]))
-        {
-            output.Add(locBiomes[order[0]], 1f - sum);
-        }
-        else
-            output[locBiomes[order[0]]] += 1f - sum;
 
         return output;
     }
 
-    private float[,] GenerateHeightmap(SectionCoord coord)
+    private float[,] GenerateHeightmap(SectionCoord coord, 
+            out List<Biome> containedBiomes)
     {
         float[,] heightmap = new float[genSettings.heightMapRes,
                 genSettings.heightMapRes];
-
-        float height, nx, nz;
+        containedBiomes = new List<Biome>();
+        Biome b;
+        float height, nx, nz, bx, bz, totalHeight, totalWeight;
+        Dictionary<Biome, float> biomes = null;
         for (int x = 0; x < genSettings.heightMapRes; x++)
             for (int z = 0; z < genSettings.heightMapRes; z++)
             {
                 nx = coord.x - 0.5f + (float)x / (genSettings.heightMapRes - 1);
                 nz = coord.z - 0.5f + (float)z / (genSettings.heightMapRes - 1);
+                bx = nx * genSettings.length;
+                bz = nz * genSettings.length;
                 nx *= genSettings.length / noiseScale;
                 nz *= genSettings.length / noiseScale;
-                height = 0f;
-                for (int i = 0; i < numOctaves; i++)
+                biomes = GetBiomes(new Vector3(bx, 0f, bz));
+                totalHeight = 0f;
+                totalWeight = 0f;
+                foreach (KeyValuePair<Biome, float> kvp in biomes)
                 {
-                    height += Mathf.Pow(2f, -i) * Mathf.PerlinNoise(
-                            nx * Mathf.Pow(2, i) + offsets[i, 0],
-                            nz * Mathf.Pow(2, i) + offsets[i, 1]);
+                    totalWeight += kvp.Value;
+                    b = kvp.Key;
+                    if (!containedBiomes.Contains(b))
+                        containedBiomes.Add(b);
+
+                    height = 0f;
+                    for (int i = 0; i < numOctaves; i++)
+                    {
+                        height += Mathf.Pow(2f, -i) * Mathf.PerlinNoise(
+                                nx * Mathf.Pow(2, i) + offsets[i, 0],
+                                nz * Mathf.Pow(2, i) + offsets[i, 1]);
+                    }
+                    height = height / (2f - Mathf.Pow(2, -(numOctaves - 1)));
+                    height = Mathf.Pow(height, b.heightExponent);
+                    height = height * (b.maxHeight - b.minHeight) + b.minHeight;
+
+                    totalHeight += height * kvp.Value;
                 }
 
-                heightmap[z, x] = height / (2f - Mathf.Pow(2, -(numOctaves - 1)));
+                heightmap[z, x] = totalHeight / totalWeight;
             }
 
         return heightmap;
     }
 
     private float[,,] GenerateAlphamaps(SectionCoord coord,
-            float[,] heightmap, out List<Biome> containedBiomes)
+            List<Biome> containedBiomes)
     {
-        containedBiomes = new List<Biome>();
         Dictionary<Biome, float> locBiomes = null;
-        List<float[,]> maps = new List<float[,]>();
+        float[,,] alphamaps = new float[genSettings.alphaMapRes,
+                genSettings.alphaMapRes, containedBiomes.Count];
 
         float nx, nz;
         
@@ -506,31 +580,35 @@ public class TerrainManager : MonoBehaviour
 
                 foreach (KeyValuePair<Biome, float> kvp in locBiomes)
                 {
-                    if (!containedBiomes.Contains(kvp.Key))
-                    {
-                        maps.Add(new float[genSettings.alphaMapRes, 
-                                genSettings.alphaMapRes]);
-                        containedBiomes.Add(kvp.Key);
-                    }
-                    maps[containedBiomes.IndexOf(kvp.Key)][z, x] = kvp.Value;
+                    alphamaps[z, x, containedBiomes.IndexOf(kvp.Key)] = kvp.Value;
                 }
 
             }
 
-        float[,,] alphamaps = new float[genSettings.alphaMapRes,
-                genSettings.alphaMapRes, containedBiomes.Count];
-        
-        for (int i = 0; i < containedBiomes.Count; i++)
-        {
-            float[,] map = maps[i];
-            for (int x = 0; x < genSettings.alphaMapRes; x++)
-                for (int z = 0; z < genSettings.alphaMapRes; z++)
-                {
-                    alphamaps[x, z, i] = map[x, z];
-                }
-        }
-
         return alphamaps;
+    }
+
+    private List<int[,]> GenerateDetailMaps(SectionCoord coord, 
+            out List<DetailPrototypeData> detailPrototypes)
+    {
+        List<int[,]> detailmaps = new List<int[,]>();
+        detailPrototypes = new List<DetailPrototypeData>();
+
+        float nx, nz;
+        Dictionary<Biome, float> biomes;
+
+        for (int x = 0; x < genSettings.detailMapRes; x++)
+            for (int z = 0; z < genSettings.detailMapRes; z++)
+            {
+                nx = coord.x - 0.5f + (float)x / (genSettings.detailMapRes - 1);
+                nz = coord.z - 0.5f + (float)z / (genSettings.detailMapRes - 1);
+                nx *= genSettings.length;
+                nz *= genSettings.length;
+
+                biomes = GetBiomes(new Vector3(nx, 0f, nz));
+            }
+
+        return detailmaps;
     }
 
     private List<SectionCoord> SectionsInRadius(SectionCoord coord, int radius)
@@ -553,8 +631,10 @@ public class TerrainManager : MonoBehaviour
 
     private SectionCoord SectionFor(Vector3 vLoc)
     {
-        return new SectionCoord(Mathf.FloorToInt(vLoc.x / genSettings.length),
-                Mathf.FloorToInt(vLoc.z / genSettings.length));
+        return new SectionCoord(Mathf.FloorToInt((vLoc.x +
+                genSettings.length / 2) / genSettings.length), 
+                Mathf.FloorToInt((vLoc.z + genSettings.length / 2) /
+                genSettings.length));
     }
 
     private bool SectionExists(SectionCoord coord)

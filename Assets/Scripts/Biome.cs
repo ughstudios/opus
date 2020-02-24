@@ -7,5 +7,12 @@ public class Biome : ScriptableObject
 {
     public new string name;
     public TerrainLayer terrainLayer;
-    public int relativeFrequency;
+    public int relativeFrequency = 1;
+
+    public float minHeight = 0f;
+    public float maxHeight = 1f;
+    public float heightExponent = 1f;
+
+    public List<DetailPrototypeData> detailPrototypes =
+            new List<DetailPrototypeData>();
 }

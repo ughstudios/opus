@@ -15,4 +15,7 @@ MonoBehaviour:
   name: Forest
   terrainLayer: {fileID: 8574412962073106934, guid: 49f836a9af6962f4fb0fe8ff67e3334e,
     type: 2}
-  relativeFrequency: 50
+  relativeFrequency: 1
+  minHeight: 0.3
+  maxHeight: 0.5
+  heightExponent: 1

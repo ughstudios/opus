@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5cb55e53bcff94cae9c5dc1f1786c3, type: 3}
-  m_Name: Grasslands
+  m_Name: Ocean
   m_EditorClassIdentifier: 
-  name: Grasslands
-  terrainLayer: {fileID: 8574412962073106934, guid: 4f342a34f5faa1c49bf32001e901e53e,
+  name: Ocean
+  terrainLayer: {fileID: 8574412962073106934, guid: 3b0f13b265881494a8112b18a188547a,
     type: 2}
   relativeFrequency: 1
-  minHeight: 0.3
-  maxHeight: 0.5
+  minHeight: 0
+  maxHeight: 0.3
   heightExponent: 1
