@@ -7,124 +7,159 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MobController
 {
-    private bool canPlant = true;
-    public Camera camera;
+	private bool canPlant = true;
+	public Camera camera;
+
+	protected override void NetworkStart()
+	{
+		base.NetworkStart();
+		networkObject.position = transform.position;
+
+		if (!UseChild) networkObject.rotation = transform.rotation;
+		if (UseChild) networkObject.rotation = transform.GetChild(0).transform.rotation;
+
+		networkObject.positionInterpolation.target = transform.position;
+
+		if(!UseChild) networkObject.rotationInterpolation.target = transform.rotation;
+		if (UseChild) networkObject.rotationInterpolation.target = transform.GetChild(0).transform.rotation;
+
+		networkObject.SnapInterpolations();
+	}
 
 
-  
+	void OnTriggerStay(Collider collider)
+	{
+		if (collider.gameObject.tag == "Water Hex")
+		{
+			if (Input.GetButtonDown("Gather"))
+			{
+				networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
+				SurvivalTimer survivalTimer = GetComponent<SurvivalTimer>();
+				survivalTimer.reset_water_bar_to_full();
+			}
+		}
+		canPlant = false;
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		canPlant = true;
+	}
+
+	private void Update()
+	{
+
+		if (networkObject != null)
+		{
+			if (networkObject.IsOwner)
+			{
+				camera.enabled = true;
+
+				if (UseChild)
+				{
+					networkObject.isJumping = animator.GetBool("isJumping");
+					networkObject.onGround = animator.GetBool("onGround");
+					networkObject.runningVal = animator.GetInteger("runningVal");
+				}
+			}
+		}
+		
+
+	}
+
+	protected override void FixedUpdate()
+	{
+		if (networkObject != null)
+		{
+			if (!networkObject.IsOwner)
+			{
+				transform.position = networkObject.position;
+
+				if (!UseChild)
+					transform.rotation = networkObject.rotation;
+
+				if(UseChild)
+					transform.GetChild(0).transform.rotation = networkObject.rotation;
 
 
-    protected override void NetworkStart()
-    {
-        base.NetworkStart();
-        networkObject.position = transform.position;
-        networkObject.rotation = transform.rotation;
-        networkObject.positionInterpolation.target = transform.position;
-        networkObject.rotationInterpolation.target = transform.rotation;
+				if (UseChild)
+				{
+					if(animator.GetBool("isJumping") != networkObject.isJumping) animator.SetBool("isJumping", networkObject.isJumping);
+					if (animator.GetBool("onGround") != networkObject.onGround) animator.SetBool("onGround", networkObject.onGround);
+					if (animator.GetInteger("runningVal") != networkObject.runningVal) animator.SetInteger("runningVal", networkObject.runningVal);
+				}
+				camera.enabled = false;
 
-        networkObject.SnapInterpolations();
+				return;
+			}
+		}
+		
+		moveInput.Set(Input.GetAxisRaw("Horizontal"),
+				Input.GetButton("Jump") ? 1f : 0f,
+				Input.GetAxisRaw("Vertical"));
 
-    }
+		base.FixedUpdate();
 
+		if (canPlant && isGrounded && groundCollider != null &&
+				groundCollider.GetComponent<DamageableEntity>() == null
+				&& Input.GetButton("Gather"))
+		{
+			Inventory inv = GetComponent<Inventory>();
+			RaycastHit hit;
+			Item toPlant = inv.GetRandomPlantable();
+			if (toPlant != null && Physics.Raycast(transform.position,
+					Vector3.down, out hit, 5f))
+			{
+				Harvestable plant = Instantiate<Harvestable>(toPlant.plantPrefab,
+						hit.point, Quaternion.Euler(0f, Random.value * 360f, 0f));
+				plant.canHarvest = false;
+				plant.ForceUpdate();
+				inv.RemoveCountOfItemFromInventory(toPlant, 1);
+			}
+		}
 
-    void OnTriggerStay(Collider collider)
-    {
-        if (collider.gameObject.tag == "Water Hex")
-        {
-            if (Input.GetButtonDown("Gather"))
-            {
-                networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
-                SurvivalTimer survivalTimer = GetComponent<SurvivalTimer>();
-                survivalTimer.reset_water_bar_to_full();
-            }
-        }
-        canPlant = false;
-    }
+		if (networkObject != null)
+		{
+			networkObject.position = transform.position;
 
-    private void OnTriggerExit(Collider other)
-    {
-        canPlant = true;
-    }
+			if(!UseChild)
+				networkObject.rotation = transform.rotation;
 
-    private void Update()
-    {
-        if (networkObject.IsOwner)
-        {
-            camera.enabled = true;
-        }
-    }
+			if(UseChild)
+				networkObject.rotation = transform.GetChild(0).transform.rotation;
+		}
+	}
 
-    protected override void FixedUpdate()
-    {
-        if (!networkObject.IsOwner)
-        {
-            transform.position = networkObject.position;
-            transform.rotation = networkObject.rotation;
+	public override int TakeDamage(DamageableEntity source, int damage)
+	{
+		if (!isGrounded || groundCollider.GetComponent<DamageableEntity>() != null)
+			return 0;
 
-            camera.enabled = false;
+		return base.TakeDamage(source, damage);
+	}
 
-            return;
-        }
+	protected override void OnDeath()
+	{
+		SceneManager.LoadScene("GameOver");
+		base.OnDeath();
+	}
 
-        moveInput.Set(Input.GetAxisRaw("Horizontal"),
-                Input.GetButton("Jump") ? 1f : 0f,
-                Input.GetAxisRaw("Vertical"));
+	private bool IsUnder(Collider col)
+	{
+		RaycastHit[] hits = Physics.SphereCastAll(transform.position + groundCheckOffset, groundCheckRadius,
+				Vector3.down, groundCheckDist);
+		foreach (RaycastHit hit in hits)
+		{
+			if (hit.collider == col)
+				return true;
+		}
+		return false;
+	}
 
-        base.FixedUpdate();
-
-        if (canPlant && isGrounded && groundCollider != null &&
-                groundCollider.GetComponent<DamageableEntity>() == null
-                && Input.GetButton("Gather"))
-        {
-            Inventory inv = GetComponent<Inventory>();
-            RaycastHit hit;
-            Item toPlant = inv.GetRandomPlantable();
-            if (toPlant != null && Physics.Raycast(transform.position,
-                    Vector3.down, out hit, 5f))
-            {
-                Harvestable plant = Instantiate<Harvestable>(toPlant.plantPrefab,
-                        hit.point, Quaternion.Euler(0f, Random.value * 360f, 0f));
-                plant.canHarvest = false;
-                plant.ForceUpdate();
-                inv.RemoveCountOfItemFromInventory(toPlant, 1);
-            }
-        }
-
-
-        networkObject.position = transform.position;
-        networkObject.rotation = transform.rotation;
-    }
-
-    public override int TakeDamage(DamageableEntity source, int damage)
-    {
-        if (!isGrounded || groundCollider.GetComponent<DamageableEntity>() != null)
-            return 0;
-
-        return base.TakeDamage(source, damage);
-    }
-
-    protected override void OnDeath()
-    {
-        SceneManager.LoadScene("GameOver");
-        base.OnDeath();
-    }
-
-    private bool IsUnder(Collider col)
-    {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + groundCheckOffset, groundCheckRadius,
-                Vector3.down, groundCheckDist);
-        foreach (RaycastHit hit in hits)
-        {
-            if (hit.collider == col)
-                return true;
-        }
-        return false;
-    }
-
-    protected override void OnCollisionEnter(Collision collision)
-    {
-        GroundCheck();
-        if (IsUnder(collision.collider))
-            base.OnCollisionEnter(collision);
-    }
+	protected override void OnCollisionEnter(Collision collision)
+	{
+		GroundCheck();
+		if (IsUnder(collision.collider))
+			base.OnCollisionEnter(collision);
+	}
 }

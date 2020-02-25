@@ -137,7 +137,8 @@ public class DamageableEntity : PlayerBehavior
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        networkObject.health = MaxEverything;
+		if(networkObject != null)
+			networkObject.health = MaxEverything;
     }
 
     protected virtual void FixedUpdate()
@@ -159,7 +160,7 @@ public class DamageableEntity : PlayerBehavior
 
     public virtual int TakeDamage(DamageableEntity source, int damage)
     {
-        if (!networkObject.IsServer)
+        if (networkObject != null && !networkObject.IsServer)
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 

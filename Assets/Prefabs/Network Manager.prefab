@@ -43,8 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe5b082a785e7641bf1a62b930a3f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChatManagerNetworkObject: []
+  CubeForgeGameNetworkObject: []
+  ExampleProximityPlayerNetworkObject: []
   GameModeNetworkObject:
   - {fileID: 3415037556922266389, guid: 52ea8becaa09d964abbeb33a19f1fbd7, type: 3}
+  NetworkCameraNetworkObject: []
   PlayerNetworkObject:
-  - {fileID: 2728694950465021238, guid: fe937413175636044aa7069c2a50bda0, type: 3}
+  - {fileID: 5688016174280329108, guid: a16dc28ea7a00b54e8765ce7adf38394, type: 3}
+  TestNetworkObject: []
   automaticScenes: 1
