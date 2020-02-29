@@ -8,6 +8,7 @@ TagManager:
   - Water Hex
   - Network Manager
   - Spawn Point
+  - ThrowPos
   layers:
   - Default
   - TransparentFX

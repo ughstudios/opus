@@ -9,6 +9,8 @@ public class PlayerController : MobController
 {
 	private bool canPlant = true;
 	public Camera camera;
+	public GameObject _testSpell = null;
+	public Transform _throwPos = null;
 
 	protected override void NetworkStart()
 	{
@@ -63,7 +65,14 @@ public class PlayerController : MobController
 				}
 			}
 		}
-		
+
+
+		if (Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround)
+		{
+			movementSpeed = 0.0f;
+			rb.velocity = Vector3.zero;
+			animator.SetBool("isThrowing", true);
+		}
 
 	}
 

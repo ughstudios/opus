@@ -5,5 +5,6 @@ public static class CharacterButtonsConstants
 						HORIZONTAL = "Horizontal",
 						JUMP = "Jump",
 						ROTATE_H = "RotHorizontal", 
-						ROTATE_V = "RotVertical";
+						ROTATE_V = "RotVertical",
+						THROW = "Throw";
 }

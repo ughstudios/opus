@@ -270,12 +270,22 @@ public class MobController : DamageableEntity
 
 	public void ResetJump()
 	{
-		movementSpeed = _initMovementSpeed;
+		ResetMovementSpeed();
 		_initiateJump = false;
+	}
+
+	public void ResetMovementSpeed()
+	{
+		movementSpeed = _initMovementSpeed;
 	}
 
 	public bool UseChild
 	{
 		get => useChild;
+	}
+
+	public bool OnGround
+	{
+		get => _onGround;
 	}
 }
