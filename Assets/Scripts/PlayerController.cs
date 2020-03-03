@@ -62,6 +62,7 @@ public class PlayerController : MobController
 					networkObject.isJumping = animator.GetBool("isJumping");
 					networkObject.onGround = animator.GetBool("onGround");
 					networkObject.runningVal = animator.GetInteger("runningVal");
+					networkObject.isThrowing = animator.GetBool("isThrowing");
 				}
 			}
 		}
@@ -96,6 +97,7 @@ public class PlayerController : MobController
 					if(animator.GetBool("isJumping") != networkObject.isJumping) animator.SetBool("isJumping", networkObject.isJumping);
 					if (animator.GetBool("onGround") != networkObject.onGround) animator.SetBool("onGround", networkObject.onGround);
 					if (animator.GetInteger("runningVal") != networkObject.runningVal) animator.SetInteger("runningVal", networkObject.runningVal);
+					if (animator.GetBool("isThrowing") != networkObject.isThrowing) animator.SetBool("isThrowing", networkObject.isThrowing);
 				}
 				camera.enabled = false;
 

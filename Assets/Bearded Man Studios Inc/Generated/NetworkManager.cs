@@ -17,6 +17,8 @@ namespace BeardedManStudios.Forge.Networking.Unity
 		public GameObject[] NetworkCameraNetworkObject = null;
 		public GameObject[] PlayerNetworkObject = null;
 		public GameObject[] TestNetworkObject = null;
+		public GameObject[] ThrowObjNetworkObject = null;
+		public GameObject[] InstatiateSpellPosNetworkObject = null;
 
 		protected virtual void SetupObjectCreatedEvent()
 		{
@@ -195,6 +197,52 @@ namespace BeardedManStudios.Forge.Networking.Unity
 						objectInitialized(newObj, obj);
 				});
 			}
+			else if (obj is ThrowObjNetworkObject)
+			{
+				MainThreadManager.Run(() =>
+				{
+					NetworkBehavior newObj = null;
+					if (!NetworkBehavior.skipAttachIds.TryGetValue(obj.NetworkId, out newObj))
+					{
+						if (ThrowObjNetworkObject.Length > 0 && ThrowObjNetworkObject[obj.CreateCode] != null)
+						{
+							var go = Instantiate(ThrowObjNetworkObject[obj.CreateCode]);
+							newObj = go.GetComponent<ThrowObjBehavior>();
+						}
+					}
+
+					if (newObj == null)
+						return;
+						
+					newObj.Initialize(obj);
+
+					if (objectInitialized != null)
+						objectInitialized(newObj, obj);
+				});
+			}
+			else if (obj is InstatiateSpellPosNetworkObject)
+			{
+				MainThreadManager.Run(() =>
+				{
+					NetworkBehavior newObj = null;
+					if (!NetworkBehavior.skipAttachIds.TryGetValue(obj.NetworkId, out newObj))
+					{
+						if (InstatiateSpellPosNetworkObject.Length > 0 && InstatiateSpellPosNetworkObject[obj.CreateCode] != null)
+						{
+							var go = Instantiate(InstatiateSpellPosNetworkObject[obj.CreateCode]);
+							newObj = go.GetComponent<InstatiateSpellPosBehavior>();
+						}
+					}
+
+					if (newObj == null)
+						return;
+						
+					newObj.Initialize(obj);
+
+					if (objectInitialized != null)
+						objectInitialized(newObj, obj);
+				});
+			}
 		}
 
 		protected virtual void InitializedObject(INetworkBehavior behavior, NetworkObject obj)
@@ -284,6 +332,30 @@ namespace BeardedManStudios.Forge.Networking.Unity
 			var netBehavior = go.GetComponent<TestBehavior>();
 			var obj = netBehavior.CreateNetworkObject(Networker, index);
 			go.GetComponent<TestBehavior>().networkObject = (TestNetworkObject)obj;
+
+			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
+			
+			return netBehavior;
+		}
+		[Obsolete("Use InstantiateThrowObj instead, its shorter and easier to type out ;)")]
+		public ThrowObjBehavior InstantiateThrowObjNetworkObject(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		{
+			var go = Instantiate(ThrowObjNetworkObject[index]);
+			var netBehavior = go.GetComponent<ThrowObjBehavior>();
+			var obj = netBehavior.CreateNetworkObject(Networker, index);
+			go.GetComponent<ThrowObjBehavior>().networkObject = (ThrowObjNetworkObject)obj;
+
+			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
+			
+			return netBehavior;
+		}
+		[Obsolete("Use InstantiateInstatiateSpellPos instead, its shorter and easier to type out ;)")]
+		public InstatiateSpellPosBehavior InstantiateInstatiateSpellPosNetworkObject(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		{
+			var go = Instantiate(InstatiateSpellPosNetworkObject[index]);
+			var netBehavior = go.GetComponent<InstatiateSpellPosBehavior>();
+			var obj = netBehavior.CreateNetworkObject(Networker, index);
+			go.GetComponent<InstatiateSpellPosBehavior>().networkObject = (InstatiateSpellPosNetworkObject)obj;
 
 			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
 			
@@ -684,6 +756,120 @@ namespace BeardedManStudios.Forge.Networking.Unity
 			}
 
 			go.GetComponent<TestBehavior>().networkObject = (TestNetworkObject)obj;
+
+			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
+			
+			return netBehavior;
+		}
+		/// <summary>
+		/// Instantiate an instance of ThrowObj
+		/// </summary>
+		/// <returns>
+		/// A local instance of ThrowObjBehavior
+		/// </returns>
+		/// <param name="index">The index of the ThrowObj prefab in the NetworkManager to Instantiate</param>
+		/// <param name="position">Optional parameter which defines the position of the created GameObject</param>
+		/// <param name="rotation">Optional parameter which defines the rotation of the created GameObject</param>
+		/// <param name="sendTransform">Optional Parameter to send transform data to other connected clients on Instantiation</param>
+		public ThrowObjBehavior InstantiateThrowObj(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		{
+			if (ThrowObjNetworkObject.Length <= index)
+			{
+				Debug.Log("Prefab(s) missing for: ThrowObj. Add them at the NetworkManager prefab.");
+				return null;
+			}
+			
+			var go = Instantiate(ThrowObjNetworkObject[index]);
+			var netBehavior = go.GetComponent<ThrowObjBehavior>();
+
+			NetworkObject obj = null;
+			if (!sendTransform && position == null && rotation == null)
+				obj = netBehavior.CreateNetworkObject(Networker, index);
+			else
+			{
+				metadata.Clear();
+
+				if (position == null && rotation == null)
+				{
+					byte transformFlags = 0x1 | 0x2;
+					ObjectMapper.Instance.MapBytes(metadata, transformFlags);
+					ObjectMapper.Instance.MapBytes(metadata, go.transform.position, go.transform.rotation);
+				}
+				else
+				{
+					byte transformFlags = 0x0;
+					transformFlags |= (byte)(position != null ? 0x1 : 0x0);
+					transformFlags |= (byte)(rotation != null ? 0x2 : 0x0);
+					ObjectMapper.Instance.MapBytes(metadata, transformFlags);
+
+					if (position != null)
+						ObjectMapper.Instance.MapBytes(metadata, position.Value);
+
+					if (rotation != null)
+						ObjectMapper.Instance.MapBytes(metadata, rotation.Value);
+				}
+
+				obj = netBehavior.CreateNetworkObject(Networker, index, metadata.CompressBytes());
+			}
+
+			go.GetComponent<ThrowObjBehavior>().networkObject = (ThrowObjNetworkObject)obj;
+
+			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
+			
+			return netBehavior;
+		}
+		/// <summary>
+		/// Instantiate an instance of InstatiateSpellPos
+		/// </summary>
+		/// <returns>
+		/// A local instance of InstatiateSpellPosBehavior
+		/// </returns>
+		/// <param name="index">The index of the InstatiateSpellPos prefab in the NetworkManager to Instantiate</param>
+		/// <param name="position">Optional parameter which defines the position of the created GameObject</param>
+		/// <param name="rotation">Optional parameter which defines the rotation of the created GameObject</param>
+		/// <param name="sendTransform">Optional Parameter to send transform data to other connected clients on Instantiation</param>
+		public InstatiateSpellPosBehavior InstantiateInstatiateSpellPos(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
+		{
+			if (InstatiateSpellPosNetworkObject.Length <= index)
+			{
+				Debug.Log("Prefab(s) missing for: InstatiateSpellPos. Add them at the NetworkManager prefab.");
+				return null;
+			}
+			
+			var go = Instantiate(InstatiateSpellPosNetworkObject[index]);
+			var netBehavior = go.GetComponent<InstatiateSpellPosBehavior>();
+
+			NetworkObject obj = null;
+			if (!sendTransform && position == null && rotation == null)
+				obj = netBehavior.CreateNetworkObject(Networker, index);
+			else
+			{
+				metadata.Clear();
+
+				if (position == null && rotation == null)
+				{
+					byte transformFlags = 0x1 | 0x2;
+					ObjectMapper.Instance.MapBytes(metadata, transformFlags);
+					ObjectMapper.Instance.MapBytes(metadata, go.transform.position, go.transform.rotation);
+				}
+				else
+				{
+					byte transformFlags = 0x0;
+					transformFlags |= (byte)(position != null ? 0x1 : 0x0);
+					transformFlags |= (byte)(rotation != null ? 0x2 : 0x0);
+					ObjectMapper.Instance.MapBytes(metadata, transformFlags);
+
+					if (position != null)
+						ObjectMapper.Instance.MapBytes(metadata, position.Value);
+
+					if (rotation != null)
+						ObjectMapper.Instance.MapBytes(metadata, rotation.Value);
+				}
+
+				obj = netBehavior.CreateNetworkObject(Networker, index, metadata.CompressBytes());
+			}
+
+			go.GetComponent<InstatiateSpellPosBehavior>().networkObject = (InstatiateSpellPosNetworkObject)obj;
 
 			FinalizeInitialization(go, netBehavior, obj, position, rotation, sendTransform);
 			

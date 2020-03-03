@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0.15,0.15,0,0,0,0,0,0]")]
+	[GeneratedInterpol("{\"inter\":[0.15,0.15,0,0,0,0,0,0,0]")]
 	public partial class PlayerNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 8;
+		public const int IDENTITY = 6;
 
-		private byte[] _dirtyFields = new byte[1];
+		private byte[] _dirtyFields = new byte[2];
 
 		#pragma warning disable 0067
 		public event FieldChangedEvent fieldAltered;
@@ -263,6 +263,37 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (runningValChanged != null) runningValChanged(_runningVal, timestep);
 			if (fieldAltered != null) fieldAltered("runningVal", _runningVal, timestep);
 		}
+		[ForgeGeneratedField]
+		private bool _isThrowing;
+		public event FieldEvent<bool> isThrowingChanged;
+		public Interpolated<bool> isThrowingInterpolation = new Interpolated<bool>() { LerpT = 0f, Enabled = false };
+		public bool isThrowing
+		{
+			get { return _isThrowing; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_isThrowing == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[1] |= 0x1;
+				_isThrowing = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SetisThrowingDirty()
+		{
+			_dirtyFields[1] |= 0x1;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_isThrowing(ulong timestep)
+		{
+			if (isThrowingChanged != null) isThrowingChanged(_isThrowing, timestep);
+			if (fieldAltered != null) fieldAltered("isThrowing", _isThrowing, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -280,6 +311,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			isJumpingInterpolation.current = isJumpingInterpolation.target;
 			onGroundInterpolation.current = onGroundInterpolation.target;
 			runningValInterpolation.current = runningValInterpolation.target;
+			isThrowingInterpolation.current = isThrowingInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
@@ -294,6 +326,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			UnityObjectMapper.Instance.MapBytes(data, _isJumping);
 			UnityObjectMapper.Instance.MapBytes(data, _onGround);
 			UnityObjectMapper.Instance.MapBytes(data, _runningVal);
+			UnityObjectMapper.Instance.MapBytes(data, _isThrowing);
 
 			return data;
 		}
@@ -332,6 +365,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			runningValInterpolation.current = _runningVal;
 			runningValInterpolation.target = _runningVal;
 			RunChange_runningVal(timestep);
+			_isThrowing = UnityObjectMapper.Instance.Map<bool>(payload);
+			isThrowingInterpolation.current = _isThrowing;
+			isThrowingInterpolation.target = _isThrowing;
+			RunChange_isThrowing(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -355,6 +392,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _onGround);
 			if ((0x80 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _runningVal);
+			if ((0x1 & _dirtyFields[1]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _isThrowing);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -475,6 +514,19 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_runningVal(timestep);
 				}
 			}
+			if ((0x1 & readDirtyFlags[1]) != 0)
+			{
+				if (isThrowingInterpolation.Enabled)
+				{
+					isThrowingInterpolation.target = UnityObjectMapper.Instance.Map<bool>(data);
+					isThrowingInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_isThrowing = UnityObjectMapper.Instance.Map<bool>(data);
+					RunChange_isThrowing(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -522,12 +574,17 @@ namespace BeardedManStudios.Forge.Networking.Generated
 				_runningVal = (int)runningValInterpolation.Interpolate();
 				//RunChange_runningVal(runningValInterpolation.Timestep);
 			}
+			if (isThrowingInterpolation.Enabled && !isThrowingInterpolation.current.UnityNear(isThrowingInterpolation.target, 0.0015f))
+			{
+				_isThrowing = (bool)isThrowingInterpolation.Interpolate();
+				//RunChange_isThrowing(isThrowingInterpolation.Timestep);
+			}
 		}
 
 		private void Initialize()
 		{
 			if (readDirtyFlags == null)
-				readDirtyFlags = new byte[1];
+				readDirtyFlags = new byte[2];
 
 		}
 
