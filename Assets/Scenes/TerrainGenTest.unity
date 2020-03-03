@@ -247,44 +247,22 @@ MonoBehaviour:
     height: 256
     heightMapRes: 257
     alphaMapRes: 257
-    detailMapRes: 257
+    detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
   updateInterval: 5
   loadedSectionRadius: 5
-  numOctaves: 8
+  numHeightmapOctaves: 8
   maxOffset: 32
-  maxGenThreads: 8
+  numDetailOctaves: 3
+  detailNoiseScale: 25
+  maxSimultaneousGens: 8
   follow:
   - {fileID: 1880884212}
   biomes: []
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100
   biomeBlend: 100
-  biomeBlendCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!4 &1880884214
 Transform:
   m_ObjectHideFlags: 0

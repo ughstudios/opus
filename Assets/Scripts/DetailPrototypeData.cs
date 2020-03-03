@@ -9,12 +9,12 @@ public class DetailPrototypeData : ScriptableObject
     public new string name;
 
     public float bendFactor;
-    public Color dryColor;
-    public Color healthyColor;
-    public float maxHeight;
-    public float maxWidth;
-    public float minHeight;
-    public float minWidth;
+    public Color dryColor = Color.white;
+    public Color healthyColor = Color.white;
+    public float maxHeight = 1f;
+    public float maxWidth = 1f;
+    public float minHeight = 0.1f;
+    public float minWidth = 0.1f;
     public float noiseSpread;
     public GameObject prototype;
     public Texture2D prototypeTexture;

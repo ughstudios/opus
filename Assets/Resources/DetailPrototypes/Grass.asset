@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Grass
   bendFactor: 1
-  dryColor: {r: 1, g: 1, b: 1, a: 1}
+  dryColor: {r: 1, g: 0.84669596, b: 0.3443396, a: 1}
   healthyColor: {r: 1, g: 1, b: 1, a: 1}
   maxHeight: 1
   maxWidth: 1
-  minHeight: 0.5
-  minWidth: 0.5
-  noiseSpread: 0.5
+  minHeight: 0.25
+  minWidth: 0.25
+  noiseSpread: 1
   prototype: {fileID: 0}
   prototypeTexture: {fileID: 2800000, guid: 8017769d442654955bbec874e9038be4, type: 3}
   renderMode: 0
-  minDensity: 2
+  minDensity: 4
   maxDensity: 8

@@ -19,3 +19,5 @@ MonoBehaviour:
   minHeight: 0.3
   maxHeight: 0.5
   heightExponent: 1
+  detailPrototypes:
+  - {fileID: 11400000, guid: 73cbe1b616922fe428f1013a47e56fad, type: 2}

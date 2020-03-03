@@ -15,4 +15,6 @@ public class Biome : ScriptableObject
 
     public List<DetailPrototypeData> detailPrototypes =
             new List<DetailPrototypeData>();
+    public List<TreePrototypeData> treePrototypes =
+            new List<TreePrototypeData>();
 }
