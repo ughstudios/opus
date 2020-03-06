@@ -31,6 +31,7 @@ public class TerrainManager : MonoBehaviour
     public float minTreeDistance = 1f;
     public float minBorderTreeDistance = 0.5f;
     public int treeTestPoints = 30;
+    public float minBiomeTreeStrength = 0.8f;
 
     private Dictionary<SectionCoord, TerrainSection> terrains =
             new Dictionary<SectionCoord, TerrainSection>();
@@ -320,7 +321,9 @@ public class TerrainManager : MonoBehaviour
 
         List<Biome> containedBiomes = null;
         List<DetailPrototypeData> detailPrototypeDatas = null;
-        List<int[,]> detailMaps = new List<int[,]>();
+        List<int[,]> detailMaps = null;
+        List<TreePrototypeData> treePrototypeDatas = null;
+        List<TreeInstance> treeInstances = null;
 
         Thread heightThread = new Thread(() =>
                 {
@@ -335,11 +338,18 @@ public class TerrainManager : MonoBehaviour
                     detailMaps = GenerateDetailMaps(coord,
                             out detailPrototypeDatas);
                 });
+        Thread treeThread = new Thread(() =>
+                {
+                    treeInstances = GenerateTreeInstances(coord,
+                            out treePrototypeDatas);
+                });
         heightThread.Start();
         alphaThread.Start();
         detailThread.Start();
+        treeThread.Start();
         yield return new WaitUntil(() => (heightmap != null &&
-                alphamaps != null && detailMaps != null));
+                alphamaps != null && detailMaps != null && 
+                treeInstances != null));
 
         TerrainLayer[] terrainLayers = new TerrainLayer[containedBiomes.Count];
 
@@ -366,6 +376,16 @@ public class TerrainManager : MonoBehaviour
             dp.renderMode = dpd.renderMode;
         }
 
+        TreePrototype[] treePrototypes = null;
+        if (treePrototypeDatas.Count > 0)
+                treePrototypes = new TreePrototype[treePrototypeDatas.Count];
+        for (int i = 0; i < treePrototypeDatas.Count; i++)
+        {
+            TreePrototype tp = treePrototypes[i] = new TreePrototype();
+            tp.bendFactor = treePrototypeDatas[i].bendFactor;
+            tp.prefab = treePrototypeDatas[i].prefab;
+        }
+
         data.SetHeights(0, 0, heightmap);
         data.terrainLayers = terrainLayers;
         data.SetAlphamaps(0, 0, alphamaps);
@@ -377,7 +397,13 @@ public class TerrainManager : MonoBehaviour
                 data.SetDetailLayer(0, 0, i, detailMaps[i]);
             }
         }
+        if (treePrototypes != null)
+        {
+            data.treePrototypes = treePrototypes;
+            data.SetTreeInstances(treeInstances.ToArray(), true);
+        }
         data.RefreshPrototypes();
+
 
         GameObject obj = Terrain.CreateTerrainGameObject(data);
         obj.transform.position = new Vector3(coord.x * genSettings.length -
@@ -427,6 +453,24 @@ public class TerrainManager : MonoBehaviour
             removeRunning = true;
             StartCoroutine(Remove_CR());
         }
+    }
+
+    public Biome GetBiome(Vector3 loc)
+    {
+        Dictionary<Biome, float> biomes = GetBiomes(loc);
+        Biome max = null;
+        foreach (KeyValuePair<Biome, float> kvp in biomes)
+        {
+            if (max == null)
+                max = kvp.Key;
+            else
+            {
+                if (kvp.Value > biomes[max])
+                    max = kvp.Key;
+            }
+        }
+
+        return max;
     }
 
     private BiomeCenter GenerateBiomeCenter(SectionCoord coord)
@@ -697,16 +741,18 @@ public class TerrainManager : MonoBehaviour
         NotRandom.RNG rng = new NotRandom.RNG(NotRandom.Hash2Int(seedHash, 
                 coord.GetHashCode()));
 
-        List<Vector2> toProcess = new List<Vector2>();
-        List<Vector2> processed = new List<Vector2>();
-        List<Vector2> selected = new List<Vector2>();
+        List<Vector3> toProcess = new List<Vector3>();
+        List<Vector3> processed = new List<Vector3>();
+        List<Vector3> selected = new List<Vector3>();
+        List<TreePrototypeData> selectedTree = new List<TreePrototypeData>();
         Dictionary<Biome, float> biomes;
-        Vector2 test;
-        int p;
-        float bx, bz;
-
-        toProcess.Add(new Vector2(rng.Value() * (genSettings.length -
-                minBorderTreeDistance * 2) + minBorderTreeDistance,
+        Vector3 test, next;
+        Biome b = null;
+        int p, totalTreeFreq;
+        float bx, bz, a, r;
+        bool canTree;
+        toProcess.Add(new Vector3(rng.Value() * (genSettings.length -
+                minBorderTreeDistance * 2) + minBorderTreeDistance, 0f,
                 rng.Value() * (genSettings.length -
                 minBorderTreeDistance * 2) + minBorderTreeDistance));
 
@@ -715,11 +761,126 @@ public class TerrainManager : MonoBehaviour
             p = (int) (rng.Value() * toProcess.Count);
             test = toProcess[p];
             toProcess.RemoveAt(p);
-            bx = (coord.x - 0.5f) * genSettings.length + test.x;
-            bz = (coord.z - 0.5f) * genSettings.length + test.y;
-            biomes = GetBiomes(new Vector3(bx, 0f, bz));
 
+            canTree = true;
+            for (int i = 0; i < selected.Count; i++)
+            {
+                if (Vector3.Distance(test, selected[i]) < selectedTree[i].minDistance)
+                {
+                    canTree = false;
+                    break;
+                }
+            }
+            if (canTree)
+            {
+                bx = (coord.x - 0.5f) * genSettings.length + test.x;
+                bz = (coord.z - 0.5f) * genSettings.length + test.z;
+                biomes = GetBiomes(new Vector3(bx, 0f, bz));
+                if (biomes.Keys.Count == 1)
+                {
+                    b = biomes.Keys.ToList()[0];
+                }
+                else
+                {
+                    b = null;
+                    foreach (KeyValuePair<Biome, float> kvp in biomes)
+                    {
+                        if (b == null)
+                            b = kvp.Key;
+                        else
+                        {
+                            if (kvp.Value > biomes[b])
+                                b = kvp.Key;
+                        }
+                    }
+                }
+                if (biomes[b] < minBiomeTreeStrength ||
+                        b.treePrototypes == null ||
+                        b.treePrototypes.Count == 0)
+                {
+                    canTree = false;
+                }
+            }
+            if (canTree && b != null)
+            {
+                totalTreeFreq = 0;
+                foreach (TreePrototypeData tp in b.treePrototypes)
+                {
+                    totalTreeFreq += tp.relativeFrequency;
+                }
+                int index = (int)(rng.ValueUInt() % totalTreeFreq);
 
+                for (int i = 0; i < b.treePrototypes.Count; i++)
+                {
+                    if (index >= 0 && index < b.treePrototypes[i].relativeFrequency)
+                    {
+                        selectedTree.Add(b.treePrototypes[i]);
+                        selected.Add(test);
+                        break;
+                    }
+                    index -= b.treePrototypes[i].relativeFrequency;
+                }
+            }
+            for (int i = 0; i < treeTestPoints; i++)
+            {
+                a = rng.Value();
+                r = rng.Value();
+                r = r * minTreeDistance + minTreeDistance;
+
+                next = new Vector3(test.x + r * Mathf.Cos(a * 2 * Mathf.PI),
+                        0f, test.z + r * Mathf.Sin(a * 2 * Mathf.PI));
+                if (next.x < minBorderTreeDistance || 
+                        next.z < minBorderTreeDistance ||
+                        next.x > genSettings.length - minBorderTreeDistance ||
+                        next.z > genSettings.length - minBorderTreeDistance)
+                {
+                    continue;
+                }
+                canTree = true;
+                foreach (Vector3 vec in toProcess)
+                {
+                    if (Vector3.Distance(next, vec) < minTreeDistance)
+                    {
+                        canTree = false;
+                        break;
+                    }
+                }
+                if (!canTree)
+                    continue;
+                foreach (Vector3 vec in processed)
+                {
+                    if (Vector3.Distance(next, vec) < minTreeDistance)
+                    {
+                        canTree = false;
+                        break;
+                    }
+                }
+                if (canTree)
+                {
+                    toProcess.Add(next);
+                }
+            }
+            processed.Add(test);
+        }
+        TreeInstance ti;
+        TreePrototypeData tpd;
+        for (int i = 0; i < selected.Count; i++)
+        {
+            tpd = selectedTree[i];
+            if (!treePrototypes.Contains(tpd))
+                treePrototypes.Add(tpd);
+            ti = new TreeInstance();
+            ti.color = tpd.color;
+            ti.lightmapColor = tpd.lightmapColor;
+            ti.prototypeIndex = treePrototypes.IndexOf(tpd);
+            ti.position = selected[i] / genSettings.length;
+            ti.heightScale = rng.Value() * (tpd.maxHeightScale - 
+                    tpd.minHeightScale) + tpd.minHeightScale;
+            ti.widthScale = rng.Value() * (tpd.maxWidthScale -
+                    tpd.minWidthScale) + tpd.minWidthScale;
+            ti.rotation = rng.Value() * 2 * Mathf.PI;
+
+            treeInstances.Add(ti);
         }
 
         return treeInstances;

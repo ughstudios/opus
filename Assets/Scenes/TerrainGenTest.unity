@@ -263,6 +263,10 @@ MonoBehaviour:
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100
   biomeBlend: 100
+  minTreeDistance: 1
+  minBorderTreeDistance: 0.5
+  treeTestPoints: 30
+  minBiomeTreeStrength: 0.8
 --- !u!4 &1880884214
 Transform:
   m_ObjectHideFlags: 0
