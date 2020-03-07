@@ -39,6 +39,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new GameModeNetworkObject(networker, id, frame);
 						break;
+					case InstatiateSpellPosNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new InstatiateSpellPosNetworkObject(networker, id, frame);
+						break;
 					case NetworkCameraNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new NetworkCameraNetworkObject(networker, id, frame);
@@ -54,10 +58,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					case ThrowObjNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new ThrowObjNetworkObject(networker, id, frame);
-						break;
-					case InstatiateSpellPosNetworkObject.IDENTITY:
-						availableCallback = true;
-						obj = new InstatiateSpellPosNetworkObject(networker, id, frame);
 						break;
 				}
 

@@ -207,7 +207,7 @@ public class MobController : DamageableEntity
 
 	protected override void OnDeath()
 	{
-		rb.constraints -= RigidbodyConstraints.FreezeRotation;
+		//rb.constraints -= RigidbodyConstraints.FreezeRotation;
 
 		base.OnDeath();
 	}

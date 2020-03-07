@@ -11,6 +11,10 @@ public class PlayerController : MobController
 	public Camera camera;
 	public GameObject _testSpell = null;
 	public Transform _throwPos = null;
+	public bool _isDead = false; //Set _loadFromServer to true if prefab is to be loaded to server, don't apply to prefab
+	public RectTransform _healthTransform = null;
+	public float _healthCanvasValue = 0.0f;
+	public GameObject _hudCanvas = null;
 
 	protected override void NetworkStart()
 	{
@@ -26,6 +30,9 @@ public class PlayerController : MobController
 		if (UseChild) networkObject.rotationInterpolation.target = transform.GetChild(0).transform.rotation;
 
 		networkObject.SnapInterpolations();
+
+		networkObject.health = health;
+		networkObject.isDead = _isDead;
 	}
 
 
@@ -43,19 +50,19 @@ public class PlayerController : MobController
 		canPlant = false;
 	}
 
-	private void OnTriggerExit(Collider other)
-	{
-		canPlant = true;
-	}
-
 	private void Update()
 	{
+		if (health <= 0)
+		{
+			_isDead = true;
+		}
 
 		if (networkObject != null)
 		{
 			if (networkObject.IsOwner)
 			{
 				camera.enabled = true;
+				_hudCanvas.SetActive(true);
 
 				if (UseChild)
 				{
@@ -64,6 +71,9 @@ public class PlayerController : MobController
 					networkObject.runningVal = animator.GetInteger("runningVal");
 					networkObject.isThrowing = animator.GetBool("isThrowing");
 				}
+
+				networkObject.health = health;
+				networkObject.isDead = _isDead;
 			}
 		}
 
@@ -74,6 +84,9 @@ public class PlayerController : MobController
 			rb.velocity = Vector3.zero;
 			animator.SetBool("isThrowing", true);
 		}
+
+		if(networkObject.IsOwner)
+			HealthCanvasMeter();
 
 	}
 
@@ -99,11 +112,18 @@ public class PlayerController : MobController
 					if (animator.GetInteger("runningVal") != networkObject.runningVal) animator.SetInteger("runningVal", networkObject.runningVal);
 					if (animator.GetBool("isThrowing") != networkObject.isThrowing) animator.SetBool("isThrowing", networkObject.isThrowing);
 				}
+
+				health = networkObject.health;
+				_isDead = networkObject.isDead;
+
 				camera.enabled = false;
+				_hudCanvas.SetActive(false);
 
 				return;
 			}
 		}
+
+		
 		
 		moveInput.Set(Input.GetAxisRaw("Horizontal"),
 				Input.GetButton("Jump") ? 1f : 0f,
@@ -141,19 +161,32 @@ public class PlayerController : MobController
 		}
 	}
 
-	public override int TakeDamage(DamageableEntity source, int damage)
+	private void OnTriggerExit(Collider other)
 	{
-		if (!isGrounded || groundCollider.GetComponent<DamageableEntity>() != null)
-			return 0;
-
-		return base.TakeDamage(source, damage);
+		canPlant = true;
 	}
 
+	//public override int TakeDamage(DamageableEntity source, int damage)
+	public override void TakeDamage(DamageableEntity source, int damage)
+	{
+		/*
+		if (networkObject != null && !isGrounded && groundCollider.GetComponent<DamageableEntity>() != null)
+			return 0;
+		*/
+
+		//return 
+		base.TakeDamage(source, damage);
+	}
+
+	/*
 	protected override void OnDeath()
 	{
-		SceneManager.LoadScene("GameOver");
 		base.OnDeath();
+
+		if (networkObject.isDead)
+			if (!_loadedFromServer) SceneManager.LoadScene("GameOver");
 	}
+	*/
 
 	private bool IsUnder(Collider col)
 	{
@@ -172,5 +205,18 @@ public class PlayerController : MobController
 		GroundCheck();
 		if (IsUnder(collision.collider))
 			base.OnCollisionEnter(collision);
+	}
+
+	void HealthCanvasMeter()
+	{
+		if (health < 0)
+			_healthCanvasValue = 0.0f;
+		if (health > 100)
+			_healthCanvasValue = 1.0f;
+
+		if (health <= 100 && health >= 0)
+			_healthCanvasValue = (float)health / 100;
+
+		_healthTransform.transform.localScale = new Vector3(_healthCanvasValue,1,1);
 	}
 }

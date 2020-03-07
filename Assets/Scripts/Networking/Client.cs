@@ -68,7 +68,8 @@ public class Client : MonoBehaviour
         MainThreadManager.Run(() =>
         {
             Debug.Log("Accepted");
-        });
+			NetworkObject.Flush(sender); //After creating or joining a server it is necessary to call NetworkObject.Flush on the related NetWorker.
+		});
     }
 
 }

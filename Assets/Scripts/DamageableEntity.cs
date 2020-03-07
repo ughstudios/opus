@@ -1,23 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
 
 public class DamageableEntity : PlayerBehavior
 {
-    //public int health = 100;
-    //public int food = 100;
-    //public int water = 100;
+    public int health = 100;
+    public int food = 100;
+    public int water = 100;
 
 
     public int MaxEverything = 100;
     public int damage = 0;
     public float damageForce = 0f;
     public float damageRecoilForce = 0f;
+	public bool _loadedFromServer = false;
 
-    public void ResetStats()
+
+	public void ResetStats()
     {
         networkObject.SendRpc(RPC_SERVER__SET_FOOD, Receivers.All, MaxEverything);
         networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
@@ -152,52 +155,81 @@ public class DamageableEntity : PlayerBehavior
     
     public override void Server_TakeDamage(RpcArgs args)
     {
-        MainThreadManager.Run(() =>
+		//this is the arg setup in the wizard
+		int damage = args.GetNext<int>();
+
+		int damageDealt = Mathf.Min(damage, networkObject.health);
+
+		MainThreadManager.Run(() =>
         {
-            TakeDamage(null, args.GetNext<int>());
-        });
+			//TakeDamage(null, args.GetNext<int>());
+
+
+			/*
+			if (damage < 1 && networkObject != null)
+				return 0;
+			*/
+
+			if (networkObject != null)
+			{
+				networkObject.health -= damageDealt;
+
+				health = networkObject.health;
+			}
+				
+
+			if (networkObject.health <= 0)
+			{
+				OnDeath();
+			}
+
+			/*
+			Rigidbody rb = GetComponent<Rigidbody>();
+			if (damageDealt > 0 && rb != null && networkObject != null)
+			{
+				rb.AddForce((transform.position - source.transform.position).normalized *
+						source.damageForce * rb.mass, ForceMode.Impulse);
+			}
+
+
+			Rigidbody sourceRb = source.GetComponent<Rigidbody>();
+			if (damageDealt > 0 && sourceRb != null)
+			{
+				sourceRb.AddForce((source.transform.position - transform.position).normalized *
+						source.damageRecoilForce * sourceRb.mass, ForceMode.Impulse);
+			}
+			*/
+
+			//return damageDealt;
+
+		});
     }
 
-    public virtual int TakeDamage(DamageableEntity source, int damage)
-    {
-        if (networkObject != null && !networkObject.IsServer)
+	//public virtual int TakeDamage(DamageableEntity source, int damage)
+	public virtual void TakeDamage(DamageableEntity source, int damage)
+	{
+		if (!networkObject.IsServer)
+			return;
+
+        if (networkObject != null)
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
-            return 0;
+            //return 0;
         }
-
-        if (damage < 1)
-            return 0;
-        int damageDealt = Mathf.Min(damage, networkObject.health);
-
-        networkObject.health -= damageDealt;
-
-        if (networkObject.health <= 0)
-        {
-            OnDeath();
-        }
-
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (damageDealt > 0 && rb != null)
-        {
-            rb.AddForce((transform.position - source.transform.position).normalized *
-                    source.damageForce * rb.mass, ForceMode.Impulse);
-        }
-        Rigidbody sourceRb = source.GetComponent<Rigidbody>();
-        if (damageDealt > 0 && sourceRb != null)
-        {
-            sourceRb.AddForce((source.transform.position - transform.position).normalized *
-                    source.damageRecoilForce * sourceRb.mass, ForceMode.Impulse);
-        }
-
-        return damageDealt;
     }
 
     protected virtual void OnDeath()
     {
-        Destroy(gameObject, 2f);
-    }
+		networkObject.Destroy();//This destroys network object
+		/*
+		if (networkObject.Owner.IsHost)//check if IsHost before changing scenes or else server will also change scene
+		{
+			SceneManager.LoadScene(2, LoadSceneMode.Single);
+		}
+		*/
+		//Destroy(gameObject, 2f);
+	}
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
