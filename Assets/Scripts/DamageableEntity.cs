@@ -219,7 +219,7 @@ public class DamageableEntity : PlayerBehavior
 
     protected virtual void OnDeath(bool transferScene)
     {
-		if (networkObject.IsOwner)
+		if (networkObject != null && networkObject.IsOwner)
 		{
 			//networkObject.Networker.Disconnect(true);//disconnect from server
 			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
