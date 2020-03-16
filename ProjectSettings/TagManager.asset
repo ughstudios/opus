@@ -9,6 +9,7 @@ TagManager:
   - Network Manager
   - Spawn Point
   - ThrowPos
+  - Terrain Manager
   layers:
   - Default
   - TransparentFX

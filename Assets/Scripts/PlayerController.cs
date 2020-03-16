@@ -16,7 +16,7 @@ public class PlayerController : MobController
 	public float _healthCanvasValue = 0.0f;
 	public GameObject _hudCanvas = null;
 
-	protected override void NetworkStart()
+    protected override void NetworkStart()
 	{
 		base.NetworkStart();
 		networkObject.position = transform.position;
@@ -36,7 +36,7 @@ public class PlayerController : MobController
 	}
 
 
-	void OnTriggerStay(Collider collider)
+    void OnTriggerStay(Collider collider)
 	{
 		if (collider.gameObject.tag == "Water Hex")
 		{
@@ -62,6 +62,7 @@ public class PlayerController : MobController
 		{
 			if (networkObject.IsOwner)
 			{
+
 				camera.enabled = true;
 				_hudCanvas.SetActive(true);
 

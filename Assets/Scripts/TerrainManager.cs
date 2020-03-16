@@ -181,7 +181,7 @@ public class TerrainManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void StartGeneration()
     {
         if (seed == null)
             seed = "";
