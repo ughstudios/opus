@@ -87,7 +87,7 @@ public class PlayerController : MobController
 			animator.SetBool("isThrowing", true);
 		}
 
-		if(networkObject.IsOwner)
+		if(networkObject != null && networkObject.IsOwner)
 			HealthCanvasMeter();
 
 	}

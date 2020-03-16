@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8738a17ff79549c44a9a3169eb3d4699, type: 3}
+  m_Name: Flowers
+  m_EditorClassIdentifier: 
+  name: Flowers
+  bendFactor: 0
+  dryColor: {r: 1, g: 1, b: 1, a: 1}
+  healthyColor: {r: 1, g: 1, b: 1, a: 1}
+  maxHeight: 1
+  maxWidth: 1
+  minHeight: 0.1
+  minWidth: 0.1
+  noiseSpread: 0
+  prototype: {fileID: 100000, guid: dcadbc0f2d7e2964e91f8be5365ff0e3, type: 3}
+  prototypeTexture: {fileID: 0}
+  renderMode: 2
+  minDensity: 4
+  maxDensity: 10
