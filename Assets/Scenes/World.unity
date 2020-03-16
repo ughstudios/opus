@@ -274,6 +274,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: farm_lvl5
       objectReference: {fileID: 0}
+    - target: {fileID: 1302713538416700, guid: 5526a7870160e19499d29687ae4fb17a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4785417458580246, guid: 5526a7870160e19499d29687ae4fb17a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -17.8
@@ -3495,6 +3499,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Reg. Forest Biome
       objectReference: {fileID: 0}
+    - target: {fileID: 5857194785517447663, guid: 8301adba4d3b0e74cbf9a404307e23e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3517568983782060299, guid: 8301adba4d3b0e74cbf9a404307e23e5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4622,7 +4631,7 @@ Camera:
   far clip plane: 50
   field of view: 60
   orthographic: 1
-  orthographic size: 120
+  orthographic size: 26.2
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -4646,7 +4655,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599816050}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 75, y: 100, z: 135}
+  m_LocalPosition: {x: 36, y: 100, z: 67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -16659,6 +16668,10 @@ PrefabInstance:
     - target: {fileID: 1979652878100142, guid: 7908cc4dfd2040a49bdf1a7b45bcf55c, type: 3}
       propertyPath: m_Name
       value: house_lvl4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1979652878100142, guid: 7908cc4dfd2040a49bdf1a7b45bcf55c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4342572344458294, guid: 7908cc4dfd2040a49bdf1a7b45bcf55c, type: 3}
       propertyPath: m_LocalPosition.x

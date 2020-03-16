@@ -53,7 +53,8 @@ public class GameMode : GameModeBehavior
             }
 
             PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
-            //playerController.networkObject.position = spawnPoint;
+            
+			playerController.networkObject.position = spawnPoint;
             playerController.networkObject.AssignOwnership(player);
             
             Debug.Log("Player Connected: " + player.Ip);
@@ -75,6 +76,7 @@ public class GameMode : GameModeBehavior
                     toDelete.Add(no);
                     Debug.Log("owner found");
                 }
+				//TODO - Correct issues with disconnecting
             }
 
             //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
@@ -83,8 +85,8 @@ public class GameMode : GameModeBehavior
                 for (int i = toDelete.Count - 1; i >= 0; i--)
                 {
                     sender.NetworkObjectList.Remove(toDelete[i]);
-                    toDelete[i].Destroy();
-                }
+					toDelete[i].Destroy();
+				}
             }
         });
     }

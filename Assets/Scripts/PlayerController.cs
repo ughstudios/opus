@@ -52,6 +52,7 @@ public class PlayerController : MobController
 
 	private void Update()
 	{
+
 		if (health <= 0)
 		{
 			_isDead = true;
@@ -166,14 +167,8 @@ public class PlayerController : MobController
 		canPlant = true;
 	}
 
-	//public override int TakeDamage(DamageableEntity source, int damage)
 	public override void TakeDamage(DamageableEntity source, int damage)
 	{
-		/*
-		if (networkObject != null && !isGrounded && groundCollider.GetComponent<DamageableEntity>() != null)
-			return 0;
-		*/
-
 		//return 
 		base.TakeDamage(source, damage);
 	}
@@ -183,8 +178,9 @@ public class PlayerController : MobController
 	{
 		base.OnDeath();
 
-		if (networkObject.isDead)
-			if (!_loadedFromServer) SceneManager.LoadScene("GameOver");
+
+		//if (networkObject.isDead)
+		//if (!_loadedFromServer) SceneManager.LoadScene("GameOver");
 	}
 	*/
 

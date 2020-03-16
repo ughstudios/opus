@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
@@ -19,6 +18,7 @@ public class DamageableEntity : PlayerBehavior
     public float damageRecoilForce = 0f;
 	public bool _loadedFromServer = false;
 
+	[SerializeField] bool _canQuit = false;
 
 	public void ResetStats()
     {
@@ -172,9 +172,8 @@ public class DamageableEntity : PlayerBehavior
 
 			if (networkObject != null)
 			{
-				networkObject.health -= damageDealt;
-
-				health = networkObject.health;
+				//networkObject.health -= damageDealt;
+				health -= damageDealt;
 			}
 				
 
@@ -205,7 +204,6 @@ public class DamageableEntity : PlayerBehavior
 		});
     }
 
-	//public virtual int TakeDamage(DamageableEntity source, int damage)
 	public virtual void TakeDamage(DamageableEntity source, int damage)
 	{
 		if (!networkObject.IsServer)
@@ -215,23 +213,45 @@ public class DamageableEntity : PlayerBehavior
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
-            //return 0;
+            return;
         }
     }
 
-    protected virtual void OnDeath()
+    protected virtual void OnDeath(bool transferScene)
     {
-		networkObject.Destroy();//This destroys network object
-		/*
-		if (networkObject.Owner.IsHost)//check if IsHost before changing scenes or else server will also change scene
+		if (networkObject.IsOwner)
 		{
-			SceneManager.LoadScene(2, LoadSceneMode.Single);
+			//networkObject.Networker.Disconnect(true);//disconnect from server
+			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
+
+			if (transferScene)
+				UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
+
+			//this is to allow proper respawning if player connects after losing
+			if (!NetworkManager.Instance.Networker.IsServer)
+			{
+				NetworkManager.Instance.Disconnect();
+			}
 		}
-		*/
-		//Destroy(gameObject, 2f);
 	}
 
-    protected virtual void OnCollisionEnter(Collision collision)
+	protected virtual void OnDeath()
+	{
+		if (networkObject.IsOwner)
+		{
+			//networkObject.Networker.Disconnect(true);//disconnect from server
+			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
+			UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
+
+			//this is to allow proper respawning if player connects after losing
+			if (!NetworkManager.Instance.Networker.IsServer)
+			{
+				NetworkManager.Instance.Disconnect();
+			}
+		}
+	}
+
+	protected virtual void OnCollisionEnter(Collision collision)
     {
         DamageableEntity de = null;
 
@@ -242,4 +262,30 @@ public class DamageableEntity : PlayerBehavior
             //de.networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
         }
     }
+
+	public override void Die(RpcArgs args)
+	{
+		MainThreadManager.Run(() =>
+		{
+			networkObject.Destroy();
+		});
+	}
+
+	//Incase a player closes the game without dying, 
+	//the player will be kicked off the server avoiding errors from unexpected closures
+	void OnApplicationQuit()
+	{
+		Debug.Log("Quitting the Player");
+
+		Application.wantsToQuit += StopQuit;
+		OnDeath(false);
+		Application.wantsToQuit -= StopQuit;
+		Application.Quit();
+	}
+
+	//added to closing event to allow the player to disconnect 
+	bool StopQuit()
+	{
+		return false;
+	}
 }

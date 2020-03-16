@@ -204,7 +204,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		[ForgeGeneratedField]
 		private bool _onGround;
 		public event FieldEvent<bool> onGroundChanged;
-
 		public Interpolated<bool> onGroundInterpolation = new Interpolated<bool>() { LerpT = 0f, Enabled = false };
 		public bool onGround
 		{
