@@ -230,9 +230,9 @@ GameObject:
   - component: {fileID: 3714478601449488054}
   - component: {fileID: 3744592382839077468}
   - component: {fileID: 3733883421805403524}
-  - component: {fileID: 6943813591379986955}
   - component: {fileID: 3799290833561000682}
   - component: {fileID: 3614138830104881516}
+  - component: {fileID: 8251931119117097999}
   m_Layer: 0
   m_Name: TestTree
   m_TagString: Untagged
@@ -302,20 +302,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6943813591379986955
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3712857241743333466}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300006, guid: c52a1ad28de5ec447a225e11be0fe132, type: 3}
 --- !u!65 &3799290833561000682
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -346,6 +332,20 @@ MonoBehaviour:
   - {fileID: 0}
   canHarvest: 1
   maxSpawns: 0
+--- !u!136 &8251931119117097999
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712857241743333466}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 9.7880335
+  m_Direction: 1
+  m_Center: {x: 0.19, y: 4.7772193, z: 0.3}
 --- !u!1 &3713215451279682016
 GameObject:
   m_ObjectHideFlags: 0

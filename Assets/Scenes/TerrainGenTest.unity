@@ -250,6 +250,7 @@ MonoBehaviour:
     detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
+  genOnStart: 1
   updateInterval: 5
   loadedSectionRadius: 5
   numHeightmapOctaves: 8
