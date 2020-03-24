@@ -8,9 +8,12 @@ using BeardedManStudios.Forge.Networking.Unity;
 public class TravelingSpell : ThrowObjBehavior
 {
 	[SerializeField] float _speed = 80f;
+	[SerializeField] float	_duration = 0.0f,
+							_initDuration = 0.0f,
+							_destroyTimeMargin = 2.0f;
 	[SerializeField] int _damageAmount = 5;
 	Transform _firePos = null;
-	bool _didHit = false;
+	[SerializeField] bool _didHit = false;
 
 
 
@@ -53,6 +56,15 @@ public class TravelingSpell : ThrowObjBehavior
 			networkObject.rotation = transform.rotation;
 			networkObject.didHit = _didHit;
 		}
+
+		if (_didHit)
+		{
+			float destroyTime = _initDuration + _destroyTimeMargin;
+			_duration -= Time.deltaTime;
+
+			if(_duration <= -destroyTime)
+				Destroy(gameObject);
+		}
 	}
 
 	void OnCollisionEnter(Collision col)
@@ -62,19 +74,17 @@ public class TravelingSpell : ThrowObjBehavior
 		gameObject.transform.GetChild(1).transform.gameObject.SetActive(true);
 
 		float time = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().time;
-		float duration = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().main.duration;
+		_duration = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().main.duration;
+		_initDuration = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().main.duration;
+		_didHit = true;
 
-		if (col.gameObject.tag == "Player" && !_didHit)
+		if (col.gameObject.tag == "Player")
 		{
-			_didHit = true;
-
 			DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
 
 			de.TakeDamage(de, _damageAmount);
 		}
-
-		if (time == duration)
-			Destroy(gameObject);
+			
 	}
 
 	public void SetSpeed(float speed)

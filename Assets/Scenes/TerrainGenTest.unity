@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 1880884214}
   - component: {fileID: 1880884213}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: TerrainGen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,7 +250,6 @@ MonoBehaviour:
     detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
-  genOnStart: 1
   updateInterval: 5
   loadedSectionRadius: 5
   numHeightmapOctaves: 8

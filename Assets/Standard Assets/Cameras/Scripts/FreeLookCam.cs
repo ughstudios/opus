@@ -28,6 +28,9 @@ namespace UnityStandardAssets.Cameras
 		private Quaternion m_PivotTargetRot;
 		private Quaternion m_TransformTargetRot;
 
+		//updates for player rotation
+		[SerializeField] GameObject _player = null;
+
         protected override void Awake()
         {
             base.Awake();
@@ -72,15 +75,18 @@ namespace UnityStandardAssets.Cameras
 			if(Time.timeScale < float.Epsilon)
 			return;
 
-            // Read the user input
-            var x = CrossPlatformInputManager.GetAxis("Mouse X");
-            var y = CrossPlatformInputManager.GetAxis("Mouse Y");
+			// Read the user input
+			var x = CrossPlatformInputManager.GetAxis("Mouse X");
+			var y = CrossPlatformInputManager.GetAxis("Mouse Y");
 
-            // Adjust the look angle by an amount proportional to the turn speed and horizontal input.
-            m_LookAngle += x*m_TurnSpeed;
 
-            // Rotate the rig (the root object) around Y axis only:
-            m_TransformTargetRot = Quaternion.Euler(0f, m_LookAngle, 0f);
+			// Adjust the look angle by an amount proportional to the turn speed and horizontal input.
+			m_LookAngle += x * m_TurnSpeed;
+
+			m_TransformTargetRot = Quaternion.Euler(0f, m_LookAngle, 0f);
+
+            
+            
 
             if (m_VerticalAutoReturn)
             {
@@ -107,9 +113,21 @@ namespace UnityStandardAssets.Cameras
 			}
 			else
 			{
+
 				m_Pivot.localRotation = m_PivotTargetRot;
+				/*
+				if (_player != null)
+				{
+					transform.localRotation = _player.transform.localRotation;
+				}
+				
+				if (_player == null)
+				{
+					transform.localRotation = m_TransformTargetRot;
+				}
+				*/
 				transform.localRotation = m_TransformTargetRot;
 			}
-        }
+		}
     }
 }

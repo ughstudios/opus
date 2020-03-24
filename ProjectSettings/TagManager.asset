@@ -10,6 +10,7 @@ TagManager:
   - Spawn Point
   - ThrowPos
   - Terrain Manager
+  - ServerCamera
   layers:
   - Default
   - TransparentFX

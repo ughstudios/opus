@@ -11,8 +11,8 @@ public class AnimationEventsHandler : MonoBehaviour
 	//this will allow the player to move on the Y-axis for jumping
 	public void Jump()
 	{
-		GetComponentInParent<Rigidbody>().velocity = Vector3.up * _jumpHeight;
-
+		//GetComponentInParent<Rigidbody>().velocity = Vector3.up * _jumpHeight;
+		GetComponentInParent<Rigidbody>().AddRelativeForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
 		GetComponent<Animator>().SetBool("isJumping", false);
 		
 		GetComponentInParent<PlayerController>().ResetJump();

@@ -25,6 +25,7 @@ public class MobController : DamageableEntity
 	protected Vector3 moveInput = Vector3.zero;
 
 	[SerializeField] bool useChild = false; //Set to True in inspector for player false for hostile
+	[SerializeField] bool _isMoving = false;
 
 	public Animator _animContTest;
 	public GameObject _currentHitObj;
@@ -39,6 +40,12 @@ public class MobController : DamageableEntity
 	[SerializeField] LayerMask _floorDetectionLayer;
 	[SerializeField] float _initMovementSpeed;
 	[SerializeField] bool _initiateJump = false;
+
+	#endregion
+
+	#region Rotation
+	[SerializeField] float _turnSpeed = 2.5f;
+	protected float m_LookAngle = 0.0f;
 	#endregion
 
 	protected override void Start()
@@ -61,52 +68,74 @@ public class MobController : DamageableEntity
 	{
 		base.FixedUpdate();
 
+		GroundCheck();
+
 		Vector3 horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
 
 		if (horizMoveInput.sqrMagnitude > 1)
 			horizMoveInput.Normalize();
 
-		GroundCheck();
-
 		Vector3 movement = horizMoveInput * movementSpeed;
+
 		Vector3 horizVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-		if (horizVel.sqrMagnitude < movement.sqrMagnitude)
+		//if (horizVel.sqrMagnitude < movement.sqrMagnitude)
+
+		if (rb.velocity.y == 0)
 		{
-			//rb.AddForce(movement * moveForceMult, ForceMode.Impulse);
-			rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
-		}
-		else
-		{
-			rb.velocity = new Vector3(0, rb.velocity.y, 0);
+			if (movement.x > 0 || movement.z > 0 || movement.x < 0 || movement.z < 0)
+			{
+				rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+				rb.AddRelativeForce(new Vector3(movement.x, 0, movement.z), ForceMode.VelocityChange);
+			}
+			else
+			{
+				rb.velocity = new Vector3(0, rb.velocity.y, 0);
+			}
 		}
 
 		//changed to accommodate the new animotor
-		if (horizMoveInput.sqrMagnitude > Mathf.Epsilon)
+		//if (horizMoveInput.sqrMagnitude > Mathf.Epsilon)
+		if (horizMoveInput.z > 0 || horizMoveInput.z < 0)//for running forward
 		{
 			if (animator != null)
 				//animator.SetBool("Walking?", true);
-				animator.SetInteger("runningVal", 1);
+				animator.SetInteger("runningVal", (int)horizMoveInput.z);
 		}
 		else
 		{
 			if (animator != null)
 				animator.SetInteger("runningVal", 0);
 		}
+		
+		if (horizMoveInput.x < 0 || horizMoveInput.x > 0)//for moving side to side
+		{
+			if (animator != null)
+				//animator.SetBool("Walking?", true);
+				animator.SetInteger("horizontalVal", (int)horizMoveInput.x);
+		}
+		else
+		{
+			if (animator != null)
+				animator.SetInteger("horizontalVal", 0);
+		}
 
-		/*
-        else
-        {
-            if (animator != null)
-                animator.SetBool("Walking?", false);
-        }
-		*/
+		if (horizMoveInput.z > 0 && horizMoveInput.x > 0 || horizMoveInput.z > 0 && horizMoveInput.x < 0)//combining x and z movement
+		{
+			animator.SetInteger("runningVal", 1);
+		}
 
+		if (horizMoveInput.z < 0 && horizMoveInput.x > 0 || horizMoveInput.z < 0 && horizMoveInput.x < 0)//combining x and z movement
+		{
+			animator.SetInteger("horizontalVal", 1);
+		}
 
 
 		//these if statements are responsible for determining which direction the character
 		//should rotate in
+		//This rotation was updated to follow the Camera's rotation due to the addition of the new camera
 		#region Rotation
+		/*
 		if (horizMoveInput.x > Mathf.Epsilon)
 		{
 			targetRot = rightRot;
@@ -126,9 +155,9 @@ public class MobController : DamageableEntity
 		{
 			targetRot = backRot;
 		}
-
+		*/
 		Vector3 normalizedRot = new Vector3(Input.GetAxis(CharacterButtonsConstants.HORIZONTAL), 0, Input.GetAxis(CharacterButtonsConstants.VERTICLE)).normalized;
-
+		
 		//Rotating child so camera doesn't rotate with object
 		//else is used so hostiles can still use MobController
 
@@ -137,7 +166,30 @@ public class MobController : DamageableEntity
 			transform.LookAt(transform.position + new Vector3(normalizedRot.x, 0, normalizedRot.z));
 
 		if (useChild)
-			transform.GetChild(0).transform.LookAt(transform.position + new Vector3(normalizedRot.x, 0, normalizedRot.z));
+		{
+			var x = Input.GetAxis("Mouse X");
+
+			m_LookAngle += x * _turnSpeed;
+
+			//Temp fix until new camera is created
+			//transform.localRotation = GetComponent<PlayerController>().camera.transform.localRotation;
+			transform.localRotation = Quaternion.Euler(new Vector3(0, m_LookAngle,0));
+
+			if (horizMoveInput.z > 0 && horizMoveInput.x > 0)//combining x and z movement
+			{
+				transform.GetChild(0).transform.localRotation = Quaternion.Euler(new Vector3(0, 45, 0));
+			}
+			else if (horizMoveInput.z > 0 && horizMoveInput.x < 0)
+			{
+				transform.GetChild(0).transform.localRotation = Quaternion.Euler(new Vector3(0, -45, 0));
+			}
+			else {
+				transform.GetChild(0).transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+			}
+			
+				
+		}
+
 
 
 		//if using this way of rotation set the child object with animator to 90 on Y rot axis

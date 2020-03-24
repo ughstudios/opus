@@ -126,7 +126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232852704}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.006100006, y: 0.016599998, z: 0.01699997}
+  m_LocalPosition: {x: 0.006100006, y: 0.025, z: 0.01699997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 834661662473393693}
@@ -243,7 +243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3892529554635573878
 RectTransform:
   m_ObjectHideFlags: 0
@@ -344,7 +344,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 5688016174280329108}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.5
   m_Height: 3
   m_Direction: 1
@@ -360,7 +360,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -372,7 +372,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5688016174280329108}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d30a1126654eace4e9ddf912312fba82, type: 3}
   m_Name: 
@@ -386,7 +386,7 @@ MonoBehaviour:
   damageRecoilForce: 5
   _loadedFromServer: 0
   _canQuit: 0
-  movementSpeed: 8
+  movementSpeed: 4
   moveForceMult: 1
   jumpSpeed: 10
   rightRot: {x: 0, y: 0, z: 0}
@@ -398,6 +398,7 @@ MonoBehaviour:
   groundCheckRadius: 0.5
   groundCheckOffset: {x: 0, y: 0.5, z: 0}
   useChild: 1
+  _isMoving: 0
   _animContTest: {fileID: 0}
   _currentHitObj: {fileID: 0}
   _castOffSet: {x: 0, y: 0, z: 0}
@@ -410,7 +411,9 @@ MonoBehaviour:
     m_Bits: 311
   _initMovementSpeed: 0
   _initiateJump: 0
-  camera: {fileID: 0}
+  _turnSpeed: 6
+  serverCam: {fileID: 0}
+  camera: {fileID: 100004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 3}
   _testSpell: {fileID: 4704259911276081040, guid: 070384fb92869cf4dbb9573c8658c071,
     type: 3}
   _throwPos: {fileID: 1232852705}
@@ -425,7 +428,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5688016174280329108}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0c0b8c913871148aaf9d64a463b29a, type: 3}
   m_Name: 

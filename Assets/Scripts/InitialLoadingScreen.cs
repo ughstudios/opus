@@ -24,7 +24,7 @@ public class InitialLoadingScreen : MonoBehaviour
 
         tm = FindObjectOfType<TerrainManager>();
         tm.follow.Add(gameObject);
-        tm.StartGeneration();
+        //tm.StartGeneration();
 
     }
 

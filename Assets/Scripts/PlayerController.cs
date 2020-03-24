@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MobController
 {
 	private bool canPlant = true;
-	public Camera camera;
+	public Camera serverCam;
+	public GameObject camera = null;
 	public GameObject _testSpell = null;
 	public Transform _throwPos = null;
 	public bool _isDead = false; //Set _loadFromServer to true if prefab is to be loaded to server, don't apply to prefab
@@ -35,7 +36,20 @@ public class PlayerController : MobController
 		networkObject.isDead = _isDead;
 	}
 
+	protected override void Start()
+	{
+		base.Start();
+		Cursor.visible = false;
+		if(GameObject.FindGameObjectWithTag("ServerCamera") != null)
+			serverCam = GameObject.FindGameObjectWithTag("ServerCamera").GetComponent<Camera>();
 
+		//if (GameObject.FindGameObjectWithTag("MainCamera").gameObject != null)
+		//camera = GameObject.FindGameObjectWithTag("MainCamera").gameObject;
+
+		if(networkObject.IsOwner && camera != null)
+			Instantiate(camera);
+	}
+	
     void OnTriggerStay(Collider collider)
 	{
 		if (collider.gameObject.tag == "Water Hex")
@@ -52,6 +66,8 @@ public class PlayerController : MobController
 
 	private void Update()
 	{
+		if (Cursor.visible)
+			Cursor.visible = false;
 
 		if (health <= 0)
 		{
@@ -62,8 +78,12 @@ public class PlayerController : MobController
 		{
 			if (networkObject.IsOwner)
 			{
+				if(serverCam != null)
+					serverCam.enabled = false;
 
-				camera.enabled = true;
+				//if(camera != null)
+					//camera.SetActive(true);
+
 				_hudCanvas.SetActive(true);
 
 				if (UseChild)
@@ -80,7 +100,7 @@ public class PlayerController : MobController
 		}
 
 
-		if (Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround)
+		if (Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround || Input.GetMouseButtonDown(0) && OnGround)
 		{
 			movementSpeed = 0.0f;
 			rb.velocity = Vector3.zero;
@@ -118,7 +138,12 @@ public class PlayerController : MobController
 				health = networkObject.health;
 				_isDead = networkObject.isDead;
 
-				camera.enabled = false;
+				if (serverCam != null)
+					serverCam.enabled = true;
+
+				//if(camera != null)
+					//camera.SetActive(false);
+
 				_hudCanvas.SetActive(false);
 
 				return;
@@ -215,5 +240,10 @@ public class PlayerController : MobController
 			_healthCanvasValue = (float)health / 100;
 
 		_healthTransform.transform.localScale = new Vector3(_healthCanvasValue,1,1);
+	}
+
+	public float MouseAngle
+	{
+		get => m_LookAngle;
 	}
 }
