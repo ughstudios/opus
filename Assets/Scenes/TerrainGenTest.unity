@@ -250,6 +250,7 @@ MonoBehaviour:
     detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
+  genOnStart: 1
   updateInterval: 5
   loadedSectionRadius: 5
   numHeightmapOctaves: 8
@@ -263,7 +264,7 @@ MonoBehaviour:
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100
   biomeBlend: 100
-  minTreeDistance: 1
+  minTreeDistance: 5
   minBorderTreeDistance: 0.5
   treeTestPoints: 30
   minBiomeTreeStrength: 0.8
