@@ -30,6 +30,7 @@ public class TerrainManager : MonoBehaviour
     public float biomeBlend = 100f;
 
     public float minTreeDistance = 1f;
+    public float maxMinTreeDistance = 20f;
     public float minBorderTreeDistance = 0.5f;
     public int treeTestPoints = 30;
     public float minBiomeTreeStrength = 0.8f;
@@ -353,26 +354,30 @@ public class TerrainManager : MonoBehaviour
 
         Thread heightThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling("Heightmap", "" + coord.x + ":" + coord.z);
+                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                            "Heightmap", "" + coord.x + ":" + coord.z);
                     heightmap = GenerateHeightmap(coord);
                     UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread alphaThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling("Alphamap", "" + coord.x + ":" + coord.z);
+                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                            "Alphamap", "" + coord.x + ":" + coord.z);
                     alphamaps = GenerateAlphamaps(coord, out containedBiomes);
                     UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread detailThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling("Detailmap", "" + coord.x + ":" + coord.z);
+                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                            "Detailmap", "" + coord.x + ":" + coord.z);
                     detailMaps = GenerateDetailMaps(coord,
                             out detailPrototypeDatas);
                     UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread treeThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling("Treemap", "" + coord.x + ":" + coord.z);
+                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                            "Treemap", "" + coord.x + ":" + coord.z);
                     treeInstances = GenerateTreeInstances(coord,
                             out treePrototypeDatas);
                     UnityEngine.Profiling.Profiler.EndThreadProfiling();
@@ -453,7 +458,7 @@ public class TerrainManager : MonoBehaviour
         if (numGenThreads > 0)
             numGenThreads--;
         generating.Remove(coord);
-        if (sectionLoading.Equals(coord))
+        if (coord.Equals(sectionLoading))
             loadingSection = false;
     }
 
@@ -537,7 +542,7 @@ public class TerrainManager : MonoBehaviour
 
     private BiomeCenter SafeGetBiomeCenter(SectionCoord coord)
     {
-        BiomeCenter bc = null, test = null;
+        BiomeCenter bc, test;
 
         if (!biomeCenters.TryGetValue(coord, out bc))
         {
@@ -638,8 +643,6 @@ public class TerrainManager : MonoBehaviour
 
             for (int k = 0; weak && k < center.properBounds.Count; k++)
             {
-                //if (strong)
-                //    strong = center.strongBounds[k].GetSide(loc);
                 if (weak)
                 {
                     weak = center.weakBounds[k].GetSide(loc);
@@ -677,7 +680,6 @@ public class TerrainManager : MonoBehaviour
             output[i].strength =
                     Mathf.Pow(Mathf.Clamp01(output[i].strength), 2f);
         }
-        //return GetBiomes(vLoc);
         return output;
     }
 
@@ -707,8 +709,6 @@ public class TerrainManager : MonoBehaviour
 
             for (int k = 0; weak && k < center.properBounds.Count; k++)
             {
-                //if (strong)
-                //    strong = center.strongBounds[k].GetSide(loc);
                 if (weak)
                 {
                     weak = center.weakBounds[k].GetSide(loc);
@@ -742,7 +742,6 @@ public class TerrainManager : MonoBehaviour
             output[biomesOut[i]] =
                     Mathf.Pow(Mathf.Clamp01(output[biomesOut[i]]), 2f);
         }
-        //return GetBiomes(vLoc);
         return output;
     }
 
@@ -958,11 +957,6 @@ public class TerrainManager : MonoBehaviour
                                 Mathf.FloorToInt(((density * (dpd.maxDensity -
                                 dpd.minDensity)) + dpd.minDensity) *
                                 Mathf.Pow(biomes[i].strength, 2f));
-                        /**/
-                        /*
-                       detailmaps[detailPrototypes.IndexOf(dpd)][z, x] =
-                              Mathf.FloorToInt(dpd.minDensity * kvp.Value * kvp.Value);
-                       /**/
                     }
                 }
             }
@@ -976,7 +970,14 @@ public class TerrainManager : MonoBehaviour
         treePrototypes = new List<TreePrototypeData>();
         List<TreeInstance> treeInstances = new List<TreeInstance>();
 
-        float leastDist = minTreeDistance, mostDist = minTreeDistance;
+        float cellSize = minTreeDistance / Mathf.Sqrt(2);
+        int numCells = Mathf.CeilToInt(genSettings.length / cellSize);
+
+        int unprocessed = -1;
+        int noTree = -2;
+
+        int[,] trees = new int[numCells, numCells];
+        Vector3[,] points = new Vector3[numCells, numCells];
 
         NotRandom.RNG rng = new NotRandom.RNG(NotRandom.Hash2Int(seedHash, 
                 coord.GetHashCode()));
@@ -988,29 +989,44 @@ public class TerrainManager : MonoBehaviour
         Vector3 test, next;
         List<BiomeStrength> biomes;
         Biome b = null;
-        int p, totalTreeFreq;
+        int p, ax, az, anx, anz, annx, annz, range, tree, totalTreeFreq;
         float bx, bz, a, r, str;
         bool canTree;
-        toProcess.Add(new Vector3(rng.Value() * (genSettings.length -
+        next = new Vector3(rng.Value() * (genSettings.length -
                 minBorderTreeDistance * 2) + minBorderTreeDistance, 0f,
                 rng.Value() * (genSettings.length -
-                minBorderTreeDistance * 2) + minBorderTreeDistance));
+                minBorderTreeDistance * 2) + minBorderTreeDistance);
+        anx = Mathf.FloorToInt(next.x / cellSize);
+        anz = Mathf.FloorToInt(next.z / cellSize);
+        trees[anx, anz] = unprocessed;
+        points[anx, anz] = next;
+        toProcess.Add(next);
 
         while (toProcess.Count > 0)
         {
-            p = (int) (rng.Value() * toProcess.Count);
+            p = (int) (rng.ValueUInt() % toProcess.Count);
             test = toProcess[p];
             toProcess.RemoveAt(p);
+            ax = Mathf.FloorToInt(test.x / cellSize);
+            az = Mathf.FloorToInt(test.z / cellSize);
 
             canTree = true;
-            for (int i = 0; i < selected.Count; i++)
-            {
-                if (Vector3.Distance(test, selected[i]) < selectedTree[i].minDistance)
+            range = Mathf.CeilToInt(maxMinTreeDistance / cellSize);
+            for (int x = Mathf.Max(-range, -ax); canTree &&
+                    x <= Mathf.Min(range, numCells - 1 - ax); x++)
+                for (int z = Mathf.Max(-range, -az); canTree &&
+                        z <= Mathf.Min(range, numCells - 1 - az); z++)
                 {
-                    canTree = false;
-                    break;
+                    anx = ax + x;
+                    anz = az + z;
+                    tree = trees[anx, anz];
+                    if (tree > 0 && Vector3.Distance(test, points[anx, anz]) <
+                            selectedTree[tree - 1].minDistance)
+                    {
+                        canTree = false;
+                    }
                 }
-            }
+
             if (canTree)
             {
                 bx = (coord.x - 0.5f) * genSettings.length + test.x;
@@ -1064,6 +1080,7 @@ public class TerrainManager : MonoBehaviour
                     {
                         selectedTree.Add(b.treePrototypes[i]);
                         selected.Add(test);
+                        trees[ax, az] = selectedTree.Count;
                         break;
                     }
                     index -= b.treePrototypes[i].relativeFrequency;
@@ -1084,31 +1101,37 @@ public class TerrainManager : MonoBehaviour
                 {
                     continue;
                 }
-                canTree = true;
-                for (int j = 0; j < toProcess.Count; j++)
-                {
-                    if (Vector3.Distance(next, toProcess[j]) < minTreeDistance)
-                    {
-                        canTree = false;
-                        break;
-                    }
-                }
-                if (!canTree)
+                anx = Mathf.FloorToInt(next.x / cellSize);
+                anz = Mathf.FloorToInt(next.z / cellSize);
+                if (trees[anx, anz] != 0)
                     continue;
-                for (int j = 0; j < processed.Count; j++)
-                {
-                    if (Vector3.Distance(next, processed[j]) < minTreeDistance)
+                range = Mathf.CeilToInt(minTreeDistance / cellSize);
+                canTree = true;
+                for (int x = Mathf.Max(-range, -anx); canTree &&
+                        x <= Mathf.Min(range, numCells - 1 - anx); x++)
+                    for (int z = Mathf.Max(-range, -anz); canTree &&
+                            z <= Mathf.Min(range, numCells - 1 - anz); z++)
                     {
-                        canTree = false;
-                        break;
+                        annx = anx + x;
+                        annz = anz + z;
+
+                        if (trees[annx, annx] != 0 && 
+                                Vector3.Distance(next, points[annx, annz]) <
+                                minTreeDistance)
+                        {
+                            canTree = false;
+                        }
                     }
-                }
                 if (canTree)
                 {
                     toProcess.Add(next);
+                    trees[anx, anz] = unprocessed;
+                    points[anx, anz] = next;
                 }
             }
             processed.Add(test);
+            if (trees[ax, az] < 1)
+                trees[ax, az] = noTree;
         }
         TreeInstance ti;
         TreePrototypeData tpd;
