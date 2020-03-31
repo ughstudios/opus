@@ -306,6 +306,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Host Server
       objectReference: {fileID: 0}
+    - target: {fileID: 6793859798262937876, guid: d2513eb19424f9a48be29ea36a419482,
+        type: 3}
+      propertyPath: m_TagString
+      value: HostServer
+      objectReference: {fileID: 0}
     - target: {fileID: 6793859798262937874, guid: d2513eb19424f9a48be29ea36a419482,
         type: 3}
       propertyPath: m_LocalPosition.x

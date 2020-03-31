@@ -39,15 +39,17 @@ public class PlayerController : MobController
 	protected override void Start()
 	{
 		base.Start();
-		Cursor.visible = false;
-		if(GameObject.FindGameObjectWithTag("ServerCamera") != null)
+
+		//Cursor.visible = false;
+
+		if (GameObject.FindGameObjectWithTag("ServerCamera") != null)
 			serverCam = GameObject.FindGameObjectWithTag("ServerCamera").GetComponent<Camera>();
 
-		//if (GameObject.FindGameObjectWithTag("MainCamera").gameObject != null)
-		//camera = GameObject.FindGameObjectWithTag("MainCamera").gameObject;
-
-		if(networkObject.IsOwner && camera != null)
-			Instantiate(camera);
+		if (networkObject != null && networkObject.IsOwner && camera != null)
+		{
+			GameObject playerCamera = Instantiate(camera, gameObject.transform);
+			serverCam.enabled = false;
+		}
 	}
 	
     void OnTriggerStay(Collider collider)
@@ -66,8 +68,6 @@ public class PlayerController : MobController
 
 	private void Update()
 	{
-		if (Cursor.visible)
-			Cursor.visible = false;
 
 		if (health <= 0)
 		{

@@ -8,15 +8,22 @@ using UnityEngine.SceneManagement;
 public class Server : MonoBehaviour
 {
     public int MaxPlayers = 32;
-    private UDPServer server;
+    public UDPServer server;
     public ushort port = 15937;
     public GameObject networkManagerPrefab;
     private NetworkManager mgr;
 
+	void Awake()
+	{
+		DontDestroyOnLoad(gameObject);
+	}
+
     private void Start()
     {
-        Host();
+		if(SceneManager.GetActiveScene().name == "Server")
+			Host();
     }
+
 
     public void Host()
     {
@@ -43,12 +50,12 @@ public class Server : MonoBehaviour
         {
             mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
         }
-        
-        mgr.Initialize(server);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
-        
-        server.bindSuccessful += Server_bindSuccessful;
+		mgr.Initialize(server);
+
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+		server.bindSuccessful += Server_bindSuccessful;
     }
 
     private void Server_bindSuccessful(NetWorker sender)

@@ -48,6 +48,16 @@ public class MobController : DamageableEntity
 	protected float m_LookAngle = 0.0f;
 	#endregion
 
+	#region Slope for bumpy terrain
+	[SerializeField] float _height = 0.5f;
+	Vector3 _forward;//Keep track of our forward
+	RaycastHit _hitInfo;
+	//To track slope
+	[SerializeField] float _slopeForce;
+	[SerializeField] float _slopeForceRayLength;
+
+	#endregion
+
 	protected override void Start()
 	{
 		base.Start();
@@ -94,6 +104,12 @@ public class MobController : DamageableEntity
 			}
 		}
 
+		if ((OnSlope() && movement.x != 0) || (OnSlope() && movement.z != 0))
+		{
+			rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+			rb.AddRelativeForce(new Vector3(movement.x, 1, movement.z), ForceMode.VelocityChange);
+		}
+
 		//changed to accommodate the new animotor
 		//if (horizMoveInput.sqrMagnitude > Mathf.Epsilon)
 		if (horizMoveInput.z > 0 || horizMoveInput.z < 0)//for running forward
@@ -135,33 +151,10 @@ public class MobController : DamageableEntity
 		//should rotate in
 		//This rotation was updated to follow the Camera's rotation due to the addition of the new camera
 		#region Rotation
-		/*
-		if (horizMoveInput.x > Mathf.Epsilon)
-		{
-			targetRot = rightRot;
-		}
-
-		if (horizMoveInput.x < -Mathf.Epsilon)
-		{
-			targetRot = leftRot;
-		}
-
-		if (horizMoveInput.z > Mathf.Epsilon)
-		{
-			targetRot = frontRot;
-		}
-
-		if (horizMoveInput.z < -Mathf.Epsilon)
-		{
-			targetRot = backRot;
-		}
-		*/
 		Vector3 normalizedRot = new Vector3(Input.GetAxis(CharacterButtonsConstants.HORIZONTAL), 0, Input.GetAxis(CharacterButtonsConstants.VERTICLE)).normalized;
 		
 		//Rotating child so camera doesn't rotate with object
 		//else is used so hostiles can still use MobController
-
-
 		if (!useChild)
 			transform.LookAt(transform.position + new Vector3(normalizedRot.x, 0, normalizedRot.z));
 
@@ -189,22 +182,6 @@ public class MobController : DamageableEntity
 			
 				
 		}
-
-
-
-		//if using this way of rotation set the child object with animator to 90 on Y rot axis
-		//transform.rotation = Quaternion.Euler(targetRot);
-
-
-		/*
-		
-		transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, targetRot, rotSpeed * Time.fixedDeltaTime);
-		
-        if (animator != null)
-            animator.transform.localEulerAngles = Vector3.Lerp(animator.transform.localEulerAngles,
-                    targetRot, rotSpeed * Time.fixedDeltaTime);
-		*/
-
 		#endregion
 
 
@@ -223,11 +200,15 @@ public class MobController : DamageableEntity
 		}
 
 		//Updated below for 3d character
-
 		if (useChild)
 		{
 			NewGroundDetection();
 
+			//To correct slopes due to rigidness of terrain
+			OnSlope();
+			
+
+			DrawDebugLines();
 
 			if (Input.GetButtonDown(CharacterButtonsConstants.JUMP) && _onGround)
 			{
@@ -264,7 +245,7 @@ public class MobController : DamageableEntity
 		base.OnDeath();
 	}
 
-	protected virtual void GroundCheck()
+	protected virtual void GroundCheck()//for jumping anim, look at CheckGround() for slope
 	{
 		RaycastHit hit;
 		if (Physics.SphereCast(transform.position + groundCheckOffset, groundCheckRadius,
@@ -339,5 +320,33 @@ public class MobController : DamageableEntity
 	public bool OnGround
 	{
 		get => _onGround;
+	}
+
+
+	//draw debug lines
+	void DrawDebugLines()
+	{
+		//forward vector
+		Debug.DrawLine(transform.position, transform.position + _forward * _height * 2, Color.blue);
+		
+		//height check, simulate raycast
+		//Debug.DrawLine(transform.position, transform.position - Vector3.up * _height, Color.red);
+
+		//check if on slope
+		Debug.DrawLine(transform.position, transform.position + Vector3.down * .5f, Color.green);
+	}
+
+	bool OnSlope()
+	{
+
+		if (Physics.Raycast(transform.position, Vector3.down,out _hitInfo, .5f))
+		{
+			if (_hitInfo.normal != Vector3.up && _onGround)
+			{
+				return true;				
+			}
+		}
+
+		return false;
 	}
 }

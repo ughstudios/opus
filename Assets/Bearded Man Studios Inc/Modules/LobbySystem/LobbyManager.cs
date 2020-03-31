@@ -31,7 +31,7 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
 				return _lobbyPlayers;
 			}
 		}
-
+		
 		private Dictionary<uint, IClientMockPlayer> _lobbyPlayersMap = new Dictionary<uint, IClientMockPlayer>();
 		public Dictionary<uint, IClientMockPlayer> LobbyPlayersMap
 		{
@@ -137,7 +137,8 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
         public void StartGame(int sceneID)
         {
 #if UNITY_5_6_OR_NEWER
-            SceneManager.LoadScene(sceneID);
+			
+				SceneManager.LoadScene(sceneID);
 #else
             Application.LoadLevel(sceneID);
 #endif
@@ -456,5 +457,10 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
 			}
 		}
 		#endregion
+
+		public int PlayerCount()
+		{
+			return _lobbyPlayers.Count;
+		}
 	}
 }

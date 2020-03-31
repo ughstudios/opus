@@ -412,8 +412,11 @@ MonoBehaviour:
   _initMovementSpeed: 0
   _initiateJump: 0
   _turnSpeed: 6
+  _height: 0.5
+  _slopeForce: 0
+  _slopeForceRayLength: 0
   serverCam: {fileID: 0}
-  camera: {fileID: 100004, guid: 49a0e923d39ec3c4c8bb97699e2f2903, type: 3}
+  camera: {fileID: 4553999758793566252, guid: d3bb82f39007a7441bf6f788cfa49601, type: 3}
   _testSpell: {fileID: 4704259911276081040, guid: 070384fb92869cf4dbb9573c8658c071,
     type: 3}
   _throwPos: {fileID: 1232852705}

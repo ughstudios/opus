@@ -19,3 +19,5 @@ MonoBehaviour:
   minHeight: 0
   maxHeight: 0.3
   heightExponent: 1
+  detailPrototypes: []
+  treePrototypes: []

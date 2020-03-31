@@ -20,4 +20,5 @@ MonoBehaviour:
   maxHeight: 0.5
   heightExponent: 1
   detailPrototypes: []
-  treePrototypes: []
+  treePrototypes:
+  - {fileID: 11400000, guid: 3a70858e9abaef64da9c12c9e8a87e31, type: 2}

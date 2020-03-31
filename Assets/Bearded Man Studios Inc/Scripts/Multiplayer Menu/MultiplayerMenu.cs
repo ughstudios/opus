@@ -37,10 +37,10 @@ public class MultiplayerMenu : MonoBehaviour
 
 	private void Start()
 	{
-		//ipAddress.text = "127.0.0.1";
-		//portNumber.text = "15937";
-		ipAddress.text = "13.90.19.77";
+		ipAddress.text = "127.0.0.1";
 		portNumber.text = "15937";
+		//ipAddress.text = "13.90.19.77";
+		//portNumber.text = "15937";
 
 		for (int i = 0; i < ToggledButtons.Length; ++i)
 		{

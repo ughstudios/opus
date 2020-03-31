@@ -14,11 +14,14 @@ public class InstantiateGameMode : MonoBehaviour
 				NetworkManager.Instance.InstantiateGameMode();
 		}
 		*/
+	
+		
 
 		if (NetworkManager.Instance != null)
 		{
 			if (!NetworkManager.Instance.IsServer)
 				NetworkManager.Instance.InstantiatePlayer();
 		}
+		
 	}
 }
