@@ -222,12 +222,13 @@ public class MobController : DamageableEntity
 			{
 				animator.SetBool("onGround", false);
 			}
-
+		
 			if (!_initiateJump)
 			{
 				animator.SetBool("onGround", _onGround);
 			}
 		}
+		
 
 		//stopping the character
 		if (horizMoveInput.sqrMagnitude < Mathf.Epsilon && !bJumping && !IsFalling() && isGrounded)

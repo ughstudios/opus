@@ -20,8 +20,8 @@ public class AnimationEventsHandler : MonoBehaviour
 
 	public void Throw()
 	{
-		_throPos.GetComponent<InstantiateSpell>().ThrowSpell();
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<PlayerController>().ResetMovementSpeed();
+		_throPos.GetComponent<InstantiateSpell>().ThrowSpell();
 	}
 }

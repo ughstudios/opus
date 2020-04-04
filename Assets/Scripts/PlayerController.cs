@@ -17,7 +17,16 @@ public class PlayerController : MobController
 	public float _healthCanvasValue = 0.0f;
 	public GameObject _hudCanvas = null;
 
-    protected override void NetworkStart()
+	#region Cool down for spell
+	[SerializeField] float	_coolDownTime = 1.5f,
+							_initCoolDownTime = 0.0f,
+							_coolDownRate = 1.0f;
+
+	[SerializeField] bool _startCoolDown = false;
+	public RectTransform _poisonReflillTransform = null;
+	#endregion
+
+	protected override void NetworkStart()
 	{
 		base.NetworkStart();
 		networkObject.position = transform.position;
@@ -41,6 +50,8 @@ public class PlayerController : MobController
 		base.Start();
 
 		//Cursor.visible = false;
+
+		_initCoolDownTime = _coolDownTime;
 
 		if (GameObject.FindGameObjectWithTag("ServerCamera") != null)
 			serverCam = GameObject.FindGameObjectWithTag("ServerCamera").GetComponent<Camera>();
@@ -99,17 +110,26 @@ public class PlayerController : MobController
 			}
 		}
 
-
-		if (Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround || Input.GetMouseButtonDown(0) && OnGround)
+		
+		if (!_startCoolDown && Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround ||
+			!_startCoolDown && Input.GetMouseButtonDown(0) && OnGround)
 		{
-			movementSpeed = 0.0f;
-			rb.velocity = Vector3.zero;
-			animator.SetBool("isThrowing", true);
+			_startCoolDown = true;
+			_coolDownTime = 0.0f;
+
+			if (animator.GetBool("isThrowing") == false) //only if we are not throwing can we throw again to avoid getting stuck
+			{
+				animator.SetBool("isThrowing", true);
+				movementSpeed = 0.0f;
+				rb.velocity = Vector3.zero;
+			}
 		}
 
-		if(networkObject != null && networkObject.IsOwner)
-			HealthCanvasMeter();
+		if (_startCoolDown) CoolDown();
+		PoisonHudMeter();
 
+		if (networkObject != null && networkObject.IsOwner)
+			HealthCanvasMeter();
 	}
 
 	protected override void FixedUpdate()
@@ -162,17 +182,20 @@ public class PlayerController : MobController
 				groundCollider.GetComponent<DamageableEntity>() == null
 				&& Input.GetButton("Gather"))
 		{
-			Inventory inv = GetComponent<Inventory>();
-			RaycastHit hit;
-			Item toPlant = inv.GetRandomPlantable();
-			if (toPlant != null && Physics.Raycast(transform.position,
-					Vector3.down, out hit, 5f))
+			if (GetComponent<Inventory>() != null)
 			{
-				Harvestable plant = Instantiate<Harvestable>(toPlant.plantPrefab,
-						hit.point, Quaternion.Euler(0f, Random.value * 360f, 0f));
-				plant.canHarvest = false;
-				plant.ForceUpdate();
-				inv.RemoveCountOfItemFromInventory(toPlant, 1);
+				Inventory inv = GetComponent<Inventory>();
+				RaycastHit hit;
+				Item toPlant = inv.GetRandomPlantable();
+				if (toPlant != null && Physics.Raycast(transform.position,
+						Vector3.down, out hit, 5f))
+				{
+					Harvestable plant = Instantiate<Harvestable>(toPlant.plantPrefab,
+							hit.point, Quaternion.Euler(0f, Random.value * 360f, 0f));
+					plant.canHarvest = false;
+					plant.ForceUpdate();
+					inv.RemoveCountOfItemFromInventory(toPlant, 1);
+				}
 			}
 		}
 
@@ -199,16 +222,7 @@ public class PlayerController : MobController
 		base.TakeDamage(source, damage);
 	}
 
-	/*
-	protected override void OnDeath()
-	{
-		base.OnDeath();
-
-
-		//if (networkObject.isDead)
-		//if (!_loadedFromServer) SceneManager.LoadScene("GameOver");
-	}
-	*/
+	
 
 	private bool IsUnder(Collider col)
 	{
@@ -240,6 +254,24 @@ public class PlayerController : MobController
 			_healthCanvasValue = (float)health / 100;
 
 		_healthTransform.transform.localScale = new Vector3(_healthCanvasValue,1,1);
+	}
+
+	void PoisonHudMeter()
+	{
+		float poisonRefillVal = _coolDownTime;
+
+		_poisonReflillTransform.transform.localScale = new Vector3(1,poisonRefillVal,1);
+	}
+
+	void CoolDown()
+	{
+		_coolDownTime += Time.deltaTime * _coolDownRate;
+
+		if (_coolDownTime >= _initCoolDownTime)
+		{
+			_coolDownTime = _initCoolDownTime;
+			_startCoolDown = false;
+		}
 	}
 
 	public float MouseAngle
