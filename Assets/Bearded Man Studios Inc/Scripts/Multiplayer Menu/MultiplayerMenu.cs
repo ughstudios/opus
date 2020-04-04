@@ -37,7 +37,7 @@ public class MultiplayerMenu : MonoBehaviour
 
 	private void Start()
 	{
-		ipAddress.text = "127.0.0.1";
+		ipAddress.text = "45.63.11.159";
 		portNumber.text = "15937";
 		//ipAddress.text = "13.90.19.77";
 		//portNumber.text = "15937";
