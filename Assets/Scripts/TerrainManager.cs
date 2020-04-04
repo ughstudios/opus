@@ -989,7 +989,7 @@ public class TerrainManager : MonoBehaviour
         Vector3 test, next;
         List<BiomeStrength> biomes;
         Biome b = null;
-        int p, ax, az, anx, anz, annx, annz, range, tree, totalTreeFreq;
+        int p, ax, az, anx, anz, annx, annz, range, tree, totalTreeFreq, maxX, maxZ;
         float bx, bz, a, r, str;
         bool canTree;
         next = new Vector3(rng.Value() * (genSettings.length -
@@ -1012,10 +1012,10 @@ public class TerrainManager : MonoBehaviour
 
             canTree = true;
             range = Mathf.CeilToInt(maxMinTreeDistance / cellSize);
-            for (int x = Mathf.Max(-range, -ax); canTree &&
-                    x <= Mathf.Min(range, numCells - 1 - ax); x++)
-                for (int z = Mathf.Max(-range, -az); canTree &&
-                        z <= Mathf.Min(range, numCells - 1 - az); z++)
+            maxX = Mathf.Min(range, numCells - 1 - ax);
+            maxZ = Mathf.Min(range, numCells - 1 - az);
+            for (int x = Mathf.Max(-range, -ax); canTree && x <= maxX; x++)
+                for (int z = Mathf.Max(-range, -az); canTree && z <= maxZ; z++)
                 {
                     anx = ax + x;
                     anz = az + z;
@@ -1107,10 +1107,12 @@ public class TerrainManager : MonoBehaviour
                     continue;
                 range = Mathf.CeilToInt(minTreeDistance / cellSize);
                 canTree = true;
+                maxX = Mathf.Min(range, numCells - 1 - anx);
+                maxZ = Mathf.Min(range, numCells - 1 - anz);
                 for (int x = Mathf.Max(-range, -anx); canTree &&
-                        x <= Mathf.Min(range, numCells - 1 - anx); x++)
+                        x <= maxX; x++)
                     for (int z = Mathf.Max(-range, -anz); canTree &&
-                            z <= Mathf.Min(range, numCells - 1 - anz); z++)
+                            z <= maxZ; z++)
                     {
                         annx = anx + x;
                         annz = anz + z;
