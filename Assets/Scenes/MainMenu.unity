@@ -808,7 +808,6 @@ MonoBehaviour:
   port: 15937
   networkManagerPrefab: {fileID: 9112252649110997610, guid: aa7ff14af1e48074f8c7772f20a55889,
     type: 3}
-  mgr: {fileID: 0}
 --- !u!1 &1349210403
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,9 +3,8 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -23,7 +22,7 @@ MonoBehaviour:
   m_showFunctionDebugsOnly: 0
   m_smartConsoleClean: 0
   m_isProceduralCreatedProfile: 1
-  m_systemTypes: 0
+  m_systemTypes: 4
   m_lightingEditMode: 0
   m_selectedRenderPipeline: 0
   m_targetPlatform: 0
@@ -658,9 +657,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_useSkies: 1
-  m_usePostFX: 1
-  m_useLighting: 1
+  m_useSkies: 0
+  m_usePostFX: 0
+  m_useLighting: 0
   m_skyProfiles:
   - name: Sky Five Low
     assetName: Sky05Low
@@ -2575,7 +2574,7 @@ MonoBehaviour:
     temperature: 6500
     useTempature: 0
     fogColor: {r: 0.47450984, g: 0.63529414, b: 0.7372549, a: 0}
-    fogDistance: 625
+    fogDistance: 1000
     nearFogDistance: 0
     fogDensity: 0.0006
     includeSunInBaking: 1
@@ -4076,7 +4075,7 @@ MonoBehaviour:
     shadowQuality: 5
     fogType: 3
     cascadeCount: 3
-    enableSunDisk: 0
+    enableSunDisk: 1
     isGlobal: 1
     blendDistance: 0
     weight: 1
@@ -19718,7 +19717,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 15
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 0
     bakedGlobalIllumination: 1
@@ -19738,7 +19736,7 @@ MonoBehaviour:
     finalGather: 0
     finalGatherRayCount: 256
     finalGatherDenoising: 1
-    autoLightmapGeneration: 1
+    autoLightmapGeneration: 0
     reflectionProbeName: New Probe
     reflectionProbeSpawnType: 1
     reflectionProbeMode: 1
@@ -19759,7 +19757,6 @@ MonoBehaviour:
     lightProbesPerRow: 15
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: Very Low Quality Lighting
     profileIndex: 1
     assetName: Very Low Quality Lighting
@@ -19803,7 +19800,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 15
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 0
     bakedGlobalIllumination: 1
@@ -19844,7 +19840,6 @@ MonoBehaviour:
     lightProbesPerRow: 15
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: Low Quality Lighting
     profileIndex: 2
     assetName: Low Quality Lighting
@@ -19888,7 +19883,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 15
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 0
     bakedGlobalIllumination: 1
@@ -19929,7 +19923,6 @@ MonoBehaviour:
     lightProbesPerRow: 15
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: High Quality Lighting
     profileIndex: 3
     assetName: High Quality Lighting
@@ -19973,7 +19966,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 50
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 1
     bakedGlobalIllumination: 1
@@ -20014,7 +20006,6 @@ MonoBehaviour:
     lightProbesPerRow: 50
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: Very High Quality Lighting
     profileIndex: 4
     assetName: Very High Quality Lighting
@@ -20058,7 +20049,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 50
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 1
     bakedGlobalIllumination: 1
@@ -20099,7 +20089,6 @@ MonoBehaviour:
     lightProbesPerRow: 50
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: Ultra Quality Lighting
     profileIndex: 5
     assetName: Ultra Quality Lighting
@@ -20143,7 +20132,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 50
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 1
     bakedGlobalIllumination: 1
@@ -20184,7 +20172,6 @@ MonoBehaviour:
     lightProbesPerRow: 50
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
   - name: Ultra High Quality Lighting
     profileIndex: 6
     assetName: Ultra High Quality Lighting
@@ -20228,7 +20215,6 @@ MonoBehaviour:
     defaultLightProbesPerRow: 50
     defaultLightProbeSpawnRadius: 25
     defaultSeaLevel: 50
-    defaultFilterMode: 1
     showLightmapSettings: 0
     realtimeGlobalIllumination: 1
     bakedGlobalIllumination: 1
@@ -20269,4 +20255,3 @@ MonoBehaviour:
     lightProbesPerRow: 50
     lightProbeSpawnRadius: 25
     seaLevel: 50
-    filterMode: 1
