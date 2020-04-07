@@ -36,6 +36,8 @@ public class TerrainManager : MonoBehaviour
     public int treeTestPoints = 30;
     public float minBiomeTreeStrength = 0.8f;
 
+    public bool debugThreads = false;
+
     private Dictionary<SectionCoord, TerrainSection> terrains =
             new Dictionary<SectionCoord, TerrainSection>();
     private Queue<SectionCoord> toCreate = new Queue<SectionCoord>();
@@ -270,8 +272,8 @@ public class TerrainManager : MonoBehaviour
                 continue;
             List<SectionCoord> coords = SectionsInRadius(SectionFor(
                     follow[i].transform.position), loadedSectionRadius);
-            foreach (SectionCoord loc in coords)
-                needed.Add(loc);
+            for (int j = 0; j < coords.Count; j++)
+                needed.Add(coords[j]);
         }
 
         List<SectionCoord> exists = terrains.Keys.ToList();
@@ -281,15 +283,15 @@ public class TerrainManager : MonoBehaviour
 
         if (toGen.Count > 0)
         {
-            foreach (SectionCoord loc in toGen)
-                toCreate.Enqueue(loc);
+            for (int i = 0; i < toGen.Count; i++)
+                toCreate.Enqueue(toGen[i]);
             StartCreateCR();
         }
 
         if (remove.Count > 0)
         {
-            foreach (SectionCoord loc in remove)
-                toRemove.Enqueue(loc);
+            for (int i = 0; i < remove.Count; i++)
+                toRemove.Enqueue(remove[i]);
             StartRemoveCR();
         }
 
@@ -319,6 +321,7 @@ public class TerrainManager : MonoBehaviour
                 SectionCoord coord = toCreate.Dequeue();
                 StartCoroutine(GenerateSection_CR(coord));
                 generating.Add(coord);
+                yield return null;
             }
             yield return new WaitUntil(() => numGenThreads < maxSimultaneousGens);
         }
@@ -340,13 +343,6 @@ public class TerrainManager : MonoBehaviour
 
         float[,] heightmap = null;
         float[,,] alphamaps = null;
-        TerrainData data = new TerrainData();
-        data.heightmapResolution = genSettings.heightMapRes;
-        data.alphamapResolution = genSettings.alphaMapRes;
-        data.SetDetailResolution(genSettings.detailMapRes,
-                genSettings.detailMapResPerPatch);
-        data.size = new Vector3(genSettings.length, genSettings.height,
-                genSettings.length);
 
         List<Biome> containedBiomes = null;
         List<DetailPrototypeData> detailPrototypeDatas = null;
@@ -356,38 +352,50 @@ public class TerrainManager : MonoBehaviour
 
         Thread heightThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
-                            "Heightmap", "" + coord.x + ":" + coord.z);
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                                "Heightmap", "" + coord.x + ":" + coord.z);
                     heightmap = GenerateHeightmap(coord);
-                    UnityEngine.Profiling.Profiler.EndThreadProfiling();
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread alphaThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
-                            "Alphamap", "" + coord.x + ":" + coord.z);
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                                "Alphamap", "" + coord.x + ":" + coord.z);
                     alphamaps = GenerateAlphamaps(coord, out containedBiomes);
-                    UnityEngine.Profiling.Profiler.EndThreadProfiling();
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread detailThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
-                            "Detailmap", "" + coord.x + ":" + coord.z);
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                                "Detailmap", "" + coord.x + ":" + coord.z);
                     detailMaps = GenerateDetailMaps(coord,
                             out detailPrototypeDatas);
-                    UnityEngine.Profiling.Profiler.EndThreadProfiling();
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
         Thread treeThread = new Thread(() =>
                 {
-                    UnityEngine.Profiling.Profiler.BeginThreadProfiling(
-                            "Treemap", "" + coord.x + ":" + coord.z);
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.BeginThreadProfiling(
+                                "Treemap", "" + coord.x + ":" + coord.z);
                     treeInstances = GenerateTreeInstances(coord,
                             out treePrototypeDatas);
-                    UnityEngine.Profiling.Profiler.EndThreadProfiling();
+                    if (debugThreads)
+                        UnityEngine.Profiling.Profiler.EndThreadProfiling();
                 });
-        heightThread.Start();
-        alphaThread.Start();
-        detailThread.Start();
+        yield return null;
         treeThread.Start();
+        yield return null;
+        heightThread.Start();
+        yield return null;
+        alphaThread.Start();
+        yield return null;
+        detailThread.Start();
         yield return new WaitUntil(() => (heightmap != null &&
                 alphamaps != null && detailMaps != null && 
                 treeInstances != null && !loadingSection));
@@ -396,12 +404,27 @@ public class TerrainManager : MonoBehaviour
         loadingSection = true;
         sectionLoading = coord;
 
+        TerrainData data = new TerrainData();
+        data.heightmapResolution = genSettings.heightMapRes;
+        yield return null;
+        data.alphamapResolution = genSettings.alphaMapRes;
+        data.SetDetailResolution(genSettings.detailMapRes,
+                genSettings.detailMapResPerPatch);
+        data.size = new Vector3(genSettings.length, genSettings.height,
+                genSettings.length);
+        yield return null;
+
+        data.SetHeights(0, 0, heightmap);
+        yield return null;
+
         for (int i = 0; i < containedBiomes.Count; i++)
             terrainLayers[i] = containedBiomes[i].terrainLayer;
 
         DetailPrototype[] detailPrototypes = null;
         if (detailPrototypeDatas.Count > 0)
+        {
             detailPrototypes = new DetailPrototype[detailPrototypeDatas.Count];
+        }
         for (int i = 0; i < detailPrototypeDatas.Count; i++)
         {
             DetailPrototype dp = detailPrototypes[i] = new DetailPrototype();
@@ -419,9 +442,16 @@ public class TerrainManager : MonoBehaviour
             dp.renderMode = dpd.renderMode;
         }
         yield return null;
+
+        data.terrainLayers = terrainLayers;
+        data.SetAlphamaps(0, 0, alphamaps);
+        yield return null;
+
         TreePrototype[] treePrototypes = null;
         if (treePrototypeDatas.Count > 0)
-                treePrototypes = new TreePrototype[treePrototypeDatas.Count];
+        {
+            treePrototypes = new TreePrototype[treePrototypeDatas.Count];
+        }
         for (int i = 0; i < treePrototypeDatas.Count; i++)
         {
             TreePrototype tp = treePrototypes[i] = new TreePrototype();
@@ -429,22 +459,21 @@ public class TerrainManager : MonoBehaviour
             tp.prefab = treePrototypeDatas[i].prefab;
         }
         yield return null;
-        data.SetHeights(0, 0, heightmap);
-        data.terrainLayers = terrainLayers;
-        data.SetAlphamaps(0, 0, alphamaps);
-        yield return null;
         if (detailPrototypes != null)
         {
             data.detailPrototypes = detailPrototypes;
+            yield return null;
             for (int i = 0; i < detailMaps.Count; i++)
             {
                 data.SetDetailLayer(0, 0, i, detailMaps[i]);
+                yield return null;
             }
         }
         yield return null;
         if (treePrototypes != null)
         {
             data.treePrototypes = treePrototypes;
+            yield return null;
             data.SetTreeInstances(treeInstances.ToArray(), true);
         }
         yield return null;
