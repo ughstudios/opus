@@ -127,6 +127,7 @@ public class MultiplayerMenu : MonoBehaviour
 			if (response != null && response.serverResponse.Count > 0)
 			{
 				MasterServerResponse.Server server = response.serverResponse[Random.Range(0, response.serverResponse.Count)];
+				
 				//TCPClient client = new TCPClient();
 				UDPClient client = new UDPClient();
 				client.Connect(server.Address, server.Port);

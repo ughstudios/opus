@@ -3,161 +3,210 @@ using System.Collections.Generic;
 using UnityEngine;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Unity;
-using Steamworks;
 using System;
-using System.Net;
+using Steamworks;
+using Steamworks.Data;
+using UnityEngine.UI;
 
 public class ClientConnect : MonoBehaviour
 {
 
     public string hostAddress = "127.0.0.1";
     public ushort port = 15937;
+    public string masterServerHost = "45.63.11.159"; // should use a hostname ideally. 
+    public ushort masterServerPort = 15940;
+    public uint steamDevAppID = 480; // Ours is: 954040
 
     public GameObject networkManagerPrefab;
     private NetworkManager mgr;
 
-    //Steamworks
-    protected Callback<LobbyCreated_t> Callback_lobbyCreated;
-    protected Callback<LobbyMatchList_t> Callback_lobbyList;
-    protected Callback<LobbyEnter_t> Callback_lobbyEnter;
-    protected Callback<LobbyDataUpdate_t> Callback_lobbyInfo;
-    protected Callback<LobbyGameCreated_t> Callback_lobbyGameCreated;
-
-    private int maxLobbyMembers = 20; // Should be the same as the max number of players on the server, for obvious reasons. 
-    private ISteamMatchmakingServerListResponse m_ServerListResponse;
-
-    private CSteamID localLobbySteamID;
-
-    bool isInLobby = false;
-    bool loopForServers = true;
-    HServerListRequest serverListRequest;
-
-    //End Steamworks
-
+    public int maxLobbyMembers = 1;
+    bool isInLobby;
+    Lobby ourLobby;
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         // Do any firewall opening requests on the operating system
         NetWorker.PingForFirewall(port);
 
         Rpc.MainThreadRunner = MainThreadManager.Instance;
-        Callback_lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
-        Callback_lobbyList = Callback<LobbyMatchList_t>.Create(OnGetLobbiesList);
-        Callback_lobbyEnter = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
-        Callback_lobbyInfo = Callback<LobbyDataUpdate_t>.Create(OnGetLobbyInfo);
-        Callback_lobbyGameCreated = Callback<LobbyGameCreated_t>.Create(OnLobbyGameCreated); // Called when the lobby owner calls ISteamMatchMaking.SetLobbyGameServer()
 
-        m_ServerListResponse = new ISteamMatchmakingServerListResponse(OnServerResponded, OnServerFailedToRespond, OnRefreshComplete);
+    }
 
-        if (SteamAPI.Init())
+    private void OnEnable()
+    {
+        try
         {
-            Debug.Log("Steam API init -- SUCCESS");
+            SteamClient.Init(steamDevAppID);
+            Debug.Log("SteamAPI_init successful.");
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogError("Steam API init -- FAILED (Are you logged into steam??)");
-        }
-
-    }
-
-    private void OnRefreshComplete(HServerListRequest hRequest, EMatchMakingServerResponse response)
-    {
-        // nothing
-    }
-
-    private void OnServerFailedToRespond(HServerListRequest hRequest, int iServer)
-    {
-        // nothing
-    }
-
-    private void OnServerResponded(HServerListRequest hRequest, int iServer)
-    {
-        gameserveritem_t serverItem = SteamMatchmakingServers.GetServerDetails(hRequest, iServer);
-        if (serverItem.m_nMaxPlayers == 0)
-        {
-            string gameTags = serverItem.GetGameTags();
-            IPAddress ipAddr = IPAddress.Parse(gameTags);
-            uint ipAddrUint32 = BitConverter.ToUInt32(ipAddr.GetAddressBytes(), 0);
-
-            SteamMatchmaking.SetLobbyGameServer(localLobbySteamID, ipAddrUint32, port, serverItem.m_steamID);
-
+            Debug.LogError(e.StackTrace);
+            Debug.LogError("Message: " + e.Message);
         }
     }
 
-    private void OnLobbyGameCreated(LobbyGameCreated_t param)
+    private void OnDisable()
     {
-        hostAddress = param.m_unIP.ToString();
-        ConnectToServer();
-        SteamMatchmaking.LeaveLobby(localLobbySteamID);
-        SteamMatchmakingServers.ReleaseRequest(serverListRequest);
+        SteamClient.Shutdown();
+
     }
 
-    private void OnGetLobbyInfo(LobbyDataUpdate_t param)
+    private void Update()
     {
-        // Called after we call RequestLobbyData
-        int numLobbyMembers = SteamMatchmaking.GetNumLobbyMembers((CSteamID)param.m_ulSteamIDLobby);
-        if (numLobbyMembers < maxLobbyMembers)
-        {
-            SteamMatchmaking.JoinLobby((CSteamID)param.m_ulSteamIDLobby);
-        }
+        SteamClient.RunCallbacks();
     }
 
-    private void OnLobbyEntered(LobbyEnter_t param)
+    public async void FindMatch()
     {
-        isInLobby = true;
-        localLobbySteamID = (CSteamID)param.m_ulSteamIDLobby;
-        // Do anything we want to do when joining a lobby. 
-        if (SteamMatchmaking.GetLobbyOwner((CSteamID)param.m_ulSteamIDLobby) == SteamUser.GetSteamID()) // If we are the owner of the lobby
-        {
-            StartCoroutine(LobbyReadyCheck(param));
-        }
-    }
+        GetComponent<Canvas>().enabled = false;
 
-    IEnumerator LobbyReadyCheck(LobbyEnter_t param)
-    {
+        Lobby[] list = await SteamMatchmaking.LobbyList.RequestAsync();
+        SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
+        SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
+        SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
+        SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
 
-        while (loopForServers)
+        Debug.Log("Lobbies Count: " + list.Length);
+
+        foreach (Lobby lobby in list)
         {
-            int numLobbyMembers = SteamMatchmaking.GetNumLobbyMembers((CSteamID)param.m_ulSteamIDLobby);
-            if (numLobbyMembers == maxLobbyMembers)
+            if (lobby.MemberCount < lobby.MaxMembers)
             {
-                MatchMakingKeyValuePair_t[] filters =
+                if (steamDevAppID == 480)
                 {
-                    new MatchMakingKeyValuePair_t { m_szKey = "appid", m_szValue = "954040" }
-                };
-
-                serverListRequest = SteamMatchmakingServers.RequestInternetServerList((AppId_t)954040, filters, (uint)filters.Length, m_ServerListResponse);
-
+                    if (lobby.GetData("lobbyName").Contains("opus"))
+                    {
+                        ourLobby = lobby;
+                        await lobby.Join();
+                    }
+                }
+                else
+                {
+                    ourLobby = lobby;
+                    await lobby.Join();
+                }
             }
-
-            yield return new WaitForSeconds(2);
-        }
-    }
-
-    private void OnGetLobbiesList(LobbyMatchList_t param)
-    {
-        for (int i = 0; i < param.m_nLobbiesMatching - 1; i++)
-        {
-            CSteamID lobbyID = SteamMatchmaking.GetLobbyByIndex(i);
-            SteamMatchmaking.RequestLobbyData(lobbyID);
         }
 
         if (!isInLobby)
         {
-            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, maxLobbyMembers);
+            Debug.Log("Couldn't find a lobby, creating our own.");
+            var lobbyr = await SteamMatchmaking.CreateLobbyAsync(maxLobbyMembers);
+            if (!lobbyr.HasValue)
+            {
+                Debug.Log("Couldn't create lobby.");
+                return;
+            }
+
+            var lobby = lobbyr.Value;
+            lobby.SetPublic();
+            lobby.SetJoinable(true);
+
+        }
+
+
+        if (mgr == null)
+        {
+            mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
         }
 
     }
 
-    private void OnLobbyCreated(LobbyCreated_t param)
+    private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
-        
+        if (lobby.IsOwnedBy(SteamClient.SteamId))
+        {
+            LobbyCheck(lobby);
+        }
     }
 
-    public void FindMatch()
+    private void SteamMatchmaking_OnLobbyCreated(Result result, Lobby lobby)
     {
-        SteamMatchmaking.RequestLobbyList();
+        ourLobby = lobby;
+        Debug.Log("lobby created");
     }
+
+    private void OnApplicationQuit()
+    {
+        ourLobby.Leave();
+    }
+
+
+    private void SteamMatchmaking_OnLobbyEntered(Lobby lobby)
+    {
+        Debug.Log("Joined lobby.");
+
+        ourLobby = lobby;
+        isInLobby = true;
+
+        if (lobby.IsOwnedBy(SteamClient.SteamId))
+        {
+            Debug.Log("we own the lobby");
+            lobby.SetPublic();
+            LobbyCheck(lobby);
+
+        }
+    }
+
+    void LobbyCheck(Lobby lobby)
+    {
+        Debug.Log("Lobby Members: " + lobby.MemberCount + " Max Lobby Members: " + lobby.MaxMembers);
+
+
+        if (lobby.MemberCount != lobby.MaxMembers)
+        {
+            return;
+        }
+
+
+        Debug.Log("finding a server.");
+        Debug.Log("master server ip: " + masterServerHost);
+        Debug.Log("master server port: " + masterServerPort);
+        mgr.MatchmakingServersFromMasterServer(masterServerHost, masterServerPort, 0, (response) =>
+        {
+            Debug.Log("response found.");
+            if (response != null && response.serverResponse.Count > 0)
+            {
+                Debug.Log("Response.serverCount: " + response.serverResponse.Count);
+
+                for (int i = 0; i < response.serverResponse.Count; i++)
+                {
+                    MasterServerResponse.Server server = response.serverResponse[i];
+                    Debug.Log("Server player count: " + server.PlayerCount);
+                    if (server.PlayerCount - 1 == 0)
+                    {
+                        hostAddress = server.Address;
+                        port = server.Port;
+                        lobby.SetGameServer(hostAddress, port);
+                        return;
+                    }
+
+                }
+            }
+            else
+            {
+                Debug.Log("isNUll" + response == null);
+                Debug.Log("ServerCount: " + response.serverResponse.Count);
+            }
+
+
+        }, "OpusGame", "BattleRoyale", "Solo");
+    }
+
+    private void SteamMatchmaking_OnLobbyGameCreated(Lobby lobby, uint ip, ushort port, SteamId steamid)
+    {
+        Debug.Log("Lobby owner has found us a server, connecting.");
+        hostAddress = ip.ToString();
+        this.port = port;
+
+        ConnectToServer();
+    }
+
+
 
     public void ConnectToServer()
     {
@@ -175,7 +224,8 @@ public class ClientConnect : MonoBehaviour
             mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
         }
 
-        mgr.Initialize(client);
+
+        mgr.Initialize(client, masterServerHost, masterServerPort);
 
         client.serverAccepted += OnAccepted;
         client.connectAttemptFailed += Client_connectAttemptFailed;
