@@ -391,6 +391,8 @@ public class TerrainManager : MonoBehaviour
                 treeInstances != null && !loadingSection));
 
         TerrainLayer[] terrainLayers = new TerrainLayer[containedBiomes.Count];
+        loadingSection = true;
+        sectionLoading = coord;
 
         for (int i = 0; i < containedBiomes.Count; i++)
             terrainLayers[i] = containedBiomes[i].terrainLayer;
@@ -414,7 +416,7 @@ public class TerrainManager : MonoBehaviour
             dp.prototypeTexture = dpd.prototypeTexture;
             dp.renderMode = dpd.renderMode;
         }
-
+        yield return null;
         TreePrototype[] treePrototypes = null;
         if (treePrototypeDatas.Count > 0)
                 treePrototypes = new TreePrototype[treePrototypeDatas.Count];
@@ -424,10 +426,11 @@ public class TerrainManager : MonoBehaviour
             tp.bendFactor = treePrototypeDatas[i].bendFactor;
             tp.prefab = treePrototypeDatas[i].prefab;
         }
-
+        yield return null;
         data.SetHeights(0, 0, heightmap);
         data.terrainLayers = terrainLayers;
         data.SetAlphamaps(0, 0, alphamaps);
+        yield return null;
         if (detailPrototypes != null)
         {
             data.detailPrototypes = detailPrototypes;
@@ -436,23 +439,24 @@ public class TerrainManager : MonoBehaviour
                 data.SetDetailLayer(0, 0, i, detailMaps[i]);
             }
         }
+        yield return null;
         if (treePrototypes != null)
         {
             data.treePrototypes = treePrototypes;
             data.SetTreeInstances(treeInstances.ToArray(), true);
         }
+        yield return null;
         data.RefreshPrototypes();
-        loadingSection = true;
-        sectionLoading = coord;
 
         yield return null;
 
         GameObject obj = Terrain.CreateTerrainGameObject(data);
+        sec.terrain = obj.GetComponent<Terrain>();
+        sec.terrain.allowAutoConnect = true;
         obj.transform.position = new Vector3(coord.x * genSettings.length -
                 genSettings.length / 2, 0f, coord.z * genSettings.length -
                 genSettings.length / 2);
-        sec.terrain = obj.GetComponent<Terrain>();
-        sec.terrain.allowAutoConnect = true;
+        yield return null;
         sec.terrain.Flush();
         terrains.Add(coord, sec);
         if (numGenThreads > 0)
@@ -834,6 +838,8 @@ public class TerrainManager : MonoBehaviour
                 for (int i = 0; i < biomes.Count; i++)
                 {
                     b = biomes[i].biome;
+                    if (b == null)
+                        continue;
                     weight = biomes[i].strength;
                     totalWeight += weight;
 
@@ -880,6 +886,8 @@ public class TerrainManager : MonoBehaviour
                 for (int i = 0; i < locBiomes.Count; i++)
                 {
                     b = locBiomes[i].biome;
+                    if (b == null)
+                        continue;
                     if (!containedBiomes.Contains(b))
                     {
                         containedBiomes.Add(b);
@@ -933,6 +941,8 @@ public class TerrainManager : MonoBehaviour
                 for (int i = 0; i < biomes.Count; i++)
                 {
                     b = biomes[i].biome;
+                    if (b == null)
+                        continue;
                     for (int j = 0; j < b.detailPrototypes.Count; j++)
                     {
                         dpd = b.detailPrototypes[j];
@@ -1058,7 +1068,7 @@ public class TerrainManager : MonoBehaviour
                         }
                     }
                 }
-                if (str < minBiomeTreeStrength ||
+                if (str < minBiomeTreeStrength || b == null ||
                         b.treePrototypes == null ||
                         b.treePrototypes.Count == 0)
                 {
