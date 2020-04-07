@@ -74,18 +74,22 @@ public class ClientConnect : MonoBehaviour
 
         foreach (Lobby lobby in list)
         {
+            Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
+            Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
             if (lobby.MemberCount < lobby.MaxMembers)
             {
                 if (steamDevAppID == 480)
                 {
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
+                        Debug.Log("Joining a lobby (480 app id).");
                         ourLobby = lobby;
                         await lobby.Join();
                     }
                 }
                 else
                 {
+                    Debug.Log("Joining a lobby, not 480");
                     ourLobby = lobby;
                     await lobby.Join();
                 }
@@ -162,7 +166,6 @@ public class ClientConnect : MonoBehaviour
             return;
         }
 
-
         Debug.Log("finding a server.");
         Debug.Log("master server ip: " + masterServerHost);
         Debug.Log("master server port: " + masterServerPort);
@@ -177,7 +180,7 @@ public class ClientConnect : MonoBehaviour
                 {
                     MasterServerResponse.Server server = response.serverResponse[i];
                     Debug.Log("Server player count: " + server.PlayerCount);
-                    if (server.PlayerCount - 1 == 0)
+                    if (server.PlayerCount == 1)
                     {
                         hostAddress = server.Address;
                         port = server.Port;

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Linq;
 using UnityEngine;
 
+[ExecuteAlways]
 public class TerrainManager : MonoBehaviour
 {
     public string seed;
@@ -207,6 +208,7 @@ public class TerrainManager : MonoBehaviour
         if (genOnStart)
             StartGeneration();
     }
+
 
     public void StartGeneration()
     {
