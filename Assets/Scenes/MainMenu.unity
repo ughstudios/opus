@@ -768,7 +768,7 @@ MonoBehaviour:
   steamDevAppID: 480
   networkManagerPrefab: {fileID: 9112252649110997610, guid: aa7ff14af1e48074f8c7772f20a55889,
     type: 3}
-  maxLobbyMembers: 1
+  maxLobbyMembers: 2
 --- !u!1 &1349210403
 GameObject:
   m_ObjectHideFlags: 0

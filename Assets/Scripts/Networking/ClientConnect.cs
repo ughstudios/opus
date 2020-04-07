@@ -78,8 +78,10 @@ public class ClientConnect : MonoBehaviour
             Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
             if (lobby.MemberCount < lobby.MaxMembers)
             {
+                Debug.Log("LobbyMemberCount < MaxMembers");
                 if (steamDevAppID == 480)
                 {
+                    Debug.Log("AppID is 480, using dev code.");
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
                         Debug.Log("Joining a lobby (480 app id).");
@@ -89,7 +91,7 @@ public class ClientConnect : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Joining a lobby, not 480");
+                    Debug.Log("Joining a lobby, not 480. Using production code.");
                     ourLobby = lobby;
                     await lobby.Join();
                 }
@@ -109,6 +111,7 @@ public class ClientConnect : MonoBehaviour
             var lobby = lobbyr.Value;
             lobby.SetPublic();
             lobby.SetJoinable(true);
+            lobby.SetData("lobbyName", "opus");
 
         }
 
