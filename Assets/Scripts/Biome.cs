@@ -8,6 +8,7 @@ public class Biome : ScriptableObject
     public new string name;
     public TerrainLayer terrainLayer;
     public int relativeFrequency = 1;
+    public int heightmapOctaves = 8;
 
     public float minHeight = 0f;
     public float maxHeight = 1f;
