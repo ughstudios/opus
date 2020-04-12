@@ -7,6 +7,7 @@ using System;
 using Steamworks;
 using Steamworks.Data;
 using UnityEngine.UI;
+using TMPro;
 
 public class ClientConnect : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class ClientConnect : MonoBehaviour
 
     public GameObject networkManagerPrefab;
     private NetworkManager mgr;
+
+    public Button findMatchBtn;
+    public Button exitGameBtn;
+    public TextMeshProUGUI lobbyCountText;
 
     public int maxLobbyMembers = 1;
     bool isInLobby;
@@ -62,7 +67,9 @@ public class ClientConnect : MonoBehaviour
 
     public async void FindMatch()
     {
-        GetComponent<Canvas>().enabled = false;
+        exitGameBtn.enabled = false;
+        findMatchBtn.enabled = false;
+
 
         Lobby[] list = await SteamMatchmaking.LobbyList.RequestAsync();
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
@@ -125,6 +132,9 @@ public class ClientConnect : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
+        Debug.Log("Someone joined a lobby: " + friend.Name);
+        lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
+
         if (lobby.IsOwnedBy(SteamClient.SteamId))
         {
             LobbyCheck(lobby);
