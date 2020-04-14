@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System;
 using Steamworks;
 using BeardedManStudios.SimpleJSON;
+using BeardedManStudios;
 
 public class Server : MonoBehaviour
 {
@@ -92,6 +93,7 @@ public class Server : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         server.bindSuccessful += Server_bindSuccessful;
+
     }
 
     private void Server_bindSuccessful(NetWorker sender)
@@ -101,4 +103,6 @@ public class Server : MonoBehaviour
             Debug.Log("Server is running!");
         });
     }
+
+   
 }

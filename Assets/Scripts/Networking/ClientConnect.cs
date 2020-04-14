@@ -8,8 +8,11 @@ using Steamworks;
 using Steamworks.Data;
 using UnityEngine.UI;
 using TMPro;
+using BeardedManStudios;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
-public class ClientConnect : MonoBehaviour
+public class ClientConnect : MonoBehaviour, IUserAuthenticator
 {
 
     public string hostAddress = "127.0.0.1";
@@ -28,6 +31,11 @@ public class ClientConnect : MonoBehaviour
     public int maxLobbyMembers = 1;
     bool isInLobby;
     Lobby ourLobby;
+    public int LOBBY_CHECK_TIMER = 5;
+    public bool gameFound = false;
+
+    public List<SteamId> allowedSteamIDs;
+    
 
     private void Start()
     {
@@ -37,8 +45,6 @@ public class ClientConnect : MonoBehaviour
         NetWorker.PingForFirewall(port);
 
         Rpc.MainThreadRunner = MainThreadManager.Instance;
-
-
 
         if (mgr == null)
         {
@@ -76,7 +82,7 @@ public class ClientConnect : MonoBehaviour
     {
         exitGameBtn.enabled = false;
         findMatchBtn.enabled = false;
-
+        allowedSteamIDs.Clear();
 
         Lobby[] list = await SteamMatchmaking.LobbyList.RequestAsync();
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
@@ -160,6 +166,13 @@ public class ClientConnect : MonoBehaviour
     {
         Debug.Log("Joined lobby.");
 
+        foreach (Friend f in lobby.Members)
+        {
+            Debug.Log("Player in our lobby: " + f.Name);
+            allowedSteamIDs.Add(f.Id);
+        }
+
+
         ourLobby = lobby;
         isInLobby = true;
 
@@ -167,12 +180,19 @@ public class ClientConnect : MonoBehaviour
         {
             Debug.Log("we own the lobby");
             lobby.SetPublic();
-            LobbyCheck(lobby);
-
+            StartCoroutine(LobbyCheckCoRoutine(lobby));
         }
     }
 
+    IEnumerator LobbyCheckCoRoutine(Lobby lobby)
+    {
+        while (!gameFound)
+        {
+            LobbyCheck(lobby);
 
+            yield return new WaitForSeconds(LOBBY_CHECK_TIMER);
+        }
+    }
 
     void LobbyCheck(Lobby lobby)
     {
@@ -204,6 +224,7 @@ public class ClientConnect : MonoBehaviour
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         lobby.SetGameServer(hostAddress, port);
+
                         return;
                     }
 
@@ -224,6 +245,7 @@ public class ClientConnect : MonoBehaviour
         Debug.Log("Lobby owner has found us a server, connecting.");
         hostAddress = ip.ToString();
         this.port = port;
+        gameFound = true;
 
         lobby.Leave();
 
@@ -235,6 +257,7 @@ public class ClientConnect : MonoBehaviour
     public void ConnectToServer()
     {
         UDPClient client = new UDPClient();
+        //client.SetUserAuthenticator(this);
         client.Connect(hostAddress, port);
 
         if (!client.IsBound)
@@ -280,4 +303,37 @@ public class ClientConnect : MonoBehaviour
         });
     }
 
+    public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
+    {
+        issueChallengeAction(player, new BMSByte());
+    }
+
+    public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
+    {
+        BMSByte by = new BMSByte();
+        var binFormatter = new BinaryFormatter();
+        var mStream = new MemoryStream();
+        binFormatter.Serialize(mStream, allowedSteamIDs);
+
+        var data = ObjectMapper.BMSByte(mStream.ToArray());
+
+        authServerAction(data);
+    }
+
+    public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, Action<NetworkingPlayer> authUserAction, Action<NetworkingPlayer> rejectUserAction)
+    {
+        var mStream = new MemoryStream();
+        var binFormatter = new BinaryFormatter();
+
+        var ids = response.GetByteArray(response.StartIndex());
+
+        mStream.Write(ids, 0, ids.Length);
+        mStream.Position = 0;
+
+        allowedSteamIDs = binFormatter.Deserialize(mStream) as List<SteamId>;
+
+        authUserAction(player);
+        rejectUserAction(player);
+
+    }
 }
