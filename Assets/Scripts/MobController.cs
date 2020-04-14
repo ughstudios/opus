@@ -46,6 +46,8 @@ public class MobController : DamageableEntity
 	#region Rotation
 	[SerializeField] float _turnSpeed = 2.5f;
 	protected float m_LookAngle = 0.0f;
+	Vector3 horizMoveInput = Vector3.zero;
+	Vector3 movement = Vector3.zero;
 	#endregion
 
 	#region Slope for bumpy terrain
@@ -55,7 +57,9 @@ public class MobController : DamageableEntity
 	//To track slope
 	[SerializeField] float _slopeForce;
 	[SerializeField] float _slopeForceRayLength;
-
+	[SerializeField] bool _canJump = true;
+	[SerializeField] bool	bJumping = false,
+							_launchedInAir = false;
 	#endregion
 
 	protected override void Start()
@@ -74,41 +78,99 @@ public class MobController : DamageableEntity
 		_initMovementSpeed = movementSpeed;
 	}
 
+	 protected virtual void Update()
+	{
+		//Updated below for 3d character
+		if (useChild)
+		{
+			moveInput = new Vector3(Input.GetAxis(CharacterButtonsConstants.HORIZONTAL),0, Input.GetAxis(CharacterButtonsConstants.VERTICLE));
+
+			horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
+
+			if (horizMoveInput.sqrMagnitude > 1)
+				horizMoveInput.Normalize();
+
+			movement = horizMoveInput * movementSpeed;
+
+			Vector3 horizVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+			NewGroundDetection();
+
+			
+			if (!_onGround && rb.velocity.y > 0)
+			{
+				//rb.AddRelativeForce(Vector3.down * 12f, ForceMode.Impulse);
+				
+				Vector3 vel = rb.velocity;
+				vel.y -= 100 * Time.deltaTime;
+				rb.velocity = vel;
+						
+			}	
+			
+
+			//To correct slopes due to rigidness of terrain
+			OnSlope();
+
+			DrawDebugLines();
+			ResetCanJump();
+
+			if (Input.GetButtonDown(CharacterButtonsConstants.JUMP) && _onGround && _canJump)
+			{
+				_initiateJump = true;
+				movementSpeed = 0.0f;
+				rb.velocity = Vector3.zero;
+				animator.SetBool("isJumping", true);
+			}
+
+			if (_initiateJump)
+			{
+				animator.SetBool("onGround", false);
+			}
+
+			if (!_initiateJump)
+			{
+				animator.SetBool("onGround", _onGround);
+			}
+
+			GroundCheck();
+
+			if (_canJump)
+			{
+				
+				if ((OnSlope() && movement.x != 0) || (OnSlope() && movement.z != 0))
+				{
+					rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+					rb.AddRelativeForce(new Vector3(movement.x, 0, movement.z), ForceMode.VelocityChange);
+				}
+				
+			}
+		}
+	}
+
 	protected override void FixedUpdate()
 	{
 		base.FixedUpdate();
-
-		GroundCheck();
-
-		Vector3 horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
-
-		if (horizMoveInput.sqrMagnitude > 1)
-			horizMoveInput.Normalize();
-
-		Vector3 movement = horizMoveInput * movementSpeed;
-
-		Vector3 horizVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-		//if (horizVel.sqrMagnitude < movement.sqrMagnitude)
-
-		if (rb.velocity.y == 0)
+		
+		if (movement.x > 1.5 || movement.z > 1.5 || movement.x < -1.5 || movement.z < -1.5)
 		{
-			if (movement.x > 0 || movement.z > 0 || movement.x < 0 || movement.z < 0)
+			if (_onGround && !_initiateJump)
 			{
+				_launchedInAir = false;
 				rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
-				rb.AddRelativeForce(new Vector3(movement.x, 0, movement.z), ForceMode.VelocityChange);
+				rb.AddRelativeForce(new Vector3(movement.x, rb.velocity.y, movement.z), ForceMode.VelocityChange);
 			}
-			else
+			if (_initiateJump && !_launchedInAir)
 			{
-				rb.velocity = new Vector3(0, rb.velocity.y, 0);
+				_launchedInAir = true;
+				rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+				rb.AddRelativeForce(new Vector3(movement.x, 50, movement.z), ForceMode.VelocityChange);
 			}
+		}
+		else
+		{
+			rb.velocity = new Vector3(0, rb.velocity.y, 0);
 		}
 
-		if ((OnSlope() && movement.x != 0) || (OnSlope() && movement.z != 0))
-		{
-			rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
-			rb.AddRelativeForce(new Vector3(movement.x, 1, movement.z), ForceMode.VelocityChange);
-		}
 
 		//changed to accommodate the new animotor
 		//if (horizMoveInput.sqrMagnitude > Mathf.Epsilon)
@@ -123,7 +185,7 @@ public class MobController : DamageableEntity
 			if (animator != null)
 				animator.SetInteger("runningVal", 0);
 		}
-		
+
 		if (horizMoveInput.x < 0 || horizMoveInput.x > 0)//for moving side to side
 		{
 			if (animator != null)
@@ -146,13 +208,12 @@ public class MobController : DamageableEntity
 			animator.SetInteger("horizontalVal", 1);
 		}
 
-
 		//these if statements are responsible for determining which direction the character
 		//should rotate in
 		//This rotation was updated to follow the Camera's rotation due to the addition of the new camera
 		#region Rotation
 		Vector3 normalizedRot = new Vector3(Input.GetAxis(CharacterButtonsConstants.HORIZONTAL), 0, Input.GetAxis(CharacterButtonsConstants.VERTICLE)).normalized;
-		
+
 		//Rotating child so camera doesn't rotate with object
 		//else is used so hostiles can still use MobController
 		if (!useChild)
@@ -166,7 +227,7 @@ public class MobController : DamageableEntity
 
 			//Temp fix until new camera is created
 			//transform.localRotation = GetComponent<PlayerController>().camera.transform.localRotation;
-			transform.localRotation = Quaternion.Euler(new Vector3(0, m_LookAngle,0));
+			transform.localRotation = Quaternion.Euler(new Vector3(0, m_LookAngle, 0));
 
 			if (horizMoveInput.z > 0 && horizMoveInput.x > 0)//combining x and z movement
 			{
@@ -176,18 +237,15 @@ public class MobController : DamageableEntity
 			{
 				transform.GetChild(0).transform.localRotation = Quaternion.Euler(new Vector3(0, -45, 0));
 			}
-			else {
+			else
+			{
 				transform.GetChild(0).transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
 			}
-			
-				
 		}
 		#endregion
 
-
 		//jumping
-
-		bool bJumping = moveInput.y > Mathf.Epsilon;
+		bJumping = moveInput.y > Mathf.Epsilon;
 
 		if (!useChild)
 		{
@@ -198,37 +256,6 @@ public class MobController : DamageableEntity
 				rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
 			}
 		}
-
-		//Updated below for 3d character
-		if (useChild)
-		{
-			NewGroundDetection();
-
-			//To correct slopes due to rigidness of terrain
-			OnSlope();
-			
-
-			DrawDebugLines();
-
-			if (Input.GetButtonDown(CharacterButtonsConstants.JUMP) && _onGround)
-			{
-				_initiateJump = true;
-				movementSpeed = 0.0f;
-				rb.velocity = Vector3.zero;
-				animator.SetBool("isJumping", true);
-			}
-
-			if (_initiateJump)
-			{
-				animator.SetBool("onGround", false);
-			}
-		
-			if (!_initiateJump)
-			{
-				animator.SetBool("onGround", _onGround);
-			}
-		}
-		
 
 		//stopping the character
 		if (horizMoveInput.sqrMagnitude < Mathf.Epsilon && !bJumping && !IsFalling() && isGrounded)
@@ -313,6 +340,11 @@ public class MobController : DamageableEntity
 		movementSpeed = _initMovementSpeed;
 	}
 
+	public void MovementSpeedZero()
+	{
+		movementSpeed = 0.0f;
+	}
+
 	public bool UseChild
 	{
 		get => useChild;
@@ -323,6 +355,16 @@ public class MobController : DamageableEntity
 		get => _onGround;
 	}
 
+	public void SetCanJumpF()
+	{
+		_canJump = false;
+	}
+
+	void ResetCanJump()
+	{
+		if (!_canJump && rb.velocity.y == 0)
+			_canJump = true;
+	}
 
 	//draw debug lines
 	void DrawDebugLines()

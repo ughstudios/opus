@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"value\"][\"value\"][\"value\"][]]")]
+	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][][]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"value\"][\"value\"][\"value\"][][]]")]
 	public abstract partial class PlayerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SERVER__TAKE_DAMAGE = 0 + 5;
@@ -18,6 +18,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		public const byte RPC_SERVER__SET_FOOD = 7 + 5;
 		public const byte RPC_SERVER__SET_WATER = 8 + 5;
 		public const byte RPC_DIE = 9 + 5;
+		public const byte RPC_FIRE_ANIM = 10 + 5;
 		
 		public PlayerNetworkObject networkObject = null;
 
@@ -41,6 +42,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			networkObject.RegisterRpc("Server_SetFood", Server_SetFood, typeof(int));
 			networkObject.RegisterRpc("Server_SetWater", Server_SetWater, typeof(int));
 			networkObject.RegisterRpc("Die", Die);
+			networkObject.RegisterRpc("FireAnim", FireAnim);
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -166,6 +168,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// </summary>
 		public abstract void Die(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// </summary>
+		public abstract void FireAnim(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

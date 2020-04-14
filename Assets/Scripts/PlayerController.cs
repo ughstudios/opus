@@ -17,18 +17,48 @@ public class PlayerController : MobController
 	public float _healthCanvasValue = 0.0f;
 	public GameObject _hudCanvas = null;
 
-	#region Cool down for spell
-	[SerializeField] float	_coolDownTime = 1.5f,
+	#region Attacks
+	[SerializeField] float	_poisonCoolDownTime = 1.5f,
+							_fireCoolDownTime = 3.0f,
+							_initFireCoolTime = 0.0f,
+							_fireCanvasVal = 0.0f,
+							_flameRate = 3,
+							_fireRefillRate = 3.0f,
 							_initCoolDownTime = 0.0f,
 							_coolDownRate = 1.0f;
 
-	[SerializeField] bool _startCoolDown = false;
-	public RectTransform _poisonReflillTransform = null;
+	[SerializeField] bool	_startBaseCoolDown = false,
+							_startFlameCoolDown = false,
+							_startFireAttack = false,
+							_flameInstantiated = false;
+
+	public RectTransform	_poisonReflillTransform = null,
+							_fireReflillTransform = null;
+
+	[SerializeField] GameObject	_fireAttackPS = null;
+	[SerializeField] Transform	_fireAttackPos = null;
+
+	//these ints are for the animations, networking anims not working as bools
+	[SerializeField] int	fireInt = 0,
+							aimInt = 0,
+							hasSnipped = 0;
+
+	[SerializeField] bool	_flamesStarted = false,
+							_isAiming = false,
+							_isSniping = false;
+
+	Vector3 _initCamAttachedPos = new Vector3(0,4,-10);
+
+	float	newCamPosX = 4f,
+			newCamPosZ = -10f;
+
+	[SerializeField] GameObject _crossHair = null;
 	#endregion
 
 	protected override void NetworkStart()
 	{
 		base.NetworkStart();
+
 		networkObject.position = transform.position;
 
 		if (!UseChild) networkObject.rotation = transform.rotation;
@@ -49,18 +79,13 @@ public class PlayerController : MobController
 	{
 		base.Start();
 
-		//Cursor.visible = false;
-
-		_initCoolDownTime = _coolDownTime;
+		Cursor.visible = false;
+		//Physics.gravity = new Vector3(0,-50,0);//This is for the entire system
+		_initCoolDownTime = _poisonCoolDownTime;
+		_initFireCoolTime = _fireCoolDownTime;
 
 		if (GameObject.FindGameObjectWithTag("ServerCamera") != null)
 			serverCam = GameObject.FindGameObjectWithTag("ServerCamera").GetComponent<Camera>();
-
-		if (networkObject != null && networkObject.IsOwner && camera != null)
-		{
-			GameObject playerCamera = Instantiate(camera, gameObject.transform);
-			serverCam.enabled = false;
-		}
 	}
 	
     void OnTriggerStay(Collider collider)
@@ -77,12 +102,44 @@ public class PlayerController : MobController
 		canPlant = false;
 	}
 
-	private void Update()
+	protected override void Update()
 	{
-
+		base.Update();
+		
 		if (health <= 0)
 		{
 			_isDead = true;
+		}
+
+		
+		if (_isAiming) aimInt = 1;
+		if (!_isAiming) aimInt = 0;
+
+		animator.SetInteger("fireInt", fireInt);
+		animator.SetInteger("aimInt", aimInt);
+		animator.SetInteger("hasSnipped", hasSnipped);
+
+		//when networking animations that require a button to be held use an int not a bool to control the animation!!!
+		if (networkObject != null)
+		{
+			if (networkObject.IsOwner)
+			{
+				networkObject.fireInt = animator.GetInteger("fireInt");
+				networkObject.aimInt = animator.GetInteger("aimInt");
+				networkObject.hasSnipped = animator.GetInteger("hasSnipped");
+			}
+
+			if (!networkObject.IsOwner)
+			{
+				if (animator.GetInteger("fireInt") != networkObject.fireInt)
+					animator.SetInteger("fireInt", networkObject.fireInt);
+
+				if (animator.GetInteger("aimInt") != networkObject.aimInt)
+					animator.SetInteger("aimInt", networkObject.aimInt);
+
+				if (animator.GetInteger("hasSnipped") != networkObject.hasSnipped)
+					animator.SetInteger("hasSnipped", networkObject.hasSnipped);
+			}
 		}
 
 		if (networkObject != null)
@@ -92,17 +149,17 @@ public class PlayerController : MobController
 				if(serverCam != null)
 					serverCam.enabled = false;
 
-				//if(camera != null)
-					//camera.SetActive(true);
-
 				_hudCanvas.SetActive(true);
+				camera.SetActive(true);
 
 				if (UseChild)
 				{
+					networkObject.runningVal = animator.GetInteger("runningVal");
 					networkObject.isJumping = animator.GetBool("isJumping");
 					networkObject.onGround = animator.GetBool("onGround");
-					networkObject.runningVal = animator.GetInteger("runningVal");
 					networkObject.isThrowing = animator.GetBool("isThrowing");
+					networkObject.horizontalVal = animator.GetInteger("horizontalVal");
+					networkObject.hasSnipped = animator.GetInteger("hasSnipped");
 				}
 
 				networkObject.health = health;
@@ -110,23 +167,15 @@ public class PlayerController : MobController
 			}
 		}
 
-		
-		if (!_startCoolDown && Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround ||
-			!_startCoolDown && Input.GetMouseButtonDown(0) && OnGround)
-		{
-			_startCoolDown = true;
-			_coolDownTime = 0.0f;
+		ThrowAttack();
+		FireIntAttack();
+		Aim();
+		SnipAttack();
 
-			if (animator.GetBool("isThrowing") == false) //only if we are not throwing can we throw again to avoid getting stuck
-			{
-				animator.SetBool("isThrowing", true);
-				movementSpeed = 0.0f;
-				rb.velocity = Vector3.zero;
-			}
-		}
+		if (_startBaseCoolDown) CoolDown();
 
-		if (_startCoolDown) CoolDown();
-		PoisonHudMeter();
+		HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
+		HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
 
 		if (networkObject != null && networkObject.IsOwner)
 			HealthCanvasMeter();
@@ -149,10 +198,11 @@ public class PlayerController : MobController
 
 				if (UseChild)
 				{
-					if(animator.GetBool("isJumping") != networkObject.isJumping) animator.SetBool("isJumping", networkObject.isJumping);
-					if (animator.GetBool("onGround") != networkObject.onGround) animator.SetBool("onGround", networkObject.onGround);
 					if (animator.GetInteger("runningVal") != networkObject.runningVal) animator.SetInteger("runningVal", networkObject.runningVal);
+					if (animator.GetBool("isJumping") != networkObject.isJumping) animator.SetBool("isJumping", networkObject.isJumping);
+					if (animator.GetBool("onGround") != networkObject.onGround) animator.SetBool("onGround", networkObject.onGround);
 					if (animator.GetBool("isThrowing") != networkObject.isThrowing) animator.SetBool("isThrowing", networkObject.isThrowing);
+					if (animator.GetInteger("horizontalVal") != networkObject.horizontalVal) animator.SetInteger("horizontalVal", networkObject.horizontalVal);
 				}
 
 				health = networkObject.health;
@@ -161,20 +211,18 @@ public class PlayerController : MobController
 				if (serverCam != null)
 					serverCam.enabled = true;
 
-				//if(camera != null)
-					//camera.SetActive(false);
-
 				_hudCanvas.SetActive(false);
+				camera.SetActive(false);
 
 				return;
 			}
-		}
+		}	
 
-		
-		
+		/*
 		moveInput.Set(Input.GetAxisRaw("Horizontal"),
 				Input.GetButton("Jump") ? 1f : 0f,
 				Input.GetAxisRaw("Vertical"));
+		*/
 
 		base.FixedUpdate();
 
@@ -256,22 +304,172 @@ public class PlayerController : MobController
 		_healthTransform.transform.localScale = new Vector3(_healthCanvasValue,1,1);
 	}
 
-	void PoisonHudMeter()
+	void HudAttackMeter(Transform hudAttackTransform, float attackCoolDownTime)
 	{
-		float poisonRefillVal = _coolDownTime;
+		float poisonRefillVal = attackCoolDownTime;
 
-		_poisonReflillTransform.transform.localScale = new Vector3(1,poisonRefillVal,1);
+		hudAttackTransform.transform.localScale = new Vector3(1,poisonRefillVal,1);
 	}
 
 	void CoolDown()
 	{
-		_coolDownTime += Time.deltaTime * _coolDownRate;
+		_poisonCoolDownTime += Time.deltaTime * _coolDownRate;
 
-		if (_coolDownTime >= _initCoolDownTime)
+		if (_poisonCoolDownTime >= _initCoolDownTime)
 		{
-			_coolDownTime = _initCoolDownTime;
-			_startCoolDown = false;
+			_poisonCoolDownTime = _initCoolDownTime;
+			_startBaseCoolDown = false;
 		}
+	}
+
+	void ThrowAttack()
+	{
+		if (!_isAiming)
+		{
+			if (!_startBaseCoolDown && Input.GetButtonDown(CharacterButtonsConstants.THROW) && OnGround ||
+			!_startBaseCoolDown && Input.GetMouseButtonDown(0) && OnGround)
+			{
+				_startBaseCoolDown = true;
+				_poisonCoolDownTime = 0.0f;
+
+				if (animator.GetBool("isThrowing") == false) //only if we are not throwing can we throw again to avoid getting stuck
+				{
+					animator.SetBool("isThrowing", true);
+					movementSpeed = 0.0f;
+					rb.velocity = Vector3.zero;
+				}
+			}
+		}
+	}
+
+	void FireIntAttack()
+	{
+
+		if (!_startFlameCoolDown)
+		{
+			if (Input.GetButton(CharacterButtonsConstants.BLOW_ATTACK))
+			{
+				fireInt = 1;
+			}
+			else
+			{
+				fireInt = 0;
+			}
+		}
+		else {
+			fireInt = 0;
+		}
+
+		if (_fireCoolDownTime > 0)
+		{
+			if(animator.GetInteger("fireInt") > 0 && Input.GetButton(CharacterButtonsConstants.BLOW_ATTACK))
+			{
+				movementSpeed = 0.0f;
+				_fireCoolDownTime -= Time.deltaTime/_flameRate;
+			}
+		}
+
+		if (_startFireAttack)
+		{
+			if (!_flameInstantiated)
+			{
+				//_fireAttackPos.GetComponent<InstantiateFire>().FireAttack();
+				_flameInstantiated = true;
+			}
+		}
+		else {
+			if (_fireAttackPos.childCount > 0)
+			{
+				
+				_flameInstantiated = false;
+			}
+		}
+
+		if (!Input.GetButton(CharacterButtonsConstants.BLOW_ATTACK) && _fireCoolDownTime <= _initFireCoolTime ||
+			_fireCoolDownTime <= 0)
+		{
+			_startFlameCoolDown = true;
+			_startFireAttack = false;
+		}
+				
+
+		if (movementSpeed == 0 && animator.GetInteger("fireInt") == 0 && !animator.GetBool("isThrowing"))
+			ResetMovementSpeed();
+
+		if (_startFlameCoolDown)
+		{
+			_fireCoolDownTime += Time.deltaTime/_fireRefillRate;
+
+			if (_fireCoolDownTime >= _initFireCoolTime)
+				_startFlameCoolDown = false;
+		}
+		
+		_fireCanvasVal = _fireCoolDownTime /_initFireCoolTime;//Convert to %, 100% = 1 on transform
+	}
+
+	void Aim()
+	{
+		if (Input.GetButton(CharacterButtonsConstants.AIM))
+		{
+			_isAiming = true;
+			movementSpeed = 0.0f;
+		}
+		else {
+			_isAiming = false;
+		}
+
+		if (_isAiming)
+		{
+			newCamPosZ += (12*Time.deltaTime);
+
+			if (newCamPosZ >= -4)
+			{
+				newCamPosZ = -4f;
+
+				_crossHair.SetActive(true);
+			}
+				
+			camera.transform.GetChild(0).transform.localPosition = new Vector3(0, 4, newCamPosZ);
+		}
+		else {
+			newCamPosZ = -10f;
+			camera.transform.GetChild(0).transform.localPosition = _initCamAttachedPos;
+			_crossHair.SetActive(false);
+		}
+	}
+
+	void SnipAttack()
+	{
+		if (_isAiming && Input.GetButtonDown(CharacterButtonsConstants.THROW) || _isAiming && Input.GetMouseButtonDown(0))
+		{
+			_isSniping = true;
+			hasSnipped = 1;
+		}
+		//Network latency causing too many issues with animations
+		/*
+		else {
+			hasSnipped = 0;
+		}
+		*/
+
+		if (_isSniping)
+			movementSpeed = 0.0f;
+	}
+
+	public void SetIsSnippingToFalse()
+	{
+		_isSniping = false;
+		hasSnipped = 0;
+	}
+
+	public void StartFireAttack()
+	{
+		_startFireAttack = true;
+	}
+
+	public int GetFireInt()
+	{
+		return fireInt;
 	}
 
 	public float MouseAngle

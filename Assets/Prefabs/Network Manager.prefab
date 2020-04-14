@@ -43,13 +43,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe5b082a785e7641bf1a62b930a3f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AnimTestObjNetworkObject:
+  - {fileID: 1616854526290373057, guid: 420ab84ae7797d04aa5b5be9954d50dd, type: 3}
   ChatManagerNetworkObject: []
   CubeForgeGameNetworkObject: []
   ExampleProximityPlayerNetworkObject: []
+  FlameAttacckNetworkObject: []
   GameModeNetworkObject:
   - {fileID: 3415037556922266389, guid: 52ea8becaa09d964abbeb33a19f1fbd7, type: 3}
+  InstantiateFirePosNetworkObject: []
+  InstatiateSpellPosNetworkObject: []
   NetworkCameraNetworkObject: []
   PlayerNetworkObject:
   - {fileID: 5688016174280329108, guid: a16dc28ea7a00b54e8765ce7adf38394, type: 3}
   TestNetworkObject: []
+  ThrowObjNetworkObject: []
   automaticScenes: 1

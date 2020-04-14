@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream:Assets/Plugins/Facepunch.Steamworks/Unity/Facepunch.Steamworks.Win32.xml.meta
 guid: 1c9eb7c3219a16948b7520dc7026cf20
 TextScriptImporter:
+=======
+guid: 343146bf1869c1f42ae2dffed4210426
+folderAsset: yes
+DefaultImporter:
+>>>>>>> Stashed changes:Assets/Material/ParticlesMaterials.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

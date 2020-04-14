@@ -21,5 +21,5 @@ MonoBehaviour:
   minWidthScale: 0.75
   maxHeightScale: 1.25
   maxWidthScale: 1.25
-  minDistance: 20
-  relativeFrequency: 2
+  minDistance: 2000
+  relativeFrequency: 1

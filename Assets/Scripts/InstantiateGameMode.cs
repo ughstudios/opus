@@ -7,20 +7,31 @@ public class InstantiateGameMode : MonoBehaviour
 {
     void Start()
     {
+		
 		if (NetworkManager.Instance != null)
 		{
 			if (NetworkManager.Instance.IsServer)
 				NetworkManager.Instance.InstantiateGameMode();
 		}
 		
-	
-		
 
-		/*if (NetworkManager.Instance != null)
+		// This is for testing animations, DON'T TOUCH!
+		/*
+		if (NetworkManager.Instance != null)
+		{
+			if (!NetworkManager.Instance.IsServer)
+				NetworkManager.Instance.InstantiateAnimTestObj();
+		}
+		*/
+
+		//For testing purposes
+		/*
+		if (NetworkManager.Instance != null)
 		{
 			if (!NetworkManager.Instance.IsServer)
 				NetworkManager.Instance.InstantiatePlayer();
-		}*/
-		
+		}
+		*/
+
 	}
 }

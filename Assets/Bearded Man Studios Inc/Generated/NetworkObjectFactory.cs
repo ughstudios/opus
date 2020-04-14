@@ -23,6 +23,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				switch (identity)
 				{
+					case AnimTestObjNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new AnimTestObjNetworkObject(networker, id, frame);
+						break;
 					case ChatManagerNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new ChatManagerNetworkObject(networker, id, frame);
@@ -35,9 +39,17 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new ExampleProximityPlayerNetworkObject(networker, id, frame);
 						break;
+					case FlameAttacckNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new FlameAttacckNetworkObject(networker, id, frame);
+						break;
 					case GameModeNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new GameModeNetworkObject(networker, id, frame);
+						break;
+					case InstantiateFirePosNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new InstantiateFirePosNetworkObject(networker, id, frame);
 						break;
 					case InstatiateSpellPosNetworkObject.IDENTITY:
 						availableCallback = true;

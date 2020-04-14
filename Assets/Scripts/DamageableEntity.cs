@@ -162,13 +162,6 @@ public class DamageableEntity : PlayerBehavior
 
 		MainThreadManager.Run(() =>
         {
-			//TakeDamage(null, args.GetNext<int>());
-
-
-			/*
-			if (damage < 1 && networkObject != null)
-				return 0;
-			*/
 
 			if (networkObject != null)
 			{
@@ -182,31 +175,12 @@ public class DamageableEntity : PlayerBehavior
 				OnDeath();
 			}
 
-			/*
-			Rigidbody rb = GetComponent<Rigidbody>();
-			if (damageDealt > 0 && rb != null && networkObject != null)
-			{
-				rb.AddForce((transform.position - source.transform.position).normalized *
-						source.damageForce * rb.mass, ForceMode.Impulse);
-			}
-
-
-			Rigidbody sourceRb = source.GetComponent<Rigidbody>();
-			if (damageDealt > 0 && sourceRb != null)
-			{
-				sourceRb.AddForce((source.transform.position - transform.position).normalized *
-						source.damageRecoilForce * sourceRb.mass, ForceMode.Impulse);
-			}
-			*/
-
-			//return damageDealt;
-
 		});
     }
 
 	public virtual void TakeDamage(DamageableEntity source, int damage)
 	{
-		if (!networkObject.IsServer)
+		if (networkObject != null && !networkObject.IsServer)
 			return;
 
         if (networkObject != null)
@@ -214,7 +188,7 @@ public class DamageableEntity : PlayerBehavior
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
             return;
-        }
+        }	
     }
 
     protected virtual void OnDeath(bool transferScene)
@@ -287,5 +261,14 @@ public class DamageableEntity : PlayerBehavior
 	bool StopQuit()
 	{
 		return false;
+	}
+
+	public override void FireAnim(RpcArgs args)
+	{
+		MainThreadManager.Run(() =>
+		{
+			GetComponent<Animator>().SetInteger("fireInt", 0);
+			Debug.Log("Fire Flame");
+		});
 	}
 }

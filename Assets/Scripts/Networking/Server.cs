@@ -16,8 +16,9 @@ public class Server : MonoBehaviour
     public GameObject networkManagerPrefab;
     private NetworkManager mgr;
     string public_ip_addr;
-    public string masterServerHost = "45.63.11.159";
-    public ushort masterServerPort = 15940;
+	public string masterServerHost = "45.63.11.159";
+	//public string masterServerHost = "127.0.0.1";
+	public ushort masterServerPort = 15940;
 
     private void OnEnable()
     {

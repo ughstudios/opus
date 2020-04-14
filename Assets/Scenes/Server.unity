@@ -371,5 +371,10 @@ PrefabInstance:
       propertyPath: port
       value: 15937
       objectReference: {fileID: 0}
+    - target: {fileID: 6793859798262937877, guid: d2513eb19424f9a48be29ea36a419482,
+        type: 3}
+      propertyPath: masterServerHost
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2513eb19424f9a48be29ea36a419482, type: 3}

@@ -19,5 +19,5 @@ public class TreePrototypeData : ScriptableObject
     public float maxWidthScale = 1.25f;
 
     public float minDistance = 1f;
-    public int relativeFrequency = 1;
+	public int relativeFrequency = 1;
 }

@@ -6,5 +6,7 @@ public static class CharacterButtonsConstants
 						JUMP = "Jump",
 						ROTATE_H = "RotHorizontal", 
 						ROTATE_V = "RotVertical",
-						THROW = "Throw";
+						THROW = "Throw",
+						BLOW_ATTACK = "BlowAttack",
+						AIM = "Aim";
 }
