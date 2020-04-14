@@ -55,7 +55,7 @@ public class GameMode : GameModeBehavior
 			playerController.networkObject.position = spawnPoint;
             playerController.networkObject.AssignOwnership(player);
 
-            NetworkManager.Instance.UpdateMasterServerListing(sender, "Opus", "BattleRoyale", "Solo");
+            NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
             Debug.Log("Player Connected: " + player.Ip);
         });
@@ -65,8 +65,7 @@ public class GameMode : GameModeBehavior
     {
         MainThreadManager.Run(() =>
         {
-            NetworkManager.Instance.UpdateMasterServerListing(sender, "Opus", "BattleRoyale", "Solo");
-
+            NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
             Debug.Log("Disconnect");
             //Loop through all players and find the player who disconnected, store all it's networkobjects to a list

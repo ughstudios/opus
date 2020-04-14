@@ -22,7 +22,6 @@ public class Server : MonoBehaviour
 
     private void OnEnable()
     {
-         public_ip_addr = new System.Net.WebClient().DownloadString("https://api.ipify.org"); // might be a better way to do this that isn't dependent on some third party website. Works fine for now tho. 
     }
 
 
@@ -49,6 +48,9 @@ public class Server : MonoBehaviour
 
     public void Host()
     {
+        public_ip_addr = new System.Net.WebClient().DownloadString("https://api.ipify.org"); // might be a better way to do this that isn't dependent on some third party website. Works fine for now tho. 
+
+
         // Do any firewall opening requests on the operating system
         NetWorker.PingForFirewall(port);
 
@@ -82,6 +84,7 @@ public class Server : MonoBehaviour
             string mode = "Solo";
 
             masterServerData = mgr.MasterServerRegisterData(server, serverId, serverName, type, mode, public_ip_addr, false, 0);
+            Debug.Log("Registered with: " + public_ip_addr + " as our  IP");
         }
         
         mgr.Initialize(server, masterServerHost, masterServerPort, masterServerData);

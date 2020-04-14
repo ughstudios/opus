@@ -38,6 +38,13 @@ public class ClientConnect : MonoBehaviour
 
         Rpc.MainThreadRunner = MainThreadManager.Instance;
 
+
+
+        if (mgr == null)
+        {
+            mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
+        }
+
     }
 
     private void OnEnable()
@@ -123,10 +130,6 @@ public class ClientConnect : MonoBehaviour
         }
 
 
-        if (mgr == null)
-        {
-            mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
-        }
 
     }
 
@@ -169,6 +172,8 @@ public class ClientConnect : MonoBehaviour
         }
     }
 
+
+
     void LobbyCheck(Lobby lobby)
     {
         Debug.Log("Lobby Members: " + lobby.MemberCount + " Max Lobby Members: " + lobby.MaxMembers);
@@ -196,6 +201,7 @@ public class ClientConnect : MonoBehaviour
                     if (server.PlayerCount == 1)
                     {
                         hostAddress = server.Address;
+                        Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         lobby.SetGameServer(hostAddress, port);
                         return;
@@ -218,6 +224,8 @@ public class ClientConnect : MonoBehaviour
         Debug.Log("Lobby owner has found us a server, connecting.");
         hostAddress = ip.ToString();
         this.port = port;
+
+        lobby.Leave();
 
         ConnectToServer();
     }
