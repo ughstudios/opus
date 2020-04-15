@@ -82,7 +82,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     {
         exitGameBtn.enabled = false;
         findMatchBtn.enabled = false;
-        allowedSteamIDs.Clear();
+        //allowedSteamIDs.Clear();
 
         Lobby[] list = await SteamMatchmaking.LobbyList.RequestAsync();
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
@@ -246,6 +246,9 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         hostAddress = ip.ToString();
         this.port = port;
         gameFound = true;
+
+        GetComponent<Canvas>().enabled = false; // Delete the canvas
+        
 
         lobby.Leave();
 
