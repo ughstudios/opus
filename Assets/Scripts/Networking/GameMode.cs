@@ -10,11 +10,50 @@ public class GameMode : GameModeBehavior
 
     // Have lobby send list of ip's to the server to verify who should be on the server during any given match. 
     Vector3 spawnPoint;
+    public float initialMatchTimer = 300;
+    private float matchTimer; // Match countdown timer in seconds. 300 seconds = 5 minutes. 
+
+    private bool serverHasBeenReset = false;
 
     protected override void NetworkStart()
     {
         base.NetworkStart();
 
+    }
+
+    void Update()
+    {
+        if (NetworkManager.Instance.Networker.Players.Count > 1)
+        {
+            matchTimer -= Time.deltaTime;
+            if (matchTimer < 0)
+            {
+                if (!serverHasBeenReset)
+                {
+                    ResetServer();
+                    serverHasBeenReset = true;
+                    matchTimer = initialMatchTimer;
+                }
+            }
+        }
+
+    }
+
+    void ResetServer()
+    {
+        MainThreadManager.Run(() =>
+        {
+            lock (NetworkManager.Instance.Networker.Players)
+            {
+                foreach (var player in NetworkManager.Instance.Networker.Players)
+                {
+                    player.Networker.Disconnect(true);
+                    matchTimer = initialMatchTimer;
+                    serverHasBeenReset = true;
+                }
+                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
+            }
+        });
     }
 
     void Start()
@@ -24,6 +63,8 @@ public class GameMode : GameModeBehavior
             return;
         }
 
+        matchTimer = initialMatchTimer;
+
         Debug.Log("Game mode is being initialized!");
 
         NetworkManager.Instance.Networker.playerAccepted += Networker_playerAccepted;
@@ -32,19 +73,16 @@ public class GameMode : GameModeBehavior
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
 
-        InvokeRepeating("GameTimer", 0, 1);
+
 
     }
 
-    void GameTimer()
-    {
 
-    }
 
 
     private void Networker_playerConnected(NetworkingPlayer player, NetWorker sender)
     {
-        
+
     }
 
     private void Networker_playerTimeout(NetworkingPlayer player, NetWorker sender)

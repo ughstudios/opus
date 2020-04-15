@@ -53,10 +53,7 @@ public class Server : MonoBehaviour
     
     }
 
-    private void Update()
-    {
-
-    }
+  
 
 
     private void Start()
