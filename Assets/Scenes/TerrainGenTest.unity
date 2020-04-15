@@ -341,7 +341,6 @@ MonoBehaviour:
   genOnStart: 1
   updateInterval: 5
   loadedSectionRadius: 5
-  numHeightmapOctaves: 8
   maxOffset: 32
   numDetailOctaves: 3
   detailNoiseScale: 25
