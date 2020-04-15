@@ -107,7 +107,6 @@ public class GameMode : GameModeBehavior
         MainThreadManager.Run(() =>
         {
 
-
             GameObject go = GameObject.FindWithTag("Spawn Point");
             if (go)
             {

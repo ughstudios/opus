@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BasicTree
   m_EditorClassIdentifier: 
   name: BasicTree
-  prefab: {fileID: 3712857241743333466, guid: 6b6cdbc1250175e41aefd6dfbf0263fb, type: 3}
+  prefab: {fileID: -927199367670048503, guid: 32391eab281e6ff4baab9914c347eb29, type: 3}
   bendFactor: 1
   color: {r: 1, g: 1, b: 1, a: 1}
   lightmapColor: {r: 1, g: 1, b: 1, a: 1}

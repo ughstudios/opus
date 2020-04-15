@@ -166,13 +166,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     {
         Debug.Log("Joined lobby.");
 
-        foreach (Friend f in lobby.Members)
-        {
-            Debug.Log("Player in our lobby: " + f.Name);
-            allowedSteamIDs.Add(f.Id);
-        }
-
-
+       
         ourLobby = lobby;
         isInLobby = true;
 

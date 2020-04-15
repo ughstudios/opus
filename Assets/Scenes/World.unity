@@ -150,6 +150,36 @@ Transform:
   m_Father: {fileID: 1186197545}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &169566701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 169566702}
+  m_Layer: 0
+  m_Name: Spawn Point
+  m_TagString: Spawn Point
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &169566702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169566701}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 500, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &226530797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -451,6 +481,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Temp Stuff
       objectReference: {fileID: 0}
+    - target: {fileID: 3245636214989861451, guid: f2d2110c6b435e341936f337569edbe1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3245636214989861448, guid: f2d2110c6b435e341936f337569edbe1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -695,6 +730,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlameThrower
       objectReference: {fileID: 0}
+    - target: {fileID: 1634767862067424, guid: 007c57e2df8e9b144b99f471b84f3d56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4584431484625042, guid: 007c57e2df8e9b144b99f471b84f3d56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20
@@ -757,7 +796,7 @@ GameObject:
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1759155621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -783,7 +822,6 @@ MonoBehaviour:
   genOnStart: 0
   updateInterval: 5
   loadedSectionRadius: 5
-  numHeightmapOctaves: 8
   maxOffset: 32
   numDetailOctaves: 3
   detailNoiseScale: 25
@@ -799,7 +837,6 @@ MonoBehaviour:
   minBorderTreeDistance: 0.5
   treeTestPoints: 30
   minBiomeTreeStrength: 0.8
-  debugThreads: 0
 --- !u!4 &1759155622
 Transform:
   m_ObjectHideFlags: 0
