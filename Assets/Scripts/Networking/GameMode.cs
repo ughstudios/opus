@@ -9,10 +9,7 @@ public class GameMode : GameModeBehavior
 {
 
     // Have lobby send list of ip's to the server to verify who should be on the server during any given match. 
-
-
     Vector3 spawnPoint;
-    public int UPDATE_SERVER_TIMER = 30;
 
     protected override void NetworkStart()
     {
@@ -22,7 +19,6 @@ public class GameMode : GameModeBehavior
 
     void Start()
     {
-
         if (!networkObject.IsServer)
         {
             return;
@@ -35,7 +31,16 @@ public class GameMode : GameModeBehavior
         NetworkManager.Instance.Networker.playerRejected += Networker_playerRejected;
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
+
+        InvokeRepeating("GameTimer", 0, 1);
+
     }
+
+    void GameTimer()
+    {
+
+    }
+
 
     private void Networker_playerConnected(NetworkingPlayer player, NetWorker sender)
     {

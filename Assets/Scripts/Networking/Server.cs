@@ -8,6 +8,7 @@ using System;
 using Steamworks;
 using BeardedManStudios.SimpleJSON;
 using BeardedManStudios;
+using System.Linq;
 
 public class Server : MonoBehaviour
 {
@@ -20,6 +21,27 @@ public class Server : MonoBehaviour
 	public string masterServerHost = "45.63.11.159";
 	//public string masterServerHost = "127.0.0.1";
 	public ushort masterServerPort = 15940;
+
+    private int GetFirstAvailablePort(ushort startingAtPort, int maxNumberOfPortsToCheck)
+    {
+        var range = Enumerable.Range(startingAtPort, maxNumberOfPortsToCheck);
+        var portsInUse =
+            from p in range
+            join used in System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners()
+            on p equals used.Port
+            select p;
+
+        var FirstFreeUDPPortInRange = range.Except(portsInUse).FirstOrDefault();
+
+        if (FirstFreeUDPPortInRange > 0)
+        {
+            return FirstFreeUDPPortInRange;
+        }
+        else
+        {
+            return -1;
+        }
+    }
 
     private void OnEnable()
     {
@@ -57,7 +79,9 @@ public class Server : MonoBehaviour
 
         Rpc.MainThreadRunner = MainThreadManager.Instance;
 
-        server = new UDPServer(MaxPlayers);
+        var availablePort = (ushort)GetFirstAvailablePort(port, 100);
+        port = availablePort;
+        server = new UDPServer(MaxPlayers);        
         server.Connect("127.0.0.1", port);
 
         server.playerTimeout += (player, sender) =>
