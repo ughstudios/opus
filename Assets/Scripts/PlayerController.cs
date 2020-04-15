@@ -106,6 +106,11 @@ public class PlayerController : MobController
 	{
 		base.Update();
 		
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+
 		if (health <= 0)
 		{
 			_isDead = true;

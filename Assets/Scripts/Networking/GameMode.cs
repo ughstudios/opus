@@ -47,7 +47,7 @@ public class GameMode : GameModeBehavior
             {
                 foreach (var player in NetworkManager.Instance.Networker.Players)
                 {
-                    player.Networker.Disconnect(true);
+                    ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
                     matchTimer = initialMatchTimer;
                     serverHasBeenReset = true;
                 }
