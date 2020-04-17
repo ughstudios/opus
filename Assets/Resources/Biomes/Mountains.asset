@@ -23,4 +23,4 @@ MonoBehaviour:
   detailPrototypes:
   - {fileID: 11400000, guid: 87a5f548eec274a498e5e4cc2a9cf482, type: 2}
   treePrototypes:
-  - {fileID: 11400000, guid: 3a70858e9abaef64da9c12c9e8a87e31, type: 2}
+  - {fileID: 11400000, guid: 58da74bbf024b1f468ebfeb7cf302877, type: 2}
