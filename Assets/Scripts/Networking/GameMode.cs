@@ -40,8 +40,18 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                     serverHasBeenReset = true;
                 }
             }
+            else if (NetworkManager.Instance.Networker.Players.Count <= 1)
+            {
+                if (!serverHasBeenReset)
+                {
+                    ResetServer();
+                    serverHasBeenReset = true;
+                }
+            }
             else
+            {
                 serverHasBeenReset = false;
+            }
         }
         else
         {
