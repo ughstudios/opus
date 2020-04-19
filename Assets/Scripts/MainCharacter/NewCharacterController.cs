@@ -22,15 +22,17 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] bool _isSniping = false;
     Vector3 _initCamAttachedPos = new Vector3(0, 4, -10);
 
-    [SerializeField] float  _movementSpeed = 12.0f,
+    [SerializeField]
+    float _movementSpeed = 12.0f,
                             _initMovementSpeed = 0.0f;
-    
+
     [SerializeField] float _gravity = -9.81f;
 
     [SerializeField] Transform _groundCheck = null;
     [SerializeField] float _groundDistance = 0.4f;//Radius of distance
     [SerializeField] LayerMask _groundMask;
-    [SerializeField] bool   _isGrounded = false,
+    [SerializeField]
+    bool _isGrounded = false,
                             _comingDown = false;
 
     [SerializeField] float _jumpHeight = 20f;
@@ -40,7 +42,8 @@ public class NewCharacterController : DamageableEntity
     //for attacks
     [SerializeField] bool _isAiming = false;
     [SerializeField] bool _startBaseCoolDown = false;
-    [SerializeField] float  _poisonCoolDownTime = 1.5f,
+    [SerializeField]
+    float _poisonCoolDownTime = 1.5f,
                             _initPoisonCoolDownTime = 0.0f,
                             _fireCoolDownTime = 3.0f,
                             _initFireCoolTime = 0.0f,
@@ -49,19 +52,21 @@ public class NewCharacterController : DamageableEntity
                             _fireRefillRate = 4.0f,
                             _fireCanvasVal = 0.0f;
 
-    [SerializeField] bool   _startFlameCoolDown = false,
+    [SerializeField]
+    bool _startFlameCoolDown = false,
                             _startFireAttack = false,
                             _flameInstantiated = false;
 
     [SerializeField] Transform _fireAttackPos = null;
-    [SerializeField] int    _fireInt = 0,
+    [SerializeField]
+    int _fireInt = 0,
                             _aimInt = 0,
                             _hasSnipped = 0;
 
     [SerializeField] bool _canAim = false;
 
     //UI refill indicators
-    public RectTransform    _poisonReflillTransform = null,
+    public RectTransform _poisonReflillTransform = null,
                             _fireReflillTransform = null,
                             _healthTransform = null;
 
@@ -123,13 +128,17 @@ public class NewCharacterController : DamageableEntity
 
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    if (_chatInput.isFocused)
+                    if (!_chatInput.isFocused)
                     {
-                        return;
+                        FocusChat();
                     }
-
-                    FocusChat();
                 }
+
+                if (_chatInput.isFocused)
+                {
+                    return;
+                }
+
 
                 networkObject.health = health;
                 HealthCanvasMeter();
@@ -157,15 +166,15 @@ public class NewCharacterController : DamageableEntity
                 _anim.SetInteger("hasSnipped", networkObject.hasSnipped);
             }
         }
-        
+
         PhysicsCheck();
-        MovePlayer(x,z);
-        RotateChild(x,z);
+        MovePlayer(x, z);
+        RotateChild(x, z);
         StartJump();
         StartThrowAttack();
         PoisonCoolDown();
         FireIntAttack();
-        if(_canAim) Aim();
+        if (_canAim) Aim();
         SnipAttack();
         HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
         HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
@@ -173,11 +182,11 @@ public class NewCharacterController : DamageableEntity
         ExitGame();
     }
 
-	protected override void FixedUpdate()
-	{
+    protected override void FixedUpdate()
+    {
         base.FixedUpdate();
-		SyncWithNetworkViaFixedUpate();
-	}
+        SyncWithNetworkViaFixedUpate();
+    }
 
     void PhysicsCheck()
     {
@@ -223,7 +232,7 @@ public class NewCharacterController : DamageableEntity
     void StartJump()
     {
         if (Input.GetButtonDown(CharacterButtonsConstants.JUMP) && _isGrounded)
-        {  
+        {
             _anim.SetBool("isJumping", true);
         }
     }
@@ -423,11 +432,12 @@ public class NewCharacterController : DamageableEntity
             else if (x < 0) _anim.SetInteger("horizontalVal", -1);
             else _anim.SetInteger("horizontalVal", 0);
         }
-        else {
+        else
+        {
             _anim.SetInteger("horizontalVal", 0);
             _anim.SetInteger("runningVal", 0);
         }
-        
+
         if (_isAiming) _aimInt = 1;
         if (!_isAiming) _aimInt = 0;
 
@@ -448,7 +458,7 @@ public class NewCharacterController : DamageableEntity
         if (networkObject == null)
             return;
 
-        
+
         if (!networkObject.IsOwner)
         {
             //position and rotation
@@ -474,7 +484,7 @@ public class NewCharacterController : DamageableEntity
             _hudCanvas.SetActive(true);
             _camera.SetActive(true);
         }
-        
+
     }
 
     void HealthCanvasMeter()
