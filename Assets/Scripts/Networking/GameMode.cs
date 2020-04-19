@@ -73,8 +73,6 @@ public class GameMode : GameModeBehavior
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
 
-
-
     }
 
 
