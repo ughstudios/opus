@@ -11,6 +11,7 @@ using TMPro;
 using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Net;
 
 public class ClientConnect : MonoBehaviour, IUserAuthenticator
 {
@@ -37,7 +38,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     private bool ownsLobby = false;
 
     public List<SteamId> allowedSteamIDs;
-    
+
 
     private void Start()
     {
@@ -91,7 +92,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
-        
+
 
         Debug.Log("Lobbies Count: " + list.Length);
 
@@ -138,7 +139,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         }
 
-        
+
 
     }
 
@@ -170,7 +171,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     {
         Debug.Log("Joined lobby.");
 
-       
+
         ourLobby = lobby;
         isInLobby = true;
 
@@ -224,8 +225,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         tryingServer = true;
-                        //ConnectToServer();
-                        lobby.SetGameServer(hostAddress, port);
+                        ConnectToServer();
+                        //lobby.SetGameServer(hostAddress, port);
 
                         return;
                     }
@@ -245,13 +246,14 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     private void SteamMatchmaking_OnLobbyGameCreated(Lobby lobby, uint ip, ushort port, SteamId steamid)
     {
         Debug.Log("Lobby owner has found us a server, connecting.");
-        Debug.Log("IP: " + ip);
+        var parsedIP = IPAddress.Parse(ip.ToString()).ToString();
+        Debug.Log("IP: " + parsedIP);
         hostAddress = ip.ToString();
         this.port = port;
         gameFound = true;
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
-        
+
 
         if (!ownsLobby)
             ConnectToServer();
@@ -311,7 +313,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
             if (ownsLobby)
             {
-                //ourLobby.SetGameServer(hostAddress, port);
+                ourLobby.SetGameServer(hostAddress, port);
                 gameFound = true;
                 tryingServer = false;
             }
@@ -330,13 +332,13 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         switch (status)
         {
             case Server.AuthStatus.Available:
-                
+
                 List<uint> memberIds = new List<uint>();
                 foreach (Friend f in ourLobby.Members)
                 {
                     memberIds.Add(f.Id.AccountId);
                 }
-                
+
                 BMSByte response = ObjectMapper.BMSByte(SteamClient.SteamId.AccountId);
 
                 BinaryFormatter binFor = new BinaryFormatter();
