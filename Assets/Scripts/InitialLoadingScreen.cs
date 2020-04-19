@@ -10,7 +10,7 @@ public class InitialLoadingScreen : MonoBehaviour
     private CapsuleCollider capsuleCollider;
     public GameObject LoadingScreenUI;
     private CharacterController unityCharacterController;
-
+    
     private TerrainManager tm;
 
     void Start()

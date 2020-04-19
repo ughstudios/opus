@@ -14,7 +14,7 @@ public class Chat : MonoBehaviour
     public GameObject chatMessage_prefab;
     public GameObject chatContentArea;
     public ScrollRect chatScrollRect;
-
+    
     void Start()
     {
         SteamMatchmaking.OnChatMessage += SteamMatchmaking_OnChatMessage;
@@ -29,9 +29,9 @@ public class Chat : MonoBehaviour
         client.ourLobby.SendChatString(message);
         chatMessageToSend.text = "";
 
-        chatMessageToSend.ReleaseSelection();
         chatMessageToSend.DeactivateInputField();
-        
+        chatMessageToSend.ReleaseSelection();
+
     }
 
     private void SteamMatchmaking_OnChatMessage(Lobby lobby, Friend member, string message)
@@ -41,6 +41,10 @@ public class Chat : MonoBehaviour
         TextMeshProUGUI txt = chatMessageSpawned.GetComponent<TextMeshProUGUI>();
         txt.text = message;
 
+        Canvas.ForceUpdateCanvases();
         chatScrollRect.normalizedPosition = new Vector2(0, 0);
+
     }
+
+
 }
