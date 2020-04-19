@@ -248,7 +248,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         Debug.Log("Lobby owner has found us a server, connecting.");
         var parsedIP = IPAddress.Parse(ip.ToString()).ToString();
         Debug.Log("IP: " + parsedIP);
-        hostAddress = ip.ToString();
+        hostAddress = parsedIP;
         this.port = port;
         gameFound = true;
 

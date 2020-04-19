@@ -76,7 +76,7 @@ public class InstantiateSpell : InstatiateSpellPosBehavior
 
 	void HandleXRotation(float y)
 	{
-		Debug.Log("Calling from Owner Netowrk Play");
+		//Debug.Log("Calling from Owner Netowrk Play");
 
 		// Read the user input, we only need the Y axis because the cam is following the player rot
 		//var y = CrossPlatformInputManager.GetAxis("Mouse Y");

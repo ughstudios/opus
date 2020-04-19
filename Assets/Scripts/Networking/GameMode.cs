@@ -64,11 +64,21 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 foreach (var player in NetworkManager.Instance.Networker.Players)
                 {
                     if (!player.IsHost)
+                    {
                         ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+
+                        NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
+                        foreach (var character in characters)
+                        {
+                            character.networkObject.Destroy();
+                        }
+                    }
+
+
                 }
-                    matchTimer = initialMatchTimer;
-                    serverHasBeenReset = true;
-                    status = Server.AuthStatus.Available;
+                matchTimer = initialMatchTimer;
+                serverHasBeenReset = true;
+                status = Server.AuthStatus.Available;
                 NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
             }
         });
