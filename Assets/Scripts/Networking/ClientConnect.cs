@@ -224,8 +224,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         tryingServer = true;
-                        ConnectToServer();
-                        //lobby.SetGameServer(hostAddress, port);
+                        //ConnectToServer();
+                        lobby.SetGameServer(hostAddress, port);
 
                         return;
                     }
@@ -245,6 +245,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     private void SteamMatchmaking_OnLobbyGameCreated(Lobby lobby, uint ip, ushort port, SteamId steamid)
     {
         Debug.Log("Lobby owner has found us a server, connecting.");
+        Debug.Log("IP: " + ip);
         hostAddress = ip.ToString();
         this.port = port;
         gameFound = true;
@@ -310,7 +311,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
             if (ownsLobby)
             {
-                ourLobby.SetGameServer(hostAddress, port);
+                //ourLobby.SetGameServer(hostAddress, port);
                 gameFound = true;
                 tryingServer = false;
             }

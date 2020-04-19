@@ -4,14 +4,16 @@ using UnityEngine;
 using TMPro;
 using Steamworks;
 using Steamworks.Data;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Chat : MonoBehaviour
 {
-    ClientConnect client;
+    private ClientConnect client;
+
     public TMP_InputField chatMessageToSend;
     public GameObject chatMessage_prefab;
     public GameObject chatContentArea;
+    public ScrollRect chatScrollRect;
 
     void Start()
     {
@@ -29,6 +31,7 @@ public class Chat : MonoBehaviour
 
         chatMessageToSend.ReleaseSelection();
         chatMessageToSend.DeactivateInputField();
+        
     }
 
     private void SteamMatchmaking_OnChatMessage(Lobby lobby, Friend member, string message)
@@ -37,5 +40,7 @@ public class Chat : MonoBehaviour
         chatMessageSpawned.transform.SetParent(chatContentArea.transform);
         TextMeshProUGUI txt = chatMessageSpawned.GetComponent<TextMeshProUGUI>();
         txt.text = message;
+
+        chatScrollRect.normalizedPosition = new Vector2(0, 0);
     }
 }
