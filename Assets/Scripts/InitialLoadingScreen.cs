@@ -6,7 +6,7 @@ using UnityStandardAssets.Cameras;
 public class InitialLoadingScreen : MonoBehaviour
 {
 
-    private PlayerController playerController;
+    private NewCharacterController characterController;
     private CapsuleCollider capsuleCollider;
     public GameObject LoadingScreenUI;
 
@@ -14,7 +14,7 @@ public class InitialLoadingScreen : MonoBehaviour
     
     void Start()
     {
-        playerController = GetComponent<PlayerController>();
+        characterController = GetComponent<NewCharacterController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
 
         tm = FindObjectOfType<TerrainManager>();
@@ -27,7 +27,7 @@ public class InitialLoadingScreen : MonoBehaviour
     {
         if(tm.TerrainExistsAt(transform.position))
         {
-            playerController.enabled = true;
+            characterController.enabled = true;
             capsuleCollider.enabled = true;
 
             Destroy(LoadingScreenUI);
