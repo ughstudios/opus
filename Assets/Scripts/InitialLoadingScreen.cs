@@ -9,13 +9,15 @@ public class InitialLoadingScreen : MonoBehaviour
     private NewCharacterController characterController;
     private CapsuleCollider capsuleCollider;
     public GameObject LoadingScreenUI;
+    private CharacterController unityCharacterController;
 
     private TerrainManager tm;
-    
+
     void Start()
     {
         characterController = GetComponent<NewCharacterController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        unityCharacterController = GetComponent<CharacterController>();
 
         tm = FindObjectOfType<TerrainManager>();
         tm.follow.Add(gameObject);
@@ -25,19 +27,17 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity))
+        if (tm.TerrainExistsAt(transform.position))
         {
-            if (hit.collider.name.Contains("Terrain"))
-            {
-                characterController.enabled = true;
-                capsuleCollider.enabled = true;
+            characterController.enabled = true;
+            capsuleCollider.enabled = true;
+            unityCharacterController.enabled = true;
 
-                Destroy(LoadingScreenUI);
-                Destroy(this);
-            }
+            Destroy(LoadingScreenUI);
+            Destroy(this);
+
         }
-        
+
     }
 
 }
