@@ -113,7 +113,7 @@ public class Server : MonoBehaviour
             string mode = "Solo";
 
             masterServerData = mgr.MasterServerRegisterData(server, serverId, serverName, type, mode, public_ip_addr, false, 0);
-            Debug.Log("Registered with: " + public_ip_addr + " as our  IP");
+            Debug.Log("Registered with: " + public_ip_addr + " as our IP");
         }
         
         mgr.Initialize(server, masterServerHost, masterServerPort, masterServerData);

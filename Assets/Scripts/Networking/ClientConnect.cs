@@ -225,7 +225,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         tryingServer = true;
-                        ConnectToServer();
+                        //ConnectToServer();
                         //lobby.SetGameServer(hostAddress, port);
 
                         return;
@@ -254,9 +254,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
-
-        if (!ownsLobby)
-            ConnectToServer();
+        //if (!ownsLobby)
+        ConnectToServer();
     }
 
     public void ConnectToServer()
@@ -322,12 +321,12 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
     {
-        Server.AuthStatus status = challenge.GetBasicType<Server.AuthStatus>();
+        /*Server.AuthStatus status = challenge.GetBasicType<Server.AuthStatus>();
 
         switch (status)
         {
@@ -357,7 +356,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
             case Server.AuthStatus.Closed:
                 rejectServerAction();
                 return;
-        }
+        }*/
         /*
         BMSByte by = new BMSByte();
         var binFormatter = new BinaryFormatter();

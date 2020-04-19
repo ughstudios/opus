@@ -40,14 +40,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                     serverHasBeenReset = true;
                 }
             }
-            else if (NetworkManager.Instance.Networker.Players.Count <= 1)
-            {
-                if (!serverHasBeenReset)
-                {
-                    ResetServer();
-                    serverHasBeenReset = true;
-                }
-            }
             else
             {
                 serverHasBeenReset = false;
@@ -202,6 +194,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         NetWorker.EndSession();
     }
 
+    /*
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
     {
         issueChallengeAction(player, ObjectMapper.BMSByte(status));
@@ -259,5 +252,5 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 rejectUserAction(player);
                 return;
         }
-    }
+    }*/
 }
