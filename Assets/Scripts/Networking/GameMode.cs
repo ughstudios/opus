@@ -4,9 +4,15 @@ using UnityEngine;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
+using System;
+using BeardedManStudios;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
-public class GameMode : GameModeBehavior
+public class GameMode : GameModeBehavior, IUserAuthenticator
 {
+    private Server.AuthStatus status = Server.AuthStatus.Available;
+    private List<uint> allowedIds;
 
     // Have lobby send list of ip's to the server to verify who should be on the server during any given match. 
     Vector3 spawnPoint;
@@ -30,14 +36,21 @@ public class GameMode : GameModeBehavior
                 matchTimer -= Time.deltaTime;
                 if (matchTimer < 0)
                 {
-                    if (!serverHasBeenReset)
-                    {
-                        ResetServer();
-                        serverHasBeenReset = true;
-                        matchTimer = initialMatchTimer;
-                    }
+                    ResetServer();
+                    serverHasBeenReset = true;
                 }
             }
+            else
+                serverHasBeenReset = false;
+        }
+        else
+        {
+            if (!serverHasBeenReset)
+            {
+                ResetServer();
+                serverHasBeenReset = true;
+            }
+
         }
 
     }
@@ -50,10 +63,12 @@ public class GameMode : GameModeBehavior
             {
                 foreach (var player in NetworkManager.Instance.Networker.Players)
                 {
-                    ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+                    if (!player.IsHost)
+                        ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+                }
                     matchTimer = initialMatchTimer;
                     serverHasBeenReset = true;
-                }
+                    status = Server.AuthStatus.Available;
                 NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
             }
         });
@@ -75,6 +90,8 @@ public class GameMode : GameModeBehavior
         NetworkManager.Instance.Networker.playerRejected += Networker_playerRejected;
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
+
+        //NetworkManager.Instance.Networker.SetUserAuthenticator(this);
 
     }
 
@@ -163,5 +180,64 @@ public class GameMode : GameModeBehavior
     private void OnApplicationQuit()
     {
         NetWorker.EndSession();
+    }
+
+    public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
+    {
+        issueChallengeAction(player, ObjectMapper.BMSByte(status));
+    }
+
+    public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, Action<NetworkingPlayer> authUserAction, Action<NetworkingPlayer> rejectUserAction)
+    {
+        uint id;
+        switch (status)
+        {
+            case Server.AuthStatus.Available:
+                id = response.GetBasicType<uint>();
+
+                BinaryFormatter binFor = new BinaryFormatter();
+                MemoryStream memStream = new MemoryStream();
+
+                byte[] bytes = response.GetByteArray(sizeof(uint));
+                memStream.Write(bytes, 0, bytes.Length);
+                memStream.Position = 0;
+
+                List<uint> ids = binFor.Deserialize(memStream) as List<uint>;
+
+                if (ids.Contains(id))
+                {
+                    ids.Remove(id);
+                    authUserAction(player);
+                    status = Server.AuthStatus.Checking;
+                    allowedIds = ids;
+                }
+                else
+                {
+                    rejectUserAction(player);
+                }
+
+                //uint[] ids = ObjectMapper.Instance.Map<uint[]>(response);
+                break;
+            case Server.AuthStatus.Checking:
+                id = response.GetBasicType<uint>();
+                if (allowedIds.Contains(id))
+                {
+                    authUserAction(player);
+                    allowedIds.Remove(id);
+                }
+                else
+                {
+                    rejectUserAction(player);
+                }
+                return;
+            case Server.AuthStatus.Closed:
+                rejectUserAction(player);
+                return;
+        }
     }
 }

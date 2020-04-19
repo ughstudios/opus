@@ -22,6 +22,13 @@ public class Server : MonoBehaviour
 	//public string masterServerHost = "127.0.0.1";
 	public ushort masterServerPort = 15940;
 
+    public enum AuthStatus
+    {
+        Available,
+        Checking,
+        Closed
+    }
+
     private int GetFirstAvailablePort(ushort startingAtPort, int maxNumberOfPortsToCheck)
     {
         var range = Enumerable.Range(startingAtPort, maxNumberOfPortsToCheck);

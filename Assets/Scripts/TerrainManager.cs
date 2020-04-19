@@ -1122,7 +1122,8 @@ public class TerrainManager : MonoBehaviour
 
     private bool SectionExists(SectionCoord coord)
     {
-        return terrains.ContainsKey(coord) && !toRemove.Contains(coord);
+        return terrains.ContainsKey(coord) && terrains[coord].terrain != null &&
+                !toRemove.Contains(coord);
     }
 
     public bool TerrainExistsAt(Vector3 vLoc)

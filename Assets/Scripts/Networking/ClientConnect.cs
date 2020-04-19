@@ -33,6 +33,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     Lobby ourLobby;
     public int LOBBY_CHECK_TIMER = 5;
     public bool gameFound = false;
+    private bool tryingServer = false;
+    private bool ownsLobby = false;
 
     public List<SteamId> allowedSteamIDs;
     
@@ -173,6 +175,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         if (lobby.IsOwnedBy(SteamClient.SteamId))
         {
             Debug.Log("we own the lobby");
+            ownsLobby = true;
             lobby.SetPublic();
             StartCoroutine(LobbyCheckCoRoutine(lobby));
         }
@@ -182,7 +185,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
     {
         while (!gameFound)
         {
-            LobbyCheck(lobby);
+            if (!tryingServer)
+                LobbyCheck(lobby);
 
             yield return new WaitForSeconds(LOBBY_CHECK_TIMER);
         }
@@ -217,7 +221,9 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
                         hostAddress = server.Address;
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
-                        lobby.SetGameServer(hostAddress, port);
+                        tryingServer = true;
+                        ConnectToServer();
+                        //lobby.SetGameServer(hostAddress, port);
 
                         return;
                     }
@@ -243,18 +249,18 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
         
-
         lobby.Leave();
-
-        ConnectToServer();
+        if (!ownsLobby)
+            ConnectToServer();
     }
-
-
 
     public void ConnectToServer()
     {
         UDPClient client = new UDPClient();
         //client.SetUserAuthenticator(this);
+        client.serverAccepted += OnAccepted;
+        client.connectAttemptFailed += Client_connectAttemptFailed;
+        client.disconnected += Client_disconnected;
         client.Connect(hostAddress, port);
 
         if (!client.IsBound)
@@ -268,12 +274,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
             mgr = Instantiate(networkManagerPrefab).GetComponent<NetworkManager>();
         }
 
-
         mgr.Initialize(client, masterServerHost, masterServerPort);
 
-        client.serverAccepted += OnAccepted;
-        client.connectAttemptFailed += Client_connectAttemptFailed;
-        client.disconnected += Client_disconnected;
     }
 
     private void Client_disconnected(NetWorker sender)
@@ -281,6 +283,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         MainThreadManager.Run(() =>
         {
             Debug.LogError("Disconnected");
+            if (ownsLobby)
+                tryingServer = false;
         });
     }
 
@@ -289,6 +293,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         MainThreadManager.Run(() =>
         {
             Debug.LogError("Connect attempt failed.");
+            if (ownsLobby)
+                tryingServer = false;
         });
     }
 
@@ -297,16 +303,55 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         MainThreadManager.Run(() =>
         {
             Debug.Log("Accepted");
+
+            if (ownsLobby)
+            {
+                ourLobby.SetGameServer(hostAddress, port);
+                gameFound = true;
+                tryingServer = false;
+            }
         });
     }
 
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
     {
-        issueChallengeAction(player, new BMSByte());
+        throw new NotImplementedException();
     }
 
     public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
     {
+        Server.AuthStatus status = challenge.GetBasicType<Server.AuthStatus>();
+
+        switch (status)
+        {
+            case Server.AuthStatus.Available:
+                
+                List<uint> memberIds = new List<uint>();
+                foreach (Friend f in ourLobby.Members)
+                {
+                    memberIds.Add(f.Id.AccountId);
+                }
+                
+                BMSByte response = ObjectMapper.BMSByte(SteamClient.SteamId.AccountId);
+
+                BinaryFormatter binFor = new BinaryFormatter();
+                MemoryStream memStream = new MemoryStream();
+                binFor.Serialize(memStream, memberIds);
+
+                //response.Append(ObjectMapper.BMSByte(memberIds.ToArray()));
+                response.Append(ObjectMapper.BMSByte(memStream.ToArray()));
+                authServerAction(response);
+
+                memStream.Close();
+                return;
+            case Server.AuthStatus.Checking:
+                authServerAction(ObjectMapper.BMSByte(SteamClient.SteamId.AccountId));
+                return;
+            case Server.AuthStatus.Closed:
+                rejectServerAction();
+                return;
+        }
+        /*
         BMSByte by = new BMSByte();
         var binFormatter = new BinaryFormatter();
         var mStream = new MemoryStream();
@@ -315,10 +360,12 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         var data = ObjectMapper.BMSByte(mStream.ToArray());
 
         authServerAction(data);
+        */
     }
 
     public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, Action<NetworkingPlayer> authUserAction, Action<NetworkingPlayer> rejectUserAction)
     {
+        /*
         var mStream = new MemoryStream();
         var binFormatter = new BinaryFormatter();
 
@@ -331,6 +378,6 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         authUserAction(player);
         rejectUserAction(player);
-
+        */
     }
 }
