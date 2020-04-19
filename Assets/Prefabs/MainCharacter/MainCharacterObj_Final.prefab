@@ -2382,7 +2382,7 @@ PrefabInstance:
     - target: {fileID: 5023793991487711913, guid: 96dbe8e0dbc3f224c85a2635ef2f021b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5023793991487711910, guid: 96dbe8e0dbc3f224c85a2635ef2f021b,
         type: 3}
@@ -2573,6 +2573,11 @@ PrefabInstance:
     - target: {fileID: 2212728132980413265, guid: 96dbe8e0dbc3f224c85a2635ef2f021b,
         type: 3}
       propertyPath: scrollRect
+      value: 
+      objectReference: {fileID: 7049839419983177084}
+    - target: {fileID: 2212728132980413265, guid: 96dbe8e0dbc3f224c85a2635ef2f021b,
+        type: 3}
+      propertyPath: chatScrollRect
       value: 
       objectReference: {fileID: 7049839419983177084}
     m_RemovedComponents: []

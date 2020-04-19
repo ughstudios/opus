@@ -126,7 +126,7 @@ public class NewCharacterController : DamageableEntity
                     _chat.SetActive(true);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return))
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 {
                     if (!_chatInput.isFocused)
                     {
