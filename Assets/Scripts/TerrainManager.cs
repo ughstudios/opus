@@ -1108,10 +1108,16 @@ public class TerrainManager : MonoBehaviour
 
     private SectionCoord SectionFor(Vector3 vLoc)
     {
+        float lx, lz;
+        lx = vLoc.x / genSettings.length;
+        lz = vLoc.z / genSettings.length;
+        return new SectionCoord(Mathf.RoundToInt(lx), Mathf.RoundToInt(lz));
+        /*
         return new SectionCoord(Mathf.FloorToInt((vLoc.x +
                 genSettings.length / 2) / genSettings.length), 
                 Mathf.FloorToInt((vLoc.z + genSettings.length / 2) /
                 genSettings.length));
+                */
     }
 
     private bool SectionExists(SectionCoord coord)
