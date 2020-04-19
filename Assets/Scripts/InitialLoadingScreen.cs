@@ -7,7 +7,6 @@ public class InitialLoadingScreen : MonoBehaviour
 {
 
     private PlayerController playerController;
-    private Rigidbody rb;
     private CapsuleCollider capsuleCollider;
     public GameObject LoadingScreenUI;
 
@@ -16,7 +15,6 @@ public class InitialLoadingScreen : MonoBehaviour
     void Start()
     {
         playerController = GetComponent<PlayerController>();
-        rb = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
 
         tm = FindObjectOfType<TerrainManager>();
@@ -30,7 +28,6 @@ public class InitialLoadingScreen : MonoBehaviour
         if(tm.TerrainExistsAt(transform.position))
         {
             playerController.enabled = true;
-            rb.useGravity = true;
             capsuleCollider.enabled = true;
 
             Destroy(LoadingScreenUI);
