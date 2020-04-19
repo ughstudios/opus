@@ -9,7 +9,7 @@ using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class GameMode : GameModeBehavior, IUserAuthenticator
+public class GameMode : GameModeBehavior
 {
     private Server.AuthStatus status = Server.AuthStatus.Available;
     private List<uint> allowedIds;
