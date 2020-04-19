@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using BeardedManStudios.Forge.Networking;
+using TMPro;
 
 public class NewCharacterController : DamageableEntity
 {
@@ -68,6 +69,9 @@ public class NewCharacterController : DamageableEntity
 
     [SerializeField] bool _isDead = false;
 
+    [SerializeField] GameObject _chat;
+    [SerializeField] TMP_InputField _chatInput;
+
     void Awake()
     {
         _charController = GetComponent<CharacterController>();
@@ -91,6 +95,13 @@ public class NewCharacterController : DamageableEntity
         networkObject.isDead = _isDead;
     }
 
+
+    void FocusChat()
+    {
+        _chatInput.Select();
+        _chatInput.ActivateInputField();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -104,6 +115,21 @@ public class NewCharacterController : DamageableEntity
             if (networkObject.IsOwner)
             {
                 //networkObject.SendRpc(RPC_TRIGGER_WALK_ANIM,Receivers.All,x,z,_movementSpeed,_isGrounded,_isAiming,_aimInt,_fireInt,_hasSnipped);
+
+                if (!_chat.activeSelf)
+                {
+                    _chat.SetActive(true);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    if (_chatInput.isFocused)
+                    {
+                        return;
+                    }
+
+                    FocusChat();
+                }
 
                 networkObject.health = health;
                 HealthCanvasMeter();

@@ -30,7 +30,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
     public int maxLobbyMembers = 1;
     bool isInLobby;
-    Lobby ourLobby;
+    public Lobby ourLobby;
     public int LOBBY_CHECK_TIMER = 5;
     public bool gameFound = false;
     private bool tryingServer = false;
@@ -91,6 +91,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
+        
 
         Debug.Log("Lobbies Count: " + list.Length);
 
@@ -137,9 +138,10 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         }
 
-
+        
 
     }
+
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
@@ -249,7 +251,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
         
-        lobby.Leave();
+
         if (!ownsLobby)
             ConnectToServer();
     }
@@ -285,6 +287,8 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
             Debug.LogError("Disconnected");
             if (ownsLobby)
                 tryingServer = false;
+
+            ourLobby.Leave();
         });
     }
 
