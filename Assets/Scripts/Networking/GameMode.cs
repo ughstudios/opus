@@ -113,7 +113,8 @@ public class GameMode : GameModeBehavior
                 spawnPoint = go.transform.position;
             }
 
-            PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
+            //PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
+            NewCharacterController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as NewCharacterController;
 
             playerController.networkObject.position = spawnPoint;
             playerController.networkObject.AssignOwnership(player);

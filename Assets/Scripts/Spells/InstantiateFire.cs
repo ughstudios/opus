@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BeardedManStudios.Forge.Networking.Generated;
-using BeardedManStudios.Forge.Networking.Unity;
 
 
 public class InstantiateFire : InstantiateFirePosBehavior
@@ -15,14 +14,22 @@ public class InstantiateFire : InstantiateFirePosBehavior
     {
 		if (networkObject != null)
 		{
-			if (!networkObject.IsOwner)
+			networkObject.position = transform.position;
+			networkObject.rotation = transform.rotation;
+
+			
+			/*
+			if (networkObject.IsOwner)
 			{
+				networkObject.position = transform.position;
+				networkObject.rotation = transform.rotation;
+			}
+			else {
 				transform.position = networkObject.position;
 				transform.rotation = networkObject.rotation;
 			}
-
-			networkObject.position = transform.position;
-			networkObject.rotation = transform.rotation;
+			*/
+			
 		}
 	}
 

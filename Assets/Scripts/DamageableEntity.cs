@@ -20,6 +20,9 @@ public class DamageableEntity : PlayerBehavior
 
 	[SerializeField] bool _canQuit = false;
 
+    public Animator _anim = null;
+
+
 	public void ResetStats()
     {
         networkObject.SendRpc(RPC_SERVER__SET_FOOD, Receivers.All, MaxEverything);
@@ -211,7 +214,7 @@ public class DamageableEntity : PlayerBehavior
 
 	protected virtual void OnDeath()
 	{
-		if (networkObject.IsOwner)
+		if (networkObject != null && networkObject.IsOwner)
 		{
 			//networkObject.Networker.Disconnect(true);//disconnect from server
 			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
@@ -271,4 +274,47 @@ public class DamageableEntity : PlayerBehavior
 			Debug.Log("Fire Flame");
 		});
 	}
+
+    public override void TriggerWalkAnim(RpcArgs args)
+    {
+        float x = args.GetNext<float>();
+        float z = args.GetNext<float>();
+        float _movementSpeed = args.GetNext<float>();
+        bool _isGrounded = args.GetNext<bool>();
+        bool _isAiming = args.GetNext<bool>();
+        int _aimInt = args.GetNext<int>();
+        int _fireInt = args.GetNext<int>();
+        int _hasSnipped = args.GetNext<int>();
+
+        MainThreadManager.Run(() =>
+        {
+            _anim.SetBool("onGround", _isGrounded);
+
+            if (_isGrounded) _anim.SetBool("isJumping", false);
+
+            if (_movementSpeed != 0)
+            {
+                if (z > 0) _anim.SetInteger("runningVal", 1);
+                else if (z < 0) _anim.SetInteger("runningVal", -1);
+                else _anim.SetInteger("runningVal", 0);
+
+
+                if (x > 0) _anim.SetInteger("horizontalVal", 1);
+                else if (x < 0) _anim.SetInteger("horizontalVal", -1);
+                else _anim.SetInteger("horizontalVal", 0);
+            }
+            else
+            {
+                _anim.SetInteger("horizontalVal", 0);
+                _anim.SetInteger("runningVal", 0);
+            }
+
+            if (_isAiming) _aimInt = 1;
+            if (!_isAiming) _aimInt = 0;
+
+            _anim.SetInteger("fireInt", _fireInt);
+            _anim.SetInteger("aimInt", _aimInt);
+            _anim.SetInteger("hasSnipped", _hasSnipped);
+        });
+    }
 }

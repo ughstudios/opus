@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using BeardedManStudios.Forge.Networking.Generated;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -12,11 +13,23 @@ public class PlayerCamera : MonoBehaviour
 	[SerializeField] float	m_TiltMin = 45.0f,
 							m_TiltMax = 45.0f;
 
+	[SerializeField] GameObject _firePosition = null;
+
+	private void Start()
+	{
+		Cursor.lockState = CursorLockMode.Locked;
+	}
+
 
 	void Update()
     {
 		HandleXRotation();
-    }
+
+		var x = CrossPlatformInputManager.GetAxis("Mouse X");
+		transform.parent.gameObject.transform.Rotate(Vector3.up * x);
+
+		//_firePosition.transform.rotation = transform.rotation;
+	}
 
 	void HandleXRotation()
 	{
@@ -32,5 +45,10 @@ public class PlayerCamera : MonoBehaviour
 		m_TransformTargetRot = _inverse ? Quaternion.Euler(m_Tilt_X_Angle, 0f, 0f) : Quaternion.Euler(-m_Tilt_X_Angle, 0f, 0f);
 
 		transform.localRotation = m_TransformTargetRot;
+	}
+
+	public float GetLocalX_Rot()
+	{
+		return transform.localRotation.eulerAngles.x;
 	}
 }

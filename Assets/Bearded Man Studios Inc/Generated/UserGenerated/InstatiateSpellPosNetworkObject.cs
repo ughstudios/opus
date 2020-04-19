@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0.1,0.1,0.1]")]
+	[GeneratedInterpol("{\"inter\":[0.1,0.1,0.1,0]")]
 	public partial class InstatiateSpellPosNetworkObject : NetworkObject
 	{
 		public const int IDENTITY = 13;
@@ -108,6 +108,37 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (localRotationChanged != null) localRotationChanged(_localRotation, timestep);
 			if (fieldAltered != null) fieldAltered("localRotation", _localRotation, timestep);
 		}
+		[ForgeGeneratedField]
+		private Quaternion _m_TransformTargetRot;
+		public event FieldEvent<Quaternion> m_TransformTargetRotChanged;
+		public InterpolateQuaternion m_TransformTargetRotInterpolation = new InterpolateQuaternion() { LerpT = 0f, Enabled = false };
+		public Quaternion m_TransformTargetRot
+		{
+			get { return _m_TransformTargetRot; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_m_TransformTargetRot == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x8;
+				_m_TransformTargetRot = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void Setm_TransformTargetRotDirty()
+		{
+			_dirtyFields[0] |= 0x8;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_m_TransformTargetRot(ulong timestep)
+		{
+			if (m_TransformTargetRotChanged != null) m_TransformTargetRotChanged(_m_TransformTargetRot, timestep);
+			if (fieldAltered != null) fieldAltered("m_TransformTargetRot", _m_TransformTargetRot, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -120,6 +151,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			positionInterpolation.current = positionInterpolation.target;
 			rotationInterpolation.current = rotationInterpolation.target;
 			localRotationInterpolation.current = localRotationInterpolation.target;
+			m_TransformTargetRotInterpolation.current = m_TransformTargetRotInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
@@ -129,6 +161,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			UnityObjectMapper.Instance.MapBytes(data, _position);
 			UnityObjectMapper.Instance.MapBytes(data, _rotation);
 			UnityObjectMapper.Instance.MapBytes(data, _localRotation);
+			UnityObjectMapper.Instance.MapBytes(data, _m_TransformTargetRot);
 
 			return data;
 		}
@@ -147,6 +180,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			localRotationInterpolation.current = _localRotation;
 			localRotationInterpolation.target = _localRotation;
 			RunChange_localRotation(timestep);
+			_m_TransformTargetRot = UnityObjectMapper.Instance.Map<Quaternion>(payload);
+			m_TransformTargetRotInterpolation.current = _m_TransformTargetRot;
+			m_TransformTargetRotInterpolation.target = _m_TransformTargetRot;
+			RunChange_m_TransformTargetRot(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -160,6 +197,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _rotation);
 			if ((0x4 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _localRotation);
+			if ((0x8 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _m_TransformTargetRot);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -215,6 +254,19 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_localRotation(timestep);
 				}
 			}
+			if ((0x8 & readDirtyFlags[0]) != 0)
+			{
+				if (m_TransformTargetRotInterpolation.Enabled)
+				{
+					m_TransformTargetRotInterpolation.target = UnityObjectMapper.Instance.Map<Quaternion>(data);
+					m_TransformTargetRotInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_m_TransformTargetRot = UnityObjectMapper.Instance.Map<Quaternion>(data);
+					RunChange_m_TransformTargetRot(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -236,6 +288,11 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				_localRotation = (Quaternion)localRotationInterpolation.Interpolate();
 				//RunChange_localRotation(localRotationInterpolation.Timestep);
+			}
+			if (m_TransformTargetRotInterpolation.Enabled && !m_TransformTargetRotInterpolation.current.UnityNear(m_TransformTargetRotInterpolation.target, 0.0015f))
+			{
+				_m_TransformTargetRot = (Quaternion)m_TransformTargetRotInterpolation.Interpolate();
+				//RunChange_m_TransformTargetRot(m_TransformTargetRotInterpolation.Timestep);
 			}
 		}
 

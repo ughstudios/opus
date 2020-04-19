@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.99363613
-        functionName: ResetMoveSpeed
+        functionName: ResetMoveSpeedNoRb
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

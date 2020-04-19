@@ -125,6 +125,7 @@ public class PlayerController : MobController
 		animator.SetInteger("hasSnipped", hasSnipped);
 
 		//when networking animations that require a button to be held use an int not a bool to control the animation!!!
+		/*TEMP DISABLED TO FIX POSSIBLE CACHE
 		if (networkObject != null)
 		{
 			if (networkObject.IsOwner)
@@ -172,6 +173,9 @@ public class PlayerController : MobController
 			}
 		}
 
+		if (networkObject != null && networkObject.IsOwner)
+			HealthCanvasMeter();
+
 		ThrowAttack();
 		FireIntAttack();
 		Aim();
@@ -182,8 +186,7 @@ public class PlayerController : MobController
 		HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
 		HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
 
-		if (networkObject != null && networkObject.IsOwner)
-			HealthCanvasMeter();
+		
 	}
 
 	protected override void FixedUpdate()
@@ -271,7 +274,6 @@ public class PlayerController : MobController
 
 	public override void TakeDamage(DamageableEntity source, int damage)
 	{
-		//return 
 		base.TakeDamage(source, damage);
 	}
 

@@ -42,18 +42,26 @@ public class TravelingSpell : ThrowObjBehavior
 	void Update()
 	{
 
+		//transform.position += (transform.forward * _speed * Time.deltaTime);
+
 		if (networkObject != null)
 		{
 			if (!networkObject.IsOwner)
 			{
+				//position and rotation
 				transform.position = networkObject.position;
 				transform.rotation = networkObject.rotation;
+				
 				_didHit = networkObject.didHit;
 			}
 
-			networkObject.position = transform.position;
-			networkObject.rotation = transform.rotation;
-			networkObject.didHit = _didHit;
+			if (networkObject.IsOwner)
+			{
+				networkObject.position = transform.position;
+				networkObject.rotation = transform.rotation;
+
+				networkObject.didHit = _didHit;
+			}	
 		}
 
 		if (_didHit)
@@ -61,10 +69,11 @@ public class TravelingSpell : ThrowObjBehavior
 			float destroyTime = _initDuration + _destroyTimeMargin;
 			_duration -= Time.deltaTime;
 
-			if(_duration <= -destroyTime)
+			if (_duration <= -destroyTime)
 				Destroy(gameObject);
 		}
 	}
+
 
 	void OnCollisionEnter(Collision col)
 	{

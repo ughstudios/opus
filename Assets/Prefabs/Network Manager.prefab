@@ -55,7 +55,7 @@ MonoBehaviour:
   InstatiateSpellPosNetworkObject: []
   NetworkCameraNetworkObject: []
   PlayerNetworkObject:
-  - {fileID: 5688016174280329108, guid: a16dc28ea7a00b54e8765ce7adf38394, type: 3}
+  - {fileID: 151136363384072058, guid: 2afc16c52161e664ba506385a00d2346, type: 3}
   TestNetworkObject: []
   ThrowObjNetworkObject: []
   automaticScenes: 1

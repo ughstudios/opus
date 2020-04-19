@@ -85,10 +85,13 @@ public class MobController : DamageableEntity
 		{
 			moveInput = new Vector3(Input.GetAxis(CharacterButtonsConstants.HORIZONTAL),0, Input.GetAxis(CharacterButtonsConstants.VERTICLE));
 
-			horizMoveInput = new Vector3(moveInput.x, 0, moveInput.z);
-
+			horizMoveInput = new Vector3(moveInput.x, rb.velocity.y, moveInput.z);
+			
+			/*
 			if (horizMoveInput.sqrMagnitude > 1)
 				horizMoveInput.Normalize();
+
+			*/
 
 			movement = horizMoveInput * movementSpeed;
 
@@ -117,8 +120,8 @@ public class MobController : DamageableEntity
 			if (Input.GetButtonDown(CharacterButtonsConstants.JUMP) && _onGround && _canJump)
 			{
 				_initiateJump = true;
-				movementSpeed = 0.0f;
-				rb.velocity = Vector3.zero;
+				movementSpeed = 20.0f;
+				//rb.velocity = Vector3.zero;
 				animator.SetBool("isJumping", true);
 			}
 
@@ -150,21 +153,39 @@ public class MobController : DamageableEntity
 	protected override void FixedUpdate()
 	{
 		base.FixedUpdate();
-		
-		if (movement.x > 1.5 || movement.z > 1.5 || movement.x < -1.5 || movement.z < -1.5)
+
+		if (_onGround)
 		{
-			if (_onGround && !_initiateJump)
+			if (movement.x > 1.5 || movement.z > 1.5 || movement.x < -1.5 || movement.z < -1.5)
 			{
-				_launchedInAir = false;
-				rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
-				rb.AddRelativeForce(new Vector3(movement.x, rb.velocity.y, movement.z), ForceMode.VelocityChange);
+				if (_onGround && !_initiateJump)
+				{
+					_launchedInAir = false;
+					rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+					rb.AddRelativeForce(new Vector3(movement.x, rb.velocity.y, movement.z), ForceMode.VelocityChange);
+				}
+
+				if (_initiateJump && !_launchedInAir)
+				{
+					_launchedInAir = true;
+					rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
+					rb.AddRelativeForce(new Vector3(movement.x, 50, movement.z), ForceMode.VelocityChange);
+				}
+
 			}
-			if (_initiateJump && !_launchedInAir)
+		}
+		else if (!_onGround && rb.velocity.y > 1 || !_onGround && rb.velocity.y < -1)
+		{
+			Debug.Log("Move in the air!");
+
+			if (movement.x > 0 || movement.z > 0 || movement.x < 0 || movement.z < 0)
 			{
-				_launchedInAir = true;
+				Vector3 moveInAir = new Vector3(moveInput.x * movementSpeed, rb.velocity.y, moveInput.z * movementSpeed);
+
 				rb.velocity = Vector3.ClampMagnitude(rb.velocity, movementSpeed);
-				rb.AddRelativeForce(new Vector3(movement.x, 50, movement.z), ForceMode.VelocityChange);
+				rb.AddRelativeForce(moveInAir, ForceMode.Impulse);
 			}
+
 		}
 		else
 		{

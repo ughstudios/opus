@@ -8,8 +8,48 @@ public class AnimationEventsHandler : MonoBehaviour
 	[SerializeField] float _jumpHeight = 10.0f; //sets the height of the jump
 	[SerializeField] GameObject _throPos = null;
 	[SerializeField] GameObject _flamePos = null;
+
+
+
+
+	#region No Rigidbody calls 
 	
-	//this will allow the player to move on the Y-axis for jumping
+	//the new player controller does not have a rigid body
+
+	public void JumpWithoutRb()
+	{
+		GetComponentInParent<NewCharacterController>().Jump();
+	}
+
+	public void ThrowWithoutRb()
+	{
+		GetComponent<Animator>().SetBool("isThrowing", false);
+		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
+		_throPos.GetComponent<InstantiateSpell>().ThrowSpell();
+	}
+
+	public void StopSnipperAttackNoRb()
+	{
+		GetComponentInParent<NewCharacterController>().SetIsSnippingToFalse();
+	}
+
+	public void ZeroMoveSpeedNoRb()
+	{
+		GetComponentInParent<NewCharacterController>().MovementSpeedZero();
+	}
+
+	public void ResetMoveSpeedNoRb()
+	{
+		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
+	}
+
+	public void SetDecentNoRb()
+	{
+		GetComponentInParent<NewCharacterController>().SetDecentToTrue();
+	}
+
+	#endregion
+
 	public void Jump()
 	{
 		GetComponentInParent<PlayerController>().SetCanJumpF();

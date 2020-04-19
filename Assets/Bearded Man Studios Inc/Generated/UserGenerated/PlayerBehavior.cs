@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][][]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"value\"][\"value\"][\"value\"][][]]")]
+	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][][][\"float\", \"float\", \"float\", \"bool\", \"bool\", \"int\", \"int\", \"int\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"value\"][\"value\"][\"value\"][][][\"x\", \"z\", \"_movementSpeed\", \"_isGrounded\", \"_isAiming\", \"_aimInt\", \"_fireInt\", \"_hasSnipped\"]]")]
 	public abstract partial class PlayerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SERVER__TAKE_DAMAGE = 0 + 5;
@@ -19,6 +19,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		public const byte RPC_SERVER__SET_WATER = 8 + 5;
 		public const byte RPC_DIE = 9 + 5;
 		public const byte RPC_FIRE_ANIM = 10 + 5;
+		public const byte RPC_TRIGGER_WALK_ANIM = 11 + 5;
 		
 		public PlayerNetworkObject networkObject = null;
 
@@ -43,6 +44,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			networkObject.RegisterRpc("Server_SetWater", Server_SetWater, typeof(int));
 			networkObject.RegisterRpc("Die", Die);
 			networkObject.RegisterRpc("FireAnim", FireAnim);
+			networkObject.RegisterRpc("TriggerWalkAnim", TriggerWalkAnim, typeof(float), typeof(float), typeof(float), typeof(bool), typeof(bool), typeof(int), typeof(int), typeof(int));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -172,6 +174,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// </summary>
 		public abstract void FireAnim(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// </summary>
+		public abstract void TriggerWalkAnim(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}
