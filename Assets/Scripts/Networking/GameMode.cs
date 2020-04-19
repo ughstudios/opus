@@ -23,16 +23,19 @@ public class GameMode : GameModeBehavior
 
     void Update()
     {
-        if (NetworkManager.Instance.Networker.Players.Count > 1)
+        if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            matchTimer -= Time.deltaTime;
-            if (matchTimer < 0)
+            if (NetworkManager.Instance.Networker.Players.Count > 1)
             {
-                if (!serverHasBeenReset)
+                matchTimer -= Time.deltaTime;
+                if (matchTimer < 0)
                 {
-                    ResetServer();
-                    serverHasBeenReset = true;
-                    matchTimer = initialMatchTimer;
+                    if (!serverHasBeenReset)
+                    {
+                        ResetServer();
+                        serverHasBeenReset = true;
+                        matchTimer = initialMatchTimer;
+                    }
                 }
             }
         }

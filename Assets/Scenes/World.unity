@@ -831,8 +831,7 @@ MonoBehaviour:
   numDetailOctaves: 3
   detailNoiseScale: 25
   maxSimultaneousGens: 8
-  follow:
-  - {fileID: 0}
+  follow: []
   biomes: []
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100

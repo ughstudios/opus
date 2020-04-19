@@ -212,7 +212,7 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
                 {
                     MasterServerResponse.Server server = response.serverResponse[i];
                     Debug.Log("Server player count: " + server.PlayerCount);
-                    if (server.PlayerCount == 1)
+                    if (server.PlayerCount <= 1)
                     {
                         hostAddress = server.Address;
                         Debug.Log("hostAddress: " + server.Address);

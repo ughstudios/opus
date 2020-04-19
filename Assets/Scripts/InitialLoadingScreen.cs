@@ -25,16 +25,19 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        if(tm.TerrainExistsAt(transform.position))
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity))
         {
-            characterController.enabled = true;
-            capsuleCollider.enabled = true;
+            if (hit.collider.name.Contains("Terrain"))
+            {
+                characterController.enabled = true;
+                capsuleCollider.enabled = true;
 
-            Destroy(LoadingScreenUI);
-            Destroy(this);
+                Destroy(LoadingScreenUI);
+                Destroy(this);
+            }
         }
-
-
+        
     }
 
 }
