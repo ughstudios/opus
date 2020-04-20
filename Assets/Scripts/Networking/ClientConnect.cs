@@ -13,7 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Net;
 
-public class ClientConnect : MonoBehaviour, IUserAuthenticator
+public class ClientConnect : MonoBehaviour
 {
 
     public string hostAddress = "127.0.0.1";
@@ -319,71 +319,4 @@ public class ClientConnect : MonoBehaviour, IUserAuthenticator
         });
     }
 
-    public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
-    {
-        //throw new NotImplementedException();
-    }
-
-    public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
-    {
-        /*Server.AuthStatus status = challenge.GetBasicType<Server.AuthStatus>();
-
-        switch (status)
-        {
-            case Server.AuthStatus.Available:
-
-                List<uint> memberIds = new List<uint>();
-                foreach (Friend f in ourLobby.Members)
-                {
-                    memberIds.Add(f.Id.AccountId);
-                }
-
-                BMSByte response = ObjectMapper.BMSByte(SteamClient.SteamId.AccountId);
-
-                BinaryFormatter binFor = new BinaryFormatter();
-                MemoryStream memStream = new MemoryStream();
-                binFor.Serialize(memStream, memberIds);
-
-                //response.Append(ObjectMapper.BMSByte(memberIds.ToArray()));
-                response.Append(ObjectMapper.BMSByte(memStream.ToArray()));
-                authServerAction(response);
-
-                memStream.Close();
-                return;
-            case Server.AuthStatus.Checking:
-                authServerAction(ObjectMapper.BMSByte(SteamClient.SteamId.AccountId));
-                return;
-            case Server.AuthStatus.Closed:
-                rejectServerAction();
-                return;
-        }*/
-        /*
-        BMSByte by = new BMSByte();
-        var binFormatter = new BinaryFormatter();
-        var mStream = new MemoryStream();
-        binFormatter.Serialize(mStream, allowedSteamIDs);
-
-        var data = ObjectMapper.BMSByte(mStream.ToArray());
-
-        authServerAction(data);
-        */
-    }
-
-    public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, Action<NetworkingPlayer> authUserAction, Action<NetworkingPlayer> rejectUserAction)
-    {
-        /*
-        var mStream = new MemoryStream();
-        var binFormatter = new BinaryFormatter();
-
-        var ids = response.GetByteArray(response.StartIndex());
-
-        mStream.Write(ids, 0, ids.Length);
-        mStream.Position = 0;
-
-        allowedSteamIDs = binFormatter.Deserialize(mStream) as List<SteamId>;
-
-        authUserAction(player);
-        rejectUserAction(player);
-        */
-    }
 }
