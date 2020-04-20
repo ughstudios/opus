@@ -9,7 +9,7 @@ using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class GameMode : GameModeBehavior
+public class GameMode : GameModeBehavior, IUserAuthenticator
 {
     private Server.AuthStatus status = Server.AuthStatus.Available;
     private List<uint> allowedIds;
@@ -197,7 +197,7 @@ public class GameMode : GameModeBehavior
         NetWorker.EndSession();
     }
 
-    /*
+    
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
     {
         issueChallengeAction(player, ObjectMapper.BMSByte(status));
@@ -255,5 +255,5 @@ public class GameMode : GameModeBehavior
                 rejectUserAction(player);
                 return;
         }
-    }*/
+    }
 }
