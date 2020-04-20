@@ -61,27 +61,30 @@ public class GameMode : GameModeBehavior
     {
         MainThreadManager.Run(() =>
         {
-            lock (NetworkManager.Instance.Networker.Players)
+            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
-                foreach (var player in NetworkManager.Instance.Networker.Players)
+                lock (NetworkManager.Instance.Networker.Players)
                 {
-                    if (!player.IsHost)
+                    foreach (var player in NetworkManager.Instance.Networker.Players)
                     {
-                        ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
-
-                        NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
-                        foreach (var character in characters)
+                        if (!player.IsHost)
                         {
-                            character.networkObject.Destroy();
+                            ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+
+                            NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
+                            foreach (var character in characters)
+                            {
+                                character.networkObject.Destroy();
+                            }
                         }
+
+
                     }
-
-
+                    matchTimer = initialMatchTimer;
+                    serverHasBeenReset = true;
+                    status = Server.AuthStatus.Available;
+                    NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
                 }
-                matchTimer = initialMatchTimer;
-                serverHasBeenReset = true;
-                status = Server.AuthStatus.Available;
-                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
             }
         });
     }

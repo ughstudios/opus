@@ -225,7 +225,7 @@ public class ClientConnect : MonoBehaviour
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         tryingServer = true;
-                        //ConnectToServer();
+                        ConnectToServer();
                         //lobby.SetGameServer(hostAddress, port);
 
                         return;
@@ -254,8 +254,8 @@ public class ClientConnect : MonoBehaviour
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
-        //if (!ownsLobby)
-        ConnectToServer();
+        if (!ownsLobby)
+            ConnectToServer();
     }
 
     public void ConnectToServer()
