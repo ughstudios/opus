@@ -22,6 +22,5 @@ MonoBehaviour:
   heightExponent: 1
   detailPrototypes: []
   treePrototypes:
-  - {fileID: 11400000, guid: 068b2a5be3ad9f14c91ac9d63431f6ff, type: 2}
-  - {fileID: 11400000, guid: 4198e5bb4288fde46a6dc1b89fbf3ef8, type: 2}
   - {fileID: 11400000, guid: 3a70858e9abaef64da9c12c9e8a87e31, type: 2}
+  - {fileID: 11400000, guid: 4198e5bb4288fde46a6dc1b89fbf3ef8, type: 2}

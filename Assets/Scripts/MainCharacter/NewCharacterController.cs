@@ -512,9 +512,21 @@ public class NewCharacterController : DamageableEntity
 
     void TogglePauseMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
         {
-            _pauseMenu.SetActive(!_pauseMenu.activeSelf);
+            if (!_pauseMenu.activeSelf)
+            {
+                Cursor.visible = true;
+                _pauseMenu.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.visible = false;
+                _pauseMenu.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            
         }
     }
 

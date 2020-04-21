@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Rocks
   m_EditorClassIdentifier: 
   name: Rocks
-  prefab: {fileID: 2021048013050503212, guid: 5333f77350725cb44bc397ec197f3641, type: 3}
+  prefab: {fileID: 0}
   bendFactor: 0
   color: {r: 1, g: 1, b: 1, a: 1}
   lightmapColor: {r: 1, g: 1, b: 1, a: 1}
-  minHeightScale: 100
-  minWidthScale: 100
-  maxHeightScale: 100
-  maxWidthScale: 100
-  minDistance: 5
+  minHeightScale: 1
+  minWidthScale: 1
+  maxHeightScale: 1.25
+  maxWidthScale: 1.25
+  minDistance: 50
   relativeFrequency: 1

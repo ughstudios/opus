@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Crystals
   m_EditorClassIdentifier: 
   name: Crystals
-  prefab: {fileID: 2726211400538572628, guid: 04a9cfc63c2f4644c9096a792d6c1a72, type: 3}
+  prefab: {fileID: 5021661612052515024, guid: b7cb89ed18ae1bf42b42ecbfa7cd7f02, type: 3}
   bendFactor: 0
   color: {r: 1, g: 1, b: 1, a: 1}
   lightmapColor: {r: 1, g: 1, b: 1, a: 1}
-  minHeightScale: 0.75
-  minWidthScale: 0.75
+  minHeightScale: 1
+  minWidthScale: 1
   maxHeightScale: 1.25
   maxWidthScale: 1.25
-  minDistance: 5
+  minDistance: 50
   relativeFrequency: 1
