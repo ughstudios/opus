@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5cb55e53bcff94cae9c5dc1f1786c3, type: 3}
-  m_Name: Ocean
+  m_Name: Desert
   m_EditorClassIdentifier: 
-  name: Ocean
+  name: Desert
   terrainLayer: {fileID: 8574412962073106934, guid: 3b0f13b265881494a8112b18a188547a,
     type: 2}
   relativeFrequency: 1
@@ -21,4 +21,6 @@ MonoBehaviour:
   maxHeight: 0.3
   heightExponent: 1
   detailPrototypes: []
-  treePrototypes: []
+  treePrototypes:
+  - {fileID: 11400000, guid: 58da74bbf024b1f468ebfeb7cf302877, type: 2}
+  - {fileID: 11400000, guid: 0ca8c4a5b2493e842993b926ee0410da, type: 2}

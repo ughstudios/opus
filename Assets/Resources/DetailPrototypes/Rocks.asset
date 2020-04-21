@@ -21,7 +21,7 @@ MonoBehaviour:
   minHeight: 1
   minWidth: 1
   noiseSpread: 0.1
-  prototype: {fileID: -927199367670048503, guid: e5551d4ec7d0f334587d44ccbbcd3911,
+  prototype: {fileID: 2021048013050503212, guid: 5333f77350725cb44bc397ec197f3641,
     type: 3}
   prototypeTexture: {fileID: 0}
   renderMode: 1
