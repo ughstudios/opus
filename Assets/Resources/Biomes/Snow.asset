@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d5cb55e53bcff94cae9c5dc1f1786c3, type: 3}
-  m_Name: Ocean
+  m_Name: Snow
   m_EditorClassIdentifier: 
-  name: Ocean
-  terrainLayer: {fileID: 8574412962073106934, guid: 3b0f13b265881494a8112b18a188547a,
+  name: Snow
+  terrainLayer: {fileID: 8574412962073106934, guid: b5bf88e84df05804e80e6e2fb1496f4f,
     type: 2}
   relativeFrequency: 1
   heightmapOctaves: 8
