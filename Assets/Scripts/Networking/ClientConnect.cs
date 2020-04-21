@@ -12,6 +12,7 @@ using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Net;
+using UnityEngine.SceneManagement;
 
 public class ClientConnect : MonoBehaviour
 {
@@ -291,6 +292,8 @@ public class ClientConnect : MonoBehaviour
                 tryingServer = false;
 
             ourLobby.Leave();
+
+            SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
         });
     }
 
