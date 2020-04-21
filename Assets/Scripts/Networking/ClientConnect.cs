@@ -170,7 +170,7 @@ public class ClientConnect : MonoBehaviour
     private void SteamMatchmaking_OnLobbyEntered(Lobby lobby)
     {
         Debug.Log("Joined lobby.");
-
+        lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
 
         ourLobby = lobby;
         isInLobby = true;

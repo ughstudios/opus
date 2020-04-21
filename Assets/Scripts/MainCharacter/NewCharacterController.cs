@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using BeardedManStudios.Forge.Networking;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class NewCharacterController : DamageableEntity
@@ -76,6 +77,7 @@ public class NewCharacterController : DamageableEntity
 
     [SerializeField] GameObject _chat;
     [SerializeField] TMP_InputField _chatInput;
+    [SerializeField] GameObject _pauseMenu;
 
     void Awake()
     {
@@ -179,7 +181,7 @@ public class NewCharacterController : DamageableEntity
         HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
         HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
         Die();
-        ExitGame();
+        TogglePauseMenu();
     }
 
     protected override void FixedUpdate()
@@ -508,11 +510,25 @@ public class NewCharacterController : DamageableEntity
         }
     }
 
-    void ExitGame()
+    void TogglePauseMenu()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+            _pauseMenu.SetActive(!_pauseMenu.activeSelf);
         }
+    }
+
+    public void LoadLevel(string name)
+    {
+        SceneManager.LoadScene(name);
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR 
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
