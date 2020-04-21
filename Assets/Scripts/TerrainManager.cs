@@ -447,8 +447,16 @@ public class TerrainManager : MonoBehaviour
             dp.minHeight = dpd.minHeight;
             dp.minWidth = dpd.minWidth;
             dp.noiseSpread = dpd.noiseSpread;
-            dp.prototype = dpd.prototype;
-            dp.prototypeTexture = dpd.prototypeTexture;
+            if (dpd.prototype != null)
+            {
+                dp.prototype = dpd.prototype;
+                dp.usePrototypeMesh = true;
+            }
+            else
+            {
+                dp.prototypeTexture = dpd.prototypeTexture;
+                dp.usePrototypeMesh = false;
+            }
             dp.renderMode = dpd.renderMode;
         }
         yield return null;
