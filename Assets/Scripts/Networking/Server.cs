@@ -76,7 +76,7 @@ public class Server : MonoBehaviour
     public void Host()
     {
         public_ip_addr = new System.Net.WebClient().DownloadString("https://api.ipify.org"); // might be a better way to do this that isn't dependent on some third party website. Works fine for now tho. 
-
+        
 
         // Do any firewall opening requests on the operating system
         NetWorker.PingForFirewall(port);
