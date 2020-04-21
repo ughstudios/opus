@@ -211,6 +211,10 @@ public class TerrainManager : MonoBehaviour
 
     public void StartGeneration()
     {
+#if UNITY_SERVER
+        return;
+#endif
+
         if (seed == null)
             seed = "";
         seedHash = NotRandom.HashString(seed);
