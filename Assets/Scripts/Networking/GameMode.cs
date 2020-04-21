@@ -4,7 +4,6 @@ using UnityEngine;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
-using System;
 using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -15,7 +14,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     private List<uint> allowedIds;
 
     // Have lobby send list of ip's to the server to verify who should be on the server during any given match. 
-    Vector3 spawnPoint;
     public float initialMatchTimer = 300;
     private float matchTimer; // Match countdown timer in seconds. 300 seconds = 5 minutes. 
 
@@ -59,7 +57,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void ResetServer()
     {
-        MainThreadManager.Run(() =>
+        /*MainThreadManager.Run(() =>
         {
             if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
@@ -86,7 +84,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                     NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
                 }
             }
-        });
+        });*/
     }
 
     void Start()
@@ -105,6 +103,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         NetworkManager.Instance.Networker.playerRejected += Networker_playerRejected;
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
+
+        
 
         //NetworkManager.Instance.Networker.SetUserAuthenticator(this);
 
@@ -139,12 +139,9 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         MainThreadManager.Run(() =>
         {
+            GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
-            GameObject go = GameObject.FindWithTag("Spawn Point");
-            if (go)
-            {
-                spawnPoint = go.transform.position;
-            }
+            Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
 
             //PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
             NewCharacterController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as NewCharacterController;
@@ -198,17 +195,17 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     }
 
     
-    public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
+    public void IssueChallenge(NetWorker networker, NetworkingPlayer player, System.Action<NetworkingPlayer, BMSByte> issueChallengeAction, System.Action<NetworkingPlayer> skipAuthAction)
     {
         issueChallengeAction(player, ObjectMapper.BMSByte(status));
     }
 
-    public void AcceptChallenge(NetWorker networker, BMSByte challenge, Action<BMSByte> authServerAction, Action rejectServerAction)
+    public void AcceptChallenge(NetWorker networker, BMSByte challenge, System.Action<BMSByte> authServerAction, System.Action rejectServerAction)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
-    public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, Action<NetworkingPlayer> authUserAction, Action<NetworkingPlayer> rejectUserAction)
+    public void VerifyResponse(NetWorker networker, NetworkingPlayer player, BMSByte response, System.Action<NetworkingPlayer> authUserAction, System.Action<NetworkingPlayer> rejectUserAction)
     {
         uint id;
         switch (status)
