@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 33051584ecb029c4182080af9be916bc, type: 3}
-  m_Name: BasicTree
+  m_Name: TreeLessFrequency
   m_EditorClassIdentifier: 
   name: BasicTree
   prefab: {fileID: 5557329738167575344, guid: 8c9cc0f9b6a1a4644a4dbdc91a05648a, type: 3}
@@ -21,5 +21,5 @@ MonoBehaviour:
   minWidthScale: 0.75
   maxHeightScale: 1.25
   maxWidthScale: 1.25
-  minDistance: 150
+  minDistance: 100
   relativeFrequency: 1
