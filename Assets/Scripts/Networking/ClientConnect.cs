@@ -226,8 +226,8 @@ public class ClientConnect : MonoBehaviour
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
                         tryingServer = true;
-                        ConnectToServer();
-                        //lobby.SetGameServer(hostAddress, port);
+                        //ConnectToServer();
+                        lobby.SetGameServer(hostAddress, port);
 
                         return;
                     }
@@ -255,7 +255,7 @@ public class ClientConnect : MonoBehaviour
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
-        if (!ownsLobby)
+        //if (!ownsLobby)
             ConnectToServer();
     }
 
@@ -309,7 +309,7 @@ public class ClientConnect : MonoBehaviour
 
     public void OnAccepted(NetWorker sender)
     {
-        MainThreadManager.Run(() =>
+        /*MainThreadManager.Run(() =>
         {
             Debug.Log("Accepted");
 
@@ -319,7 +319,7 @@ public class ClientConnect : MonoBehaviour
                 gameFound = true;
                 tryingServer = false;
             }
-        });
+        });*/
     }
 
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, Action<NetworkingPlayer, BMSByte> issueChallengeAction, Action<NetworkingPlayer> skipAuthAction)
