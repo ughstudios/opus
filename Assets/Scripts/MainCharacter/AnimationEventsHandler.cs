@@ -25,7 +25,7 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
-		_throPos.GetComponent<InstantiateSpell>().ThrowSpell();
+		_throPos.GetComponent<SpellManager>().ThrowSpell();
 	}
 
 	public void StopSnipperAttackNoRb()
@@ -69,7 +69,7 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<PlayerController>().ResetMovementSpeed();
-		_throPos.GetComponent<InstantiateSpell>().ThrowSpell();
+		_throPos.GetComponent<SpellManager>().ThrowSpell();
 	}
 
 	public void Flame()
@@ -85,7 +85,7 @@ public class AnimationEventsHandler : MonoBehaviour
 
 	public void StartSniperAttack()
 	{
-		_throPos.GetComponent<InstantiateSpell>().ThrowSnipperPorjectile();
+		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile();
 	}
 
 	public void StopSnipperAttack()

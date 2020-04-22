@@ -57,5 +57,7 @@ MonoBehaviour:
   PlayerNetworkObject:
   - {fileID: 151136363384072058, guid: 2afc16c52161e664ba506385a00d2346, type: 3}
   TestNetworkObject: []
-  ThrowObjNetworkObject: []
+  ThrowObjNetworkObject:
+  - {fileID: 3109514018544717776, guid: b01db0a63a4aebd438b52466ef5ce83d, type: 3}
+  - {fileID: 1765364573954701677, guid: d4774df06fe8d4d41bcf51a61c851abc, type: 3}
   automaticScenes: 1

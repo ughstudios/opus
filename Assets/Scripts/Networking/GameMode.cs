@@ -19,6 +19,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     private bool serverHasBeenReset = false;
 
+
     protected override void NetworkStart()
     {
         base.NetworkStart();
@@ -29,18 +30,21 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            if (NetworkManager.Instance.Networker.Players.Count > 1)
+            lock (NetworkManager.Instance.Networker.Players)
             {
-                matchTimer -= Time.deltaTime;
-                if (matchTimer < 0)
+                if (NetworkManager.Instance.Networker.Players.Count == 2)
                 {
-                    ResetServer();
-                    serverHasBeenReset = true;
+                    matchTimer -= Time.deltaTime;
+                    if (matchTimer < 0)
+                    {
+                        ResetServer();
+                        serverHasBeenReset = true;
+                    }
                 }
-            }
-            else
-            {
-                serverHasBeenReset = false;
+                else
+                {
+                    serverHasBeenReset = false;
+                }
             }
         }
         else
@@ -57,7 +61,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void ResetServer()
     {
-        /*MainThreadManager.Run(() =>
+        MainThreadManager.Run(() =>
         {
             if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
@@ -73,9 +77,9 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                             foreach (var character in characters)
                             {
                                 character.networkObject.Destroy();
+                                Destroy(character);
                             }
                         }
-
 
                     }
                     matchTimer = initialMatchTimer;
@@ -84,7 +88,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                     NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
                 }
             }
-        });*/
+        });
     }
 
     void Start()

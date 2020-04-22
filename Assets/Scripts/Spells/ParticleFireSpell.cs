@@ -33,12 +33,6 @@ public class ParticleFireSpell : FlameAttacckBehavior
 			networkObject.position = transform.position;
 			networkObject.rotation = transform.rotation;
 		}
-		/*
-		if (GetComponentInParent<PlayerController>().GetFireInt() == 0)
-		{
-			Destroy(gameObject);
-		}
-		*/
 	}
 
 

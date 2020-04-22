@@ -70,7 +70,9 @@ public class TravelingSpell : ThrowObjBehavior
 			_duration -= Time.deltaTime;
 
 			if (_duration <= -destroyTime)
-				Destroy(gameObject);
+			{
+				networkObject.Destroy();
+			}
 		}
 	}
 
