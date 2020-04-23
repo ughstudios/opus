@@ -99,13 +99,12 @@ public class DamageableEntity : PlayerBehavior
             {
                 OnDeath();
             }
-
         });
     }
 
     public virtual void TakeDamage(string killingPlayer, int damage)
     {
-        if (networkObject != null && !networkObject.IsServer)
+        if (networkObject != null)// && !networkObject.IsServer)
             return;
 
         if (networkObject != null)

@@ -64,9 +64,10 @@ public class Server : MonoBehaviour
   
 
 
-    private void Start()
+    void Start()
     {
-        if (SceneManager.GetActiveScene().name == "Server" && !serverStarted)
+        Debug.LogError("Server::Start() called again!");
+        if (!serverStarted)
         {
             Host();
             serverStarted = true;

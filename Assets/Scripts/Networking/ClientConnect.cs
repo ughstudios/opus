@@ -309,6 +309,9 @@ public class ClientConnect : MonoBehaviour
     {
         MainThreadManager.Run(() =>
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             Debug.LogError("Disconnected");
             if (ownsLobby)
                 tryingServer = false;
