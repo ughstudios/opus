@@ -27,9 +27,9 @@ public class GameUI : MonoBehaviour
 
 
         TimeSpan time = TimeSpan.FromSeconds(gameMode.networkObject.matchTimer);
-        string stringTime = time.ToString(@"hh\:mm\:ss\:fff");
+        string stringTime = time.ToString(@"hh\:mm\:ss");
 
         matchTimer.text = stringTime;
-        playersLeft.text = "Players Left: " + gameMode.networkObject.playerCount.ToString();
+        playersLeft.text = "Players Left: " + (gameMode.networkObject.playerCount - 1).ToString();
     }
 }

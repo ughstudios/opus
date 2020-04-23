@@ -37,7 +37,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             lock (NetworkManager.Instance.Networker.Players)
             {
-                networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count - 1;
+                networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
 
                 if (NetworkManager.Instance.Networker.Players.Count >= 2)
                 {

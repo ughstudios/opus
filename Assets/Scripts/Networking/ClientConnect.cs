@@ -32,11 +32,12 @@ public class ClientConnect : MonoBehaviour
 
     public int maxLobbyMembers = 1;
     bool isInLobby;
-    public Lobby ourLobby;
+    public SteamId ourLobbyId;
     public int LOBBY_CHECK_TIMER = 5;
     public bool gameFound = false;
     private bool tryingServer = false;
     private bool ownsLobby = false;
+    private Lobby[] lobbyList;
 
     public List<SteamId> allowedSteamIDs;
 
@@ -82,22 +83,35 @@ public class ClientConnect : MonoBehaviour
         SteamClient.RunCallbacks();
     }
 
+    public Lobby GetLobby()
+    {
+        foreach (var lobby in lobbyList)
+        {
+            if (lobby.Id == ourLobbyId)
+            {
+                return lobby;
+            }
+        }
+
+        return new Lobby();
+    }
+
     public async void FindMatch()
     {
         exitGameBtn.enabled = false;
         findMatchBtn.enabled = false;
         //allowedSteamIDs.Clear();
 
-        Lobby[] list = await SteamMatchmaking.LobbyList.RequestAsync();
+        lobbyList = await SteamMatchmaking.LobbyList.RequestAsync();
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
 
 
-        Debug.Log("Lobbies Count: " + list.Length);
+        Debug.Log("Lobbies Count: " + lobbyList.Length);
 
-        foreach (Lobby lobby in list)
+        foreach (Lobby lobby in lobbyList)
         {
             Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
             Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
@@ -110,14 +124,14 @@ public class ClientConnect : MonoBehaviour
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
                         Debug.Log("Joining a lobby (480 app id).");
-                        ourLobby = lobby;
+                        ourLobbyId = lobby.Id;
                         await lobby.Join();
                     }
                 }
                 else
                 {
                     Debug.Log("Joining a lobby, not 480. Using production code.");
-                    ourLobby = lobby;
+                    ourLobbyId = lobby.Id;
                     await lobby.Join();
                 }
             }
@@ -158,22 +172,42 @@ public class ClientConnect : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyCreated(Result result, Lobby lobby)
     {
-        ourLobby = lobby;
+        ourLobbyId = lobby.Id;
         Debug.Log("lobby created");
     }
 
     private void OnApplicationQuit()
     {
-        ourLobby.Leave();
+        foreach (var lobby in lobbyList)
+        {
+            if (lobby.Id == ourLobbyId)
+            {
+                lobby.Leave();
+            }
+        }
     }
 
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if (SceneManager.GetSceneAt(level).name == "MainMenu")
+        {
+            foreach (var lobby in lobbyList)
+            {
+                if (lobby.Id == ourLobbyId)
+                {
+                    lobby.Leave();
+                }
+            }
+        }
+    }
 
     private void SteamMatchmaking_OnLobbyEntered(Lobby lobby)
     {
         Debug.Log("Joined lobby.");
         lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
 
-        ourLobby = lobby;
+        ourLobbyId = lobby.Id;
         isInLobby = true;
 
         if (lobby.IsOwnedBy(SteamClient.SteamId))
@@ -255,6 +289,8 @@ public class ClientConnect : MonoBehaviour
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
+        ourLobbyId = lobby.Id;
+
         //if (!ownsLobby)
             ConnectToServer();
     }
@@ -291,7 +327,15 @@ public class ClientConnect : MonoBehaviour
             if (ownsLobby)
                 tryingServer = false;
 
-            ourLobby.Leave();
+
+            foreach(var lobby in lobbyList)
+            {
+                if (lobby.Id == ourLobbyId)
+                {
+                    lobby.Leave();
+                }
+            }
+
 
             SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
         });
@@ -336,10 +380,10 @@ public class ClientConnect : MonoBehaviour
             case Server.AuthStatus.Available:
 
                 List<uint> memberIds = new List<uint>();
-                foreach (Friend f in ourLobby.Members)
+                /*foreach (Friend f in ourLobby.Members)
                 {
                     memberIds.Add(f.Id.AccountId);
-                }
+                }*/
 
                 BMSByte response = ObjectMapper.BMSByte(SteamClient.SteamId.AccountId);
 
