@@ -33,7 +33,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         if (!networkObject.IsOwner)
             return;
-        
+
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
             lock (NetworkManager.Instance.Networker.Players)
@@ -56,49 +56,33 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 }
             }
         }
-        
+
 
     }
 
     void ResetServer()
     {
-        MainThreadManager.Run(() =>
+
+
+        if (!networkObject.IsServer)
+            return;
+
+        if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
+            NetworkManager.Instance.Disconnect();
 
-            if (!networkObject.IsServer)
-                return;
+            SceneManager.LoadScene("Server");
 
-            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
+            serverHasBeenReset = true;
+            status = Server.AuthStatus.Available;
+
+            if (NetworkManager.Instance)
             {
-                lock (NetworkManager.Instance.Networker.Players)
-                { }
-                /*foreach (var player in NetworkManager.Instance.Networker.Players)
-                {
-                    if (!player.IsHost)
-                    {
-                        player.Networker.Disconnect(true);
-                        //((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
-
-                        NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
-                        foreach (var character in characters)
-                        {
-                            character.networkObject.Destroy();
-                            Destroy(character);
-                        }
-                    }
-
-                }*/
-
-                NetworkManager.Instance.Disconnect();
-
-                SceneManager.LoadScene("Server");
-
-                serverHasBeenReset = true;
-                status = Server.AuthStatus.Available;
                 NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
-
             }
-        });
+
+        }
+
 
     }
 

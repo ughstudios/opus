@@ -21,6 +21,7 @@ public class Server : MonoBehaviour
 	public string masterServerHost = "45.63.11.159";
 	//public string masterServerHost = "127.0.0.1";
 	public ushort masterServerPort = 15940;
+    bool serverStarted = false;
 
     public enum AuthStatus
     {
@@ -65,8 +66,11 @@ public class Server : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name == "Server")
+        if (SceneManager.GetActiveScene().name == "Server" && !serverStarted)
+        {
             Host();
+            serverStarted = true;
+        }
 
         DontDestroyOnLoad(gameObject);
 
@@ -75,6 +79,9 @@ public class Server : MonoBehaviour
 
     public void Host()
     {
+
+        Debug.LogError("Attempting to host again! :)");
+
         public_ip_addr = new System.Net.WebClient().DownloadString("https://api.ipify.org"); // might be a better way to do this that isn't dependent on some third party website. Works fine for now tho. 
         
 
@@ -126,6 +133,8 @@ public class Server : MonoBehaviour
 
     private void Server_bindSuccessful(NetWorker sender)
     {
+        server.bindSuccessful -= Server_bindSuccessful;
+
         MainThreadManager.Run(() =>
         {
             Debug.Log("Server is running!");

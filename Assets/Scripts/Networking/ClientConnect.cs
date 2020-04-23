@@ -38,6 +38,7 @@ public class ClientConnect : MonoBehaviour
     private bool tryingServer = false;
     private bool ownsLobby = false;
     private Lobby[] lobbyList;
+    UDPClient client;
 
     public List<SteamId> allowedSteamIDs;
 
@@ -282,7 +283,7 @@ public class ClientConnect : MonoBehaviour
 
     public void ConnectToServer()
     {
-        UDPClient client = new UDPClient();
+        client = new UDPClient();
         //client.SetUserAuthenticator(this);
         client.serverAccepted += OnAccepted;
         client.connectAttemptFailed += Client_connectAttemptFailed;
@@ -323,6 +324,7 @@ public class ClientConnect : MonoBehaviour
 
 
             SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
+
 
             Destroy(gameObject); // Destroy this so we don't have dupes. 
         });
