@@ -187,21 +187,6 @@ public class ClientConnect : MonoBehaviour
         }
     }
 
-
-    private void OnLevelWasLoaded(int level)
-    {
-        if (SceneManager.GetSceneAt(level).name == "MainMenu")
-        {
-            foreach (var lobby in lobbyList)
-            {
-                if (lobby.Id == ourLobbyId)
-                {
-                    lobby.Leave();
-                }
-            }
-        }
-    }
-
     private void SteamMatchmaking_OnLobbyEntered(Lobby lobby)
     {
         Debug.Log("Joined lobby.");
