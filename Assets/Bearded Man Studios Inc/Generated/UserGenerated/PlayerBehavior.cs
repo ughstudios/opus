@@ -4,22 +4,16 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][\"int\"][][][\"float\", \"float\", \"float\", \"bool\", \"bool\", \"int\", \"int\", \"int\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"amount\"][\"value\"][\"value\"][\"value\"][][][\"x\", \"z\", \"_movementSpeed\", \"_isGrounded\", \"_isAiming\", \"_aimInt\", \"_fireInt\", \"_hasSnipped\"]]")]
+	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][][][\"float\", \"float\", \"float\", \"bool\", \"bool\", \"int\", \"int\", \"int\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"value\"][][][\"x\", \"z\", \"_movementSpeed\", \"_isGrounded\", \"_isAiming\", \"_aimInt\", \"_fireInt\", \"_hasSnipped\"]]")]
 	public abstract partial class PlayerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SERVER__TAKE_DAMAGE = 0 + 5;
-		public const byte RPC_SERVER__DEDUCT_FOOD = 1 + 5;
-		public const byte RPC_SERVER__ADD_FOOD = 2 + 5;
-		public const byte RPC_SERVER__DEDUCT_WATER = 3 + 5;
-		public const byte RPC_SERVER__ADD_WATER = 4 + 5;
-		public const byte RPC_SERVER__ADD_HEALTH = 5 + 5;
-		public const byte RPC_SERVER__SET_HEALTH = 6 + 5;
-		public const byte RPC_SERVER__SET_FOOD = 7 + 5;
-		public const byte RPC_SERVER__SET_WATER = 8 + 5;
-		public const byte RPC_DIE = 9 + 5;
-		public const byte RPC_FIRE_ANIM = 10 + 5;
-		public const byte RPC_TRIGGER_WALK_ANIM = 11 + 5;
+		public const byte RPC_SERVER__ADD_HEALTH = 1 + 5;
+		public const byte RPC_SERVER__SET_HEALTH = 2 + 5;
+		public const byte RPC_DIE = 3 + 5;
+		public const byte RPC_FIRE_ANIM = 4 + 5;
+		public const byte RPC_TRIGGER_WALK_ANIM = 5 + 5;
 		
 		public PlayerNetworkObject networkObject = null;
 
@@ -34,14 +28,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("Server_TakeDamage", Server_TakeDamage, typeof(int));
-			networkObject.RegisterRpc("Server_DeductFood", Server_DeductFood, typeof(int));
-			networkObject.RegisterRpc("Server_AddFood", Server_AddFood, typeof(int));
-			networkObject.RegisterRpc("Server_DeductWater", Server_DeductWater, typeof(int));
-			networkObject.RegisterRpc("Server_AddWater", Server_AddWater, typeof(int));
 			networkObject.RegisterRpc("Server_AddHealth", Server_AddHealth, typeof(int));
 			networkObject.RegisterRpc("Server_SetHealth", Server_SetHealth, typeof(int));
-			networkObject.RegisterRpc("Server_SetFood", Server_SetFood, typeof(int));
-			networkObject.RegisterRpc("Server_SetWater", Server_SetWater, typeof(int));
 			networkObject.RegisterRpc("Die", Die);
 			networkObject.RegisterRpc("FireAnim", FireAnim);
 			networkObject.RegisterRpc("TriggerWalkAnim", TriggerWalkAnim, typeof(float), typeof(float), typeof(float), typeof(bool), typeof(bool), typeof(int), typeof(int), typeof(int));
@@ -130,42 +118,12 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// int amount
 		/// </summary>
-		public abstract void Server_DeductFood(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int amount
-		/// </summary>
-		public abstract void Server_AddFood(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int amount
-		/// </summary>
-		public abstract void Server_DeductWater(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int amount
-		/// </summary>
-		public abstract void Server_AddWater(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int amount
-		/// </summary>
 		public abstract void Server_AddHealth(RpcArgs args);
 		/// <summary>
 		/// Arguments:
 		/// int value
 		/// </summary>
 		public abstract void Server_SetHealth(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int value
-		/// </summary>
-		public abstract void Server_SetFood(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// int value
-		/// </summary>
-		public abstract void Server_SetWater(RpcArgs args);
 		/// <summary>
 		/// Arguments:
 		/// </summary>

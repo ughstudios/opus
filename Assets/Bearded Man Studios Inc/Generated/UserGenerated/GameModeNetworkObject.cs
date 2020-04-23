@@ -5,16 +5,47 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[]")]
+	[GeneratedInterpol("{\"inter\":[0]")]
 	public partial class GameModeNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 6;
+		public const int IDENTITY = 5;
 
-		private byte[] _dirtyFields = new byte[0];
+		private byte[] _dirtyFields = new byte[1];
 
 		#pragma warning disable 0067
 		public event FieldChangedEvent fieldAltered;
 		#pragma warning restore 0067
+		[ForgeGeneratedField]
+		private float _matchTimer;
+		public event FieldEvent<float> matchTimerChanged;
+		public InterpolateFloat matchTimerInterpolation = new InterpolateFloat() { LerpT = 0f, Enabled = false };
+		public float matchTimer
+		{
+			get { return _matchTimer; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_matchTimer == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x1;
+				_matchTimer = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SetmatchTimerDirty()
+		{
+			_dirtyFields[0] |= 0x1;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_matchTimer(ulong timestep)
+		{
+			if (matchTimerChanged != null) matchTimerChanged(_matchTimer, timestep);
+			if (fieldAltered != null) fieldAltered("matchTimer", _matchTimer, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -24,18 +55,24 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		
 		public void SnapInterpolations()
 		{
+			matchTimerInterpolation.current = matchTimerInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
 
 		protected override BMSByte WritePayload(BMSByte data)
 		{
+			UnityObjectMapper.Instance.MapBytes(data, _matchTimer);
 
 			return data;
 		}
 
 		protected override void ReadPayload(BMSByte payload, ulong timestep)
 		{
+			_matchTimer = UnityObjectMapper.Instance.Map<float>(payload);
+			matchTimerInterpolation.current = _matchTimer;
+			matchTimerInterpolation.target = _matchTimer;
+			RunChange_matchTimer(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -43,6 +80,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			dirtyFieldsData.Clear();
 			dirtyFieldsData.Append(_dirtyFields);
 
+			if ((0x1 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _matchTimer);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -59,6 +98,19 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			Buffer.BlockCopy(data.byteArr, data.StartIndex(), readDirtyFlags, 0, readDirtyFlags.Length);
 			data.MoveStartIndex(readDirtyFlags.Length);
 
+			if ((0x1 & readDirtyFlags[0]) != 0)
+			{
+				if (matchTimerInterpolation.Enabled)
+				{
+					matchTimerInterpolation.target = UnityObjectMapper.Instance.Map<float>(data);
+					matchTimerInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_matchTimer = UnityObjectMapper.Instance.Map<float>(data);
+					RunChange_matchTimer(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -66,12 +118,17 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (IsOwner)
 				return;
 
+			if (matchTimerInterpolation.Enabled && !matchTimerInterpolation.current.UnityNear(matchTimerInterpolation.target, 0.0015f))
+			{
+				_matchTimer = (float)matchTimerInterpolation.Interpolate();
+				//RunChange_matchTimer(matchTimerInterpolation.Timestep);
+			}
 		}
 
 		private void Initialize()
 		{
 			if (readDirtyFlags == null)
-				readDirtyFlags = new byte[0];
+				readDirtyFlags = new byte[1];
 
 		}
 

@@ -14,8 +14,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     private List<uint> allowedIds;
 
     // Have lobby send list of ip's to the server to verify who should be on the server during any given match. 
-    public float initialMatchTimer = 300;
-    private float matchTimer; // Match countdown timer in seconds. 300 seconds = 5 minutes. 
+    public float initialMatchTimer = 300; // Match countdown timer in seconds. 300 seconds = 5 minutes. 
 
     private bool serverHasBeenReset = false;
 
@@ -24,21 +23,29 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         base.NetworkStart();
 
+        networkObject.matchTimer = initialMatchTimer;
+
+
     }
 
     void Update()
     {
+        if (!networkObject.IsOwner)
+            return;
+
+        
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
             lock (NetworkManager.Instance.Networker.Players)
             {
                 if (NetworkManager.Instance.Networker.Players.Count == 2)
                 {
-                    matchTimer -= Time.deltaTime;
-                    if (matchTimer < 0)
+                    networkObject.matchTimer -= Time.deltaTime;
+                    if (networkObject.matchTimer < 0)
                     {
                         ResetServer();
                         serverHasBeenReset = true;
+                        networkObject.matchTimer = initialMatchTimer;
                     }
                 }
                 else
@@ -47,48 +54,37 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 }
             }
         }
-        else
-        {
-            if (!serverHasBeenReset)
-            {
-                ResetServer();
-                serverHasBeenReset = true;
-            }
-
-        }
+        
 
     }
 
     void ResetServer()
     {
-        MainThreadManager.Run(() =>
+        if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
+            lock (NetworkManager.Instance.Networker.Players)
             {
-                lock (NetworkManager.Instance.Networker.Players)
+                foreach (var player in NetworkManager.Instance.Networker.Players)
                 {
-                    foreach (var player in NetworkManager.Instance.Networker.Players)
+                    if (!player.IsHost)
                     {
-                        if (!player.IsHost)
+                        ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+
+                        NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
+                        foreach (var character in characters)
                         {
-                            ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
-
-                            NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
-                            foreach (var character in characters)
-                            {
-                                character.networkObject.Destroy();
-                                Destroy(character);
-                            }
+                            character.networkObject.Destroy();
+                            Destroy(character);
                         }
-
                     }
-                    matchTimer = initialMatchTimer;
-                    serverHasBeenReset = true;
-                    status = Server.AuthStatus.Available;
-                    NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
+
                 }
+                serverHasBeenReset = true;
+                status = Server.AuthStatus.Available;
+                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
             }
-        });
+        }
+
     }
 
     void Start()
@@ -98,7 +94,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             return;
         }
 
-        matchTimer = initialMatchTimer;
+        //networkObject.matchTimer = initialMatchTimer;
 
         Debug.Log("Game mode is being initialized!");
 
@@ -108,7 +104,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
 
-        
+
 
         //NetworkManager.Instance.Networker.SetUserAuthenticator(this);
 
@@ -198,7 +194,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         NetWorker.EndSession();
     }
 
-    
+
     public void IssueChallenge(NetWorker networker, NetworkingPlayer player, System.Action<NetworkingPlayer, BMSByte> issueChallengeAction, System.Action<NetworkingPlayer> skipAuthAction)
     {
         issueChallengeAction(player, ObjectMapper.BMSByte(status));

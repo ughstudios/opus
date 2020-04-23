@@ -16,58 +16,21 @@ public class DamageableEntity : PlayerBehavior
     public int damage = 0;
     public float damageForce = 0f;
     public float damageRecoilForce = 0f;
-	public bool _loadedFromServer = false;
+    public bool _loadedFromServer = false;
 
-	[SerializeField] bool _canQuit = false;
+    [SerializeField] bool _canQuit = false;
 
     public Animator _anim = null;
 
 
-	public void ResetStats()
+    public void ResetStats()
     {
-        networkObject.SendRpc(RPC_SERVER__SET_FOOD, Receivers.All, MaxEverything);
-        networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
         networkObject.SendRpc(RPC_SERVER__SET_HEALTH, Receivers.All, MaxEverything);
-    }
-
-    public void ResetWater()
-    {
-        networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
-    }
-
-    public void ReduceWater(int amount)
-    {
-        networkObject.SendRpc(RPC_SERVER__DEDUCT_WATER, Receivers.All, amount);
-    }
-
-    public void ReduceFood(int amount)
-    {
-        networkObject.SendRpc(RPC_SERVER__DEDUCT_FOOD, Receivers.All, amount);
-    }
-
-    public void AddWater(int amount)
-    {
-        networkObject.SendRpc(RPC_SERVER__ADD_WATER, Receivers.All, amount);
-    }
-
-    public void AddFood(int amount)
-    {
-        networkObject.SendRpc(RPC_SERVER__ADD_FOOD, Receivers.All, amount);
     }
 
     public void AddHealth(int amount)
     {
         networkObject.SendRpc(RPC_SERVER__ADD_HEALTH, Receivers.All, amount);
-    }
-
-    public void SetWater(int value)
-    {
-        networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, value);
-    }
-
-    public void SetFood(int value)
-    {
-        networkObject.SendRpc(RPC_SERVER__SET_FOOD, Receivers.All, value);
     }
 
     public void SetHealth(int value)
@@ -84,46 +47,6 @@ public class DamageableEntity : PlayerBehavior
         });
     }
 
-    public override void Server_AddFood(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.food += args.GetNext<int>();
-        });
-    }
-
-    public override void Server_DeductFood(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.food -= args.GetNext<int>();
-        });
-    }
-
-    public override void Server_AddWater(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.water += args.GetNext<int>();
-        });
-    }
-
-    public override void Server_DeductWater(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.water -= args.GetNext<int>();
-        });
-    }
-
-    public override void Server_SetFood(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.food = args.GetNext<int>();
-        });
-    }
-
     public override void Server_SetHealth(RpcArgs args)
     {
         MainThreadManager.Run(() =>
@@ -132,19 +55,11 @@ public class DamageableEntity : PlayerBehavior
         });
     }
 
-    public override void Server_SetWater(RpcArgs args)
-    {
-        MainThreadManager.Run(() =>
-        {
-            networkObject.water = args.GetNext<int>();
-        });
-    }
-
     // Start is called before the first frame update
     protected virtual void Start()
     {
-		if(networkObject != null)
-			networkObject.health = MaxEverything;
+        if (networkObject != null)
+            networkObject.health = MaxEverything;
     }
 
     protected virtual void FixedUpdate()
@@ -155,80 +70,80 @@ public class DamageableEntity : PlayerBehavior
         }
 
     }
-    
+
     public override void Server_TakeDamage(RpcArgs args)
     {
-		//this is the arg setup in the wizard
-		int damage = args.GetNext<int>();
+        //this is the arg setup in the wizard
+        int damage = args.GetNext<int>();
 
-		int damageDealt = Mathf.Min(damage, networkObject.health);
+        int damageDealt = Mathf.Min(damage, networkObject.health);
 
-		MainThreadManager.Run(() =>
+        MainThreadManager.Run(() =>
         {
 
-			if (networkObject != null)
-			{
-				//networkObject.health -= damageDealt;
-				health -= damageDealt;
-			}
-				
+            if (networkObject != null)
+            {
+                //networkObject.health -= damageDealt;
+                health -= damageDealt;
+            }
 
-			if (networkObject.health <= 0)
-			{
-				OnDeath();
-			}
 
-		});
+            if (networkObject.health <= 0)
+            {
+                OnDeath();
+            }
+
+        });
     }
 
-	public virtual void TakeDamage(DamageableEntity source, int damage)
-	{
-		if (networkObject != null && !networkObject.IsServer)
-			return;
+    public virtual void TakeDamage(DamageableEntity source, int damage)
+    {
+        if (networkObject != null && !networkObject.IsServer)
+            return;
 
         if (networkObject != null)
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
             return;
-        }	
+        }
     }
 
     protected virtual void OnDeath(bool transferScene)
     {
-		if (networkObject != null && networkObject.IsOwner)
-		{
-			//networkObject.Networker.Disconnect(true);//disconnect from server
-			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
+        if (networkObject != null && networkObject.IsOwner)
+        {
+            //networkObject.Networker.Disconnect(true);//disconnect from server
+            networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
 
-			if (transferScene)
-				UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
+            if (transferScene)
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
 
-			//this is to allow proper respawning if player connects after losing
-			if (!NetworkManager.Instance.Networker.IsServer)
-			{
-				NetworkManager.Instance.Disconnect();
-			}
-		}
-	}
+            //this is to allow proper respawning if player connects after losing
+            if (!NetworkManager.Instance.Networker.IsServer)
+            {
+                NetworkManager.Instance.Disconnect();
+            }
+        }
+    }
 
-	protected virtual void OnDeath()
-	{
-		if (networkObject != null && networkObject.IsOwner)
-		{
-			//networkObject.Networker.Disconnect(true);//disconnect from server
-			networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
-			UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
+    protected virtual void OnDeath()
+    {
+        if (networkObject != null && networkObject.IsOwner)
+        {
+            //networkObject.Networker.Disconnect(true);//disconnect from server
+            networkObject.SendRpc(RPC_DIE, Receivers.All); //to make this a buffered call
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
 
-			//this is to allow proper respawning if player connects after losing
-			if (!NetworkManager.Instance.Networker.IsServer)
-			{
-				NetworkManager.Instance.Disconnect();
-			}
-		}
-	}
+            //this is to allow proper respawning if player connects after losing
+            if (!NetworkManager.Instance.Networker.IsServer)
+            {
+                NetworkManager.Instance.Disconnect();
+            }
+        }
+    }
 
-	protected virtual void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         DamageableEntity de = null;
 
@@ -240,40 +155,40 @@ public class DamageableEntity : PlayerBehavior
         }
     }
 
-	public override void Die(RpcArgs args)
-	{
-		MainThreadManager.Run(() =>
-		{
-			networkObject.Destroy();
-		});
-	}
+    public override void Die(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            networkObject.Destroy();
+        });
+    }
 
-	//Incase a player closes the game without dying, 
-	//the player will be kicked off the server avoiding errors from unexpected closures
-	void OnApplicationQuit()
-	{
-		Debug.Log("Quitting the Player");
+    //Incase a player closes the game without dying, 
+    //the player will be kicked off the server avoiding errors from unexpected closures
+    void OnApplicationQuit()
+    {
+        Debug.Log("Quitting the Player");
 
-		Application.wantsToQuit += StopQuit;
-		OnDeath(false);
-		Application.wantsToQuit -= StopQuit;
-		Application.Quit();
-	}
+        Application.wantsToQuit += StopQuit;
+        OnDeath(false);
+        Application.wantsToQuit -= StopQuit;
+        Application.Quit();
+    }
 
-	//added to closing event to allow the player to disconnect 
-	bool StopQuit()
-	{
-		return false;
-	}
+    //added to closing event to allow the player to disconnect 
+    bool StopQuit()
+    {
+        return false;
+    }
 
-	public override void FireAnim(RpcArgs args)
-	{
-		MainThreadManager.Run(() =>
-		{
-			GetComponent<Animator>().SetInteger("fireInt", 0);
-			Debug.Log("Fire Flame");
-		});
-	}
+    public override void FireAnim(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            GetComponent<Animator>().SetInteger("fireInt", 0);
+            Debug.Log("Fire Flame");
+        });
+    }
 
     public override void TriggerWalkAnim(RpcArgs args)
     {

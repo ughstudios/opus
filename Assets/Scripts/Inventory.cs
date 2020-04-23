@@ -18,13 +18,11 @@ public class Inventory : MonoBehaviour
 
     private PlayerController playerController;
 
-    private SurvivalTimer survivalTimer;
+    
 
     private void Start()
     {
         playerController = GetComponent<PlayerController>();
-        survivalTimer = gameObject.GetComponent<SurvivalTimer>();
-
         LoadAllItems();
     }
 
@@ -85,8 +83,6 @@ public class Inventory : MonoBehaviour
         //Debug.Log(item.name);
 
 
-        playerController.AddFood(item.food);
-        playerController.AddWater(item.water);
         playerController.AddHealth(item.health);
 
         //playerController.food += item.food;
@@ -96,7 +92,6 @@ public class Inventory : MonoBehaviour
         RemoveCountOfItemFromInventory(item, 1);
         GenerateInventoryUI_Items();
 
-        survivalTimer.update_all_bars_to_match_player_controller();
     }
 
     public void AddItemToInventory(int addcount, string itemName)

@@ -94,9 +94,7 @@ public class PlayerController : MobController
 		{
 			if (Input.GetButtonDown("Gather"))
 			{
-				networkObject.SendRpc(RPC_SERVER__SET_WATER, Receivers.All, MaxEverything);
-				SurvivalTimer survivalTimer = GetComponent<SurvivalTimer>();
-				survivalTimer.reset_water_bar_to_full();
+				
 			}
 		}
 		canPlant = false;

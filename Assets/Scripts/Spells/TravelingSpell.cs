@@ -108,4 +108,5 @@ public class TravelingSpell : ThrowObjBehavior
 	{
 		if (speed > 0) _speed = speed;
 	}
+
 }
