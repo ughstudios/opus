@@ -323,6 +323,8 @@ public class ClientConnect : MonoBehaviour
 
 
             SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
+
+            Destroy(gameObject); // Destroy this so we don't have dupes. 
         });
     }
 

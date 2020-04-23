@@ -7,6 +7,7 @@ using BeardedManStudios.Forge.Networking.Unity;
 using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameMode : GameModeBehavior, IUserAuthenticator
 {
@@ -61,15 +62,22 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void ResetServer()
     {
-        if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
+        MainThreadManager.Run(() =>
         {
-            lock (NetworkManager.Instance.Networker.Players)
+
+            if (!networkObject.IsServer)
+                return;
+
+            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
-                foreach (var player in NetworkManager.Instance.Networker.Players)
+                lock (NetworkManager.Instance.Networker.Players)
+                { }
+                /*foreach (var player in NetworkManager.Instance.Networker.Players)
                 {
                     if (!player.IsHost)
                     {
-                        ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+                        player.Networker.Disconnect(true);
+                        //((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
 
                         NewCharacterController[] characters = FindObjectsOfType<NewCharacterController>();
                         foreach (var character in characters)
@@ -79,12 +87,18 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                         }
                     }
 
-                }
+                }*/
+
+                NetworkManager.Instance.Disconnect();
+
+                SceneManager.LoadScene("Server");
+
                 serverHasBeenReset = true;
                 status = Server.AuthStatus.Available;
                 NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
+
             }
-        }
+        });
 
     }
 
