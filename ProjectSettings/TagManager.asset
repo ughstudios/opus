@@ -12,6 +12,7 @@ TagManager:
   - Terrain Manager
   - ServerCamera
   - HostServer
+  - Global Game UI
   layers:
   - Default
   - TransparentFX

@@ -5,15 +5,18 @@ using BeardedManStudios.Forge.Networking.Unity;
 
 public class SpellManager : MonoBehaviour
 {
-	
-	public void ThrowSpell()
-    {
-		NetworkManager.Instance.InstantiateThrowObj(0, transform.position, transform.rotation);
-	}
 
-	public void ThrowSnipperPorjectile()
+	public void ThrowSpell(string playerWhoSpawnedUs)
 	{
-		NetworkManager.Instance.InstantiateThrowObj(1, transform.position, transform.rotation);
+		TravelingSpell spell = NetworkManager.Instance.InstantiateThrowObj(0, transform.position, transform.rotation) as TravelingSpell;
+		spell.playerWhoSpawnedUs = playerWhoSpawnedUs;
+	}
+	
+
+	public void ThrowSnipperPorjectile(string playerWhoSpawnedUs)
+	{
+		TravelingSpell spell = NetworkManager.Instance.InstantiateThrowObj(1, transform.position, transform.rotation) as TravelingSpell;
+		spell.playerWhoSpawnedUs = playerWhoSpawnedUs;
 	}
 
 }

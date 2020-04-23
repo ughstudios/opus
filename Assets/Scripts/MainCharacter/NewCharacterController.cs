@@ -5,6 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 using BeardedManStudios.Forge.Networking;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Steamworks;
+using System;
 
 public class NewCharacterController : DamageableEntity
 {

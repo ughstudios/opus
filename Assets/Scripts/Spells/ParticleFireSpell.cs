@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BeardedManStudios.Forge.Networking.Generated;
+using Steamworks;
 
 public class ParticleFireSpell : MonoBehaviour
 {
@@ -12,8 +13,8 @@ public class ParticleFireSpell : MonoBehaviour
 		if (other.tag == "Player")
 		{
 			DamageableEntity de = other.GetComponent<DamageableEntity>();
-
-			de.TakeDamage(de, _damage);
+			
+			de.TakeDamage(SteamClient.Name, _damage);
 		}
 	}
 

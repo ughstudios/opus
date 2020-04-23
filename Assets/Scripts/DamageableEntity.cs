@@ -4,6 +4,7 @@ using UnityEngine;
 using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
+using Steamworks;
 
 public class DamageableEntity : PlayerBehavior
 {
@@ -21,6 +22,9 @@ public class DamageableEntity : PlayerBehavior
     [SerializeField] bool _canQuit = false;
 
     public Animator _anim = null;
+    public GameObject DeathUI_Announcement_prefab;
+    public GameObject GlobalGameUI;
+    public float DEATH_UI_MESSAGE_TIMER = 2;
 
 
     public void ResetStats()
@@ -60,6 +64,9 @@ public class DamageableEntity : PlayerBehavior
     {
         if (networkObject != null)
             networkObject.health = MaxEverything;
+
+
+        GlobalGameUI = GameObject.FindWithTag("Global Game UI");
     }
 
     protected virtual void FixedUpdate()
@@ -96,7 +103,7 @@ public class DamageableEntity : PlayerBehavior
         });
     }
 
-    public virtual void TakeDamage(DamageableEntity source, int damage)
+    public virtual void TakeDamage(string killingPlayer, int damage)
     {
         if (networkObject != null && !networkObject.IsServer)
             return;
@@ -105,8 +112,35 @@ public class DamageableEntity : PlayerBehavior
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
+            if (networkObject.health <= 0)
+            {
+                AnnounceWhoKilledUs(killingPlayer);
+            }
+
             return;
         }
+    }
+
+    void AnnounceWhoKilledUs(string killingPlayer)
+    {
+        networkObject.SendRpc(RPC_SERVER__ANNOUNCE_DEATH, Receivers.All, SteamClient.Name, killingPlayer);
+    }
+
+    public override void Server_AnnounceDeath(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            string dyingPlayer = args.GetNext<string>();
+            string killingPlayer = args.GetNext<string>();
+
+            GameObject go = Instantiate(DeathUI_Announcement_prefab, GlobalGameUI.transform);
+            PlayerKilledUI pkilled = go.GetComponent<PlayerKilledUI>();
+            pkilled.UpdateUI(dyingPlayer, killingPlayer);
+            
+            Destroy(go, DEATH_UI_MESSAGE_TIMER);
+            
+
+        });
     }
 
     protected virtual void OnDeath(bool transferScene)

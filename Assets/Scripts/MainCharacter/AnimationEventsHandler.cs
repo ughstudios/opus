@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Steamworks;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
-		_throPos.GetComponent<SpellManager>().ThrowSpell();
+		_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
 	}
 
 	public void StopSnipperAttackNoRb()
@@ -69,7 +70,7 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<PlayerController>().ResetMovementSpeed();
-		_throPos.GetComponent<SpellManager>().ThrowSpell();
+		_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
 	}
 
 	public void Flame()
@@ -85,7 +86,7 @@ public class AnimationEventsHandler : MonoBehaviour
 
 	public void StartSniperAttack()
 	{
-		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile();
+		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile(SteamClient.Name);
 	}
 
 	public void StopSnipperAttack()

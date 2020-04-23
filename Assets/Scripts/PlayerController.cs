@@ -270,9 +270,9 @@ public class PlayerController : MobController
 		canPlant = true;
 	}
 
-	public override void TakeDamage(DamageableEntity source, int damage)
+	public override void TakeDamage(string killingPlayer, int damage)
 	{
-		base.TakeDamage(source, damage);
+		base.TakeDamage(killingPlayer, damage);
 	}
 
 	

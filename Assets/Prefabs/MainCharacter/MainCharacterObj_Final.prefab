@@ -142,6 +142,10 @@ MonoBehaviour:
   _loadedFromServer: 0
   _canQuit: 0
   _anim: {fileID: 3019741304256502665}
+  DeathUI_Announcement_prefab: {fileID: 4442370313531478816, guid: ecfcb495b95723246b4655bf801bb7c7,
+    type: 3}
+  GlobalGameUI: {fileID: 0}
+  DEATH_UI_MESSAGE_TIMER: 2
   _charController: {fileID: 0}
   _moveInput: {x: 0, y: 0, z: 0}
   _velocity: {x: 0, y: 0, z: 0}
@@ -1691,14 +1695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005bdb16ea725274d8fc70604bfd9e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spell: {fileID: 3109514018544717776, guid: b01db0a63a4aebd438b52466ef5ce83d, type: 3}
-  _snipperProjectile: {fileID: 1765364573954701677, guid: d4774df06fe8d4d41bcf51a61c851abc,
-    type: 3}
-  _xRotTransform: {fileID: 3628259028322642707}
-  m_TurnSpeed: 1.5
-  _inverse: 0
-  m_TiltMin: 45
-  m_TiltMax: 45
 --- !u!1 &6722207543247070087
 GameObject:
   m_ObjectHideFlags: 0

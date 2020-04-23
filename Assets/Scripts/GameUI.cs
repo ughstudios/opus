@@ -8,6 +8,7 @@ public class GameUI : MonoBehaviour
 {
 
     public TextMeshProUGUI matchTimer;
+    public TextMeshProUGUI playersLeft;
     private GameMode gameMode;
 
 
@@ -29,5 +30,6 @@ public class GameUI : MonoBehaviour
         string stringTime = time.ToString(@"hh\:mm\:ss\:fff");
 
         matchTimer.text = stringTime;
+        playersLeft.text = "Players Left: " + gameMode.networkObject.playerCount.ToString();
     }
 }

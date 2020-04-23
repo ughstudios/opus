@@ -108,7 +108,7 @@ public class GenericHostile : MobController
             {
                 if (de.GetComponent(t) != null)
                 {
-                    de.TakeDamage(this, damage);
+                    //de.TakeDamage(gameObject, damage);
                     break;
                 }
             }

@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0.15,0.15,0,0,0,0,0,0,0,0,0,0,0,0]")]
+	[GeneratedInterpol("{\"inter\":[0.15,0.15,0,0,0,0,0,0,0,0,0,0]")]
 	public partial class PlayerNetworkObject : NetworkObject
 	{
-		public const int IDENTITY = 10;
+		public const int IDENTITY = 9;
 
 		private byte[] _dirtyFields = new byte[2];
 
@@ -109,68 +109,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (fieldAltered != null) fieldAltered("health", _health, timestep);
 		}
 		[ForgeGeneratedField]
-		private int _food;
-		public event FieldEvent<int> foodChanged;
-		public Interpolated<int> foodInterpolation = new Interpolated<int>() { LerpT = 0f, Enabled = false };
-		public int food
-		{
-			get { return _food; }
-			set
-			{
-				// Don't do anything if the value is the same
-				if (_food == value)
-					return;
-
-				// Mark the field as dirty for the network to transmit
-				_dirtyFields[0] |= 0x8;
-				_food = value;
-				hasDirtyFields = true;
-			}
-		}
-
-		public void SetfoodDirty()
-		{
-			_dirtyFields[0] |= 0x8;
-			hasDirtyFields = true;
-		}
-
-		private void RunChange_food(ulong timestep)
-		{
-			if (foodChanged != null) foodChanged(_food, timestep);
-			if (fieldAltered != null) fieldAltered("food", _food, timestep);
-		}
-		[ForgeGeneratedField]
-		private int _water;
-		public event FieldEvent<int> waterChanged;
-		public Interpolated<int> waterInterpolation = new Interpolated<int>() { LerpT = 0f, Enabled = false };
-		public int water
-		{
-			get { return _water; }
-			set
-			{
-				// Don't do anything if the value is the same
-				if (_water == value)
-					return;
-
-				// Mark the field as dirty for the network to transmit
-				_dirtyFields[0] |= 0x10;
-				_water = value;
-				hasDirtyFields = true;
-			}
-		}
-
-		public void SetwaterDirty()
-		{
-			_dirtyFields[0] |= 0x10;
-			hasDirtyFields = true;
-		}
-
-		private void RunChange_water(ulong timestep)
-		{
-			if (waterChanged != null) waterChanged(_water, timestep);
-			if (fieldAltered != null) fieldAltered("water", _water, timestep);
-		}
-		[ForgeGeneratedField]
 		private bool _onGround;
 		public event FieldEvent<bool> onGroundChanged;
 		public Interpolated<bool> onGroundInterpolation = new Interpolated<bool>() { LerpT = 0f, Enabled = false };
@@ -184,7 +122,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[0] |= 0x20;
+				_dirtyFields[0] |= 0x8;
 				_onGround = value;
 				hasDirtyFields = true;
 			}
@@ -192,7 +130,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetonGroundDirty()
 		{
-			_dirtyFields[0] |= 0x20;
+			_dirtyFields[0] |= 0x8;
 			hasDirtyFields = true;
 		}
 
@@ -215,7 +153,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[0] |= 0x40;
+				_dirtyFields[0] |= 0x10;
 				_isDead = value;
 				hasDirtyFields = true;
 			}
@@ -223,7 +161,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetisDeadDirty()
 		{
-			_dirtyFields[0] |= 0x40;
+			_dirtyFields[0] |= 0x10;
 			hasDirtyFields = true;
 		}
 
@@ -246,7 +184,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[0] |= 0x80;
+				_dirtyFields[0] |= 0x20;
 				_runninVal = value;
 				hasDirtyFields = true;
 			}
@@ -254,7 +192,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetrunninValDirty()
 		{
-			_dirtyFields[0] |= 0x80;
+			_dirtyFields[0] |= 0x20;
 			hasDirtyFields = true;
 		}
 
@@ -277,7 +215,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x1;
+				_dirtyFields[0] |= 0x40;
 				_horizontalVal = value;
 				hasDirtyFields = true;
 			}
@@ -285,7 +223,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SethorizontalValDirty()
 		{
-			_dirtyFields[1] |= 0x1;
+			_dirtyFields[0] |= 0x40;
 			hasDirtyFields = true;
 		}
 
@@ -308,7 +246,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x2;
+				_dirtyFields[0] |= 0x80;
 				_isJumping = value;
 				hasDirtyFields = true;
 			}
@@ -316,7 +254,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetisJumpingDirty()
 		{
-			_dirtyFields[1] |= 0x2;
+			_dirtyFields[0] |= 0x80;
 			hasDirtyFields = true;
 		}
 
@@ -339,7 +277,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x4;
+				_dirtyFields[1] |= 0x1;
 				_isThrowing = value;
 				hasDirtyFields = true;
 			}
@@ -347,7 +285,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetisThrowingDirty()
 		{
-			_dirtyFields[1] |= 0x4;
+			_dirtyFields[1] |= 0x1;
 			hasDirtyFields = true;
 		}
 
@@ -370,7 +308,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x8;
+				_dirtyFields[1] |= 0x2;
 				_fireInt = value;
 				hasDirtyFields = true;
 			}
@@ -378,7 +316,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetfireIntDirty()
 		{
-			_dirtyFields[1] |= 0x8;
+			_dirtyFields[1] |= 0x2;
 			hasDirtyFields = true;
 		}
 
@@ -401,7 +339,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x10;
+				_dirtyFields[1] |= 0x4;
 				_aimInt = value;
 				hasDirtyFields = true;
 			}
@@ -409,7 +347,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SetaimIntDirty()
 		{
-			_dirtyFields[1] |= 0x10;
+			_dirtyFields[1] |= 0x4;
 			hasDirtyFields = true;
 		}
 
@@ -432,7 +370,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					return;
 
 				// Mark the field as dirty for the network to transmit
-				_dirtyFields[1] |= 0x20;
+				_dirtyFields[1] |= 0x8;
 				_hasSnipped = value;
 				hasDirtyFields = true;
 			}
@@ -440,7 +378,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public void SethasSnippedDirty()
 		{
-			_dirtyFields[1] |= 0x20;
+			_dirtyFields[1] |= 0x8;
 			hasDirtyFields = true;
 		}
 
@@ -461,8 +399,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			positionInterpolation.current = positionInterpolation.target;
 			rotationInterpolation.current = rotationInterpolation.target;
 			healthInterpolation.current = healthInterpolation.target;
-			foodInterpolation.current = foodInterpolation.target;
-			waterInterpolation.current = waterInterpolation.target;
 			onGroundInterpolation.current = onGroundInterpolation.target;
 			isDeadInterpolation.current = isDeadInterpolation.target;
 			runninValInterpolation.current = runninValInterpolation.target;
@@ -481,8 +417,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			UnityObjectMapper.Instance.MapBytes(data, _position);
 			UnityObjectMapper.Instance.MapBytes(data, _rotation);
 			UnityObjectMapper.Instance.MapBytes(data, _health);
-			UnityObjectMapper.Instance.MapBytes(data, _food);
-			UnityObjectMapper.Instance.MapBytes(data, _water);
 			UnityObjectMapper.Instance.MapBytes(data, _onGround);
 			UnityObjectMapper.Instance.MapBytes(data, _isDead);
 			UnityObjectMapper.Instance.MapBytes(data, _runninVal);
@@ -510,14 +444,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			healthInterpolation.current = _health;
 			healthInterpolation.target = _health;
 			RunChange_health(timestep);
-			_food = UnityObjectMapper.Instance.Map<int>(payload);
-			foodInterpolation.current = _food;
-			foodInterpolation.target = _food;
-			RunChange_food(timestep);
-			_water = UnityObjectMapper.Instance.Map<int>(payload);
-			waterInterpolation.current = _water;
-			waterInterpolation.target = _water;
-			RunChange_water(timestep);
 			_onGround = UnityObjectMapper.Instance.Map<bool>(payload);
 			onGroundInterpolation.current = _onGround;
 			onGroundInterpolation.target = _onGround;
@@ -568,26 +494,22 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if ((0x4 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _health);
 			if ((0x8 & _dirtyFields[0]) != 0)
-				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _food);
-			if ((0x10 & _dirtyFields[0]) != 0)
-				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _water);
-			if ((0x20 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _onGround);
-			if ((0x40 & _dirtyFields[0]) != 0)
+			if ((0x10 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _isDead);
-			if ((0x80 & _dirtyFields[0]) != 0)
+			if ((0x20 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _runninVal);
-			if ((0x1 & _dirtyFields[1]) != 0)
+			if ((0x40 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _horizontalVal);
-			if ((0x2 & _dirtyFields[1]) != 0)
+			if ((0x80 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _isJumping);
-			if ((0x4 & _dirtyFields[1]) != 0)
+			if ((0x1 & _dirtyFields[1]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _isThrowing);
-			if ((0x8 & _dirtyFields[1]) != 0)
+			if ((0x2 & _dirtyFields[1]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _fireInt);
-			if ((0x10 & _dirtyFields[1]) != 0)
+			if ((0x4 & _dirtyFields[1]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _aimInt);
-			if ((0x20 & _dirtyFields[1]) != 0)
+			if ((0x8 & _dirtyFields[1]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _hasSnipped);
 
 			// Reset all the dirty fields
@@ -646,32 +568,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			}
 			if ((0x8 & readDirtyFlags[0]) != 0)
 			{
-				if (foodInterpolation.Enabled)
-				{
-					foodInterpolation.target = UnityObjectMapper.Instance.Map<int>(data);
-					foodInterpolation.Timestep = timestep;
-				}
-				else
-				{
-					_food = UnityObjectMapper.Instance.Map<int>(data);
-					RunChange_food(timestep);
-				}
-			}
-			if ((0x10 & readDirtyFlags[0]) != 0)
-			{
-				if (waterInterpolation.Enabled)
-				{
-					waterInterpolation.target = UnityObjectMapper.Instance.Map<int>(data);
-					waterInterpolation.Timestep = timestep;
-				}
-				else
-				{
-					_water = UnityObjectMapper.Instance.Map<int>(data);
-					RunChange_water(timestep);
-				}
-			}
-			if ((0x20 & readDirtyFlags[0]) != 0)
-			{
 				if (onGroundInterpolation.Enabled)
 				{
 					onGroundInterpolation.target = UnityObjectMapper.Instance.Map<bool>(data);
@@ -683,7 +579,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_onGround(timestep);
 				}
 			}
-			if ((0x40 & readDirtyFlags[0]) != 0)
+			if ((0x10 & readDirtyFlags[0]) != 0)
 			{
 				if (isDeadInterpolation.Enabled)
 				{
@@ -696,7 +592,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_isDead(timestep);
 				}
 			}
-			if ((0x80 & readDirtyFlags[0]) != 0)
+			if ((0x20 & readDirtyFlags[0]) != 0)
 			{
 				if (runninValInterpolation.Enabled)
 				{
@@ -709,7 +605,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_runninVal(timestep);
 				}
 			}
-			if ((0x1 & readDirtyFlags[1]) != 0)
+			if ((0x40 & readDirtyFlags[0]) != 0)
 			{
 				if (horizontalValInterpolation.Enabled)
 				{
@@ -722,7 +618,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_horizontalVal(timestep);
 				}
 			}
-			if ((0x2 & readDirtyFlags[1]) != 0)
+			if ((0x80 & readDirtyFlags[0]) != 0)
 			{
 				if (isJumpingInterpolation.Enabled)
 				{
@@ -735,7 +631,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_isJumping(timestep);
 				}
 			}
-			if ((0x4 & readDirtyFlags[1]) != 0)
+			if ((0x1 & readDirtyFlags[1]) != 0)
 			{
 				if (isThrowingInterpolation.Enabled)
 				{
@@ -748,7 +644,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_isThrowing(timestep);
 				}
 			}
-			if ((0x8 & readDirtyFlags[1]) != 0)
+			if ((0x2 & readDirtyFlags[1]) != 0)
 			{
 				if (fireIntInterpolation.Enabled)
 				{
@@ -761,7 +657,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_fireInt(timestep);
 				}
 			}
-			if ((0x10 & readDirtyFlags[1]) != 0)
+			if ((0x4 & readDirtyFlags[1]) != 0)
 			{
 				if (aimIntInterpolation.Enabled)
 				{
@@ -774,7 +670,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_aimInt(timestep);
 				}
 			}
-			if ((0x20 & readDirtyFlags[1]) != 0)
+			if ((0x8 & readDirtyFlags[1]) != 0)
 			{
 				if (hasSnippedInterpolation.Enabled)
 				{
@@ -808,16 +704,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				_health = (int)healthInterpolation.Interpolate();
 				//RunChange_health(healthInterpolation.Timestep);
-			}
-			if (foodInterpolation.Enabled && !foodInterpolation.current.UnityNear(foodInterpolation.target, 0.0015f))
-			{
-				_food = (int)foodInterpolation.Interpolate();
-				//RunChange_food(foodInterpolation.Timestep);
-			}
-			if (waterInterpolation.Enabled && !waterInterpolation.current.UnityNear(waterInterpolation.target, 0.0015f))
-			{
-				_water = (int)waterInterpolation.Interpolate();
-				//RunChange_water(waterInterpolation.Timestep);
 			}
 			if (onGroundInterpolation.Enabled && !onGroundInterpolation.current.UnityNear(onGroundInterpolation.target, 0.0015f))
 			{

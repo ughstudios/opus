@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedInterpol("{\"inter\":[0]")]
+	[GeneratedInterpol("{\"inter\":[0,0]")]
 	public partial class GameModeNetworkObject : NetworkObject
 	{
 		public const int IDENTITY = 5;
@@ -46,6 +46,37 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (matchTimerChanged != null) matchTimerChanged(_matchTimer, timestep);
 			if (fieldAltered != null) fieldAltered("matchTimer", _matchTimer, timestep);
 		}
+		[ForgeGeneratedField]
+		private int _playerCount;
+		public event FieldEvent<int> playerCountChanged;
+		public Interpolated<int> playerCountInterpolation = new Interpolated<int>() { LerpT = 0f, Enabled = false };
+		public int playerCount
+		{
+			get { return _playerCount; }
+			set
+			{
+				// Don't do anything if the value is the same
+				if (_playerCount == value)
+					return;
+
+				// Mark the field as dirty for the network to transmit
+				_dirtyFields[0] |= 0x2;
+				_playerCount = value;
+				hasDirtyFields = true;
+			}
+		}
+
+		public void SetplayerCountDirty()
+		{
+			_dirtyFields[0] |= 0x2;
+			hasDirtyFields = true;
+		}
+
+		private void RunChange_playerCount(ulong timestep)
+		{
+			if (playerCountChanged != null) playerCountChanged(_playerCount, timestep);
+			if (fieldAltered != null) fieldAltered("playerCount", _playerCount, timestep);
+		}
 
 		protected override void OwnershipChanged()
 		{
@@ -56,6 +87,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		public void SnapInterpolations()
 		{
 			matchTimerInterpolation.current = matchTimerInterpolation.target;
+			playerCountInterpolation.current = playerCountInterpolation.target;
 		}
 
 		public override int UniqueIdentity { get { return IDENTITY; } }
@@ -63,6 +95,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		protected override BMSByte WritePayload(BMSByte data)
 		{
 			UnityObjectMapper.Instance.MapBytes(data, _matchTimer);
+			UnityObjectMapper.Instance.MapBytes(data, _playerCount);
 
 			return data;
 		}
@@ -73,6 +106,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			matchTimerInterpolation.current = _matchTimer;
 			matchTimerInterpolation.target = _matchTimer;
 			RunChange_matchTimer(timestep);
+			_playerCount = UnityObjectMapper.Instance.Map<int>(payload);
+			playerCountInterpolation.current = _playerCount;
+			playerCountInterpolation.target = _playerCount;
+			RunChange_playerCount(timestep);
 		}
 
 		protected override BMSByte SerializeDirtyFields()
@@ -82,6 +119,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 			if ((0x1 & _dirtyFields[0]) != 0)
 				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _matchTimer);
+			if ((0x2 & _dirtyFields[0]) != 0)
+				UnityObjectMapper.Instance.MapBytes(dirtyFieldsData, _playerCount);
 
 			// Reset all the dirty fields
 			for (int i = 0; i < _dirtyFields.Length; i++)
@@ -111,6 +150,19 @@ namespace BeardedManStudios.Forge.Networking.Generated
 					RunChange_matchTimer(timestep);
 				}
 			}
+			if ((0x2 & readDirtyFlags[0]) != 0)
+			{
+				if (playerCountInterpolation.Enabled)
+				{
+					playerCountInterpolation.target = UnityObjectMapper.Instance.Map<int>(data);
+					playerCountInterpolation.Timestep = timestep;
+				}
+				else
+				{
+					_playerCount = UnityObjectMapper.Instance.Map<int>(data);
+					RunChange_playerCount(timestep);
+				}
+			}
 		}
 
 		public override void InterpolateUpdate()
@@ -122,6 +174,11 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				_matchTimer = (float)matchTimerInterpolation.Interpolate();
 				//RunChange_matchTimer(matchTimerInterpolation.Timestep);
+			}
+			if (playerCountInterpolation.Enabled && !playerCountInterpolation.current.UnityNear(playerCountInterpolation.target, 0.0015f))
+			{
+				_playerCount = (int)playerCountInterpolation.Interpolate();
+				//RunChange_playerCount(playerCountInterpolation.Timestep);
 			}
 		}
 

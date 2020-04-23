@@ -32,12 +32,13 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         if (!networkObject.IsOwner)
             return;
-
         
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
             lock (NetworkManager.Instance.Networker.Players)
             {
+                networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
+
                 if (NetworkManager.Instance.Networker.Players.Count == 2)
                 {
                     networkObject.matchTimer -= Time.deltaTime;

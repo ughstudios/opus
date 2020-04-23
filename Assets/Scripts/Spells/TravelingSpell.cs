@@ -17,6 +17,7 @@ public class TravelingSpell : ThrowObjBehavior
 							_useGravity = false,
 							_reverse = false;
 
+	public string playerWhoSpawnedUs;
 
 	protected override void NetworkStart()
 	{
@@ -99,7 +100,7 @@ public class TravelingSpell : ThrowObjBehavior
 		{
 			DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
 
-			de.TakeDamage(de, _damageAmount);
+			de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
 		}
 			
 	}
