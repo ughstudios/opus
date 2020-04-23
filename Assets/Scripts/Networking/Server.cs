@@ -18,9 +18,9 @@ public class Server : MonoBehaviour
     public GameObject networkManagerPrefab;
     private NetworkManager mgr;
     string public_ip_addr;
-	public string masterServerHost = "45.63.11.159";
-	//public string masterServerHost = "127.0.0.1";
-	public ushort masterServerPort = 15940;
+    public string masterServerHost = "45.63.11.159";
+    //public string masterServerHost = "127.0.0.1";
+    public ushort masterServerPort = 15940;
     bool serverStarted = false;
 
     public enum AuthStatus
@@ -58,25 +58,27 @@ public class Server : MonoBehaviour
 
     private void OnDisable()
     {
-    
+
     }
 
-  
+
 
 
     void Start()
     {
         Debug.LogError("Server::Start() called again!");
-        if (!serverStarted)
-        {
-            Host();
-            serverStarted = true;
-        }
+
+        Host();
+        serverStarted = true;
 
         DontDestroyOnLoad(gameObject);
 
     }
 
+    public void StopServer()
+    {
+        server.Disconnect(true);
+    }
 
     public void Host()
     {
@@ -84,16 +86,16 @@ public class Server : MonoBehaviour
         Debug.LogError("Attempting to host again! :)");
 
         public_ip_addr = new System.Net.WebClient().DownloadString("https://api.ipify.org"); // might be a better way to do this that isn't dependent on some third party website. Works fine for now tho. 
-        
 
-        // Do any firewall opening requests on the operating system
+
+        // Do any fi`wall opening requests on the operating system
         NetWorker.PingForFirewall(port);
 
         Rpc.MainThreadRunner = MainThreadManager.Instance;
 
         var availablePort = (ushort)GetFirstAvailablePort(port, 100);
         port = availablePort;
-        server = new UDPServer(MaxPlayers);        
+        server = new UDPServer(MaxPlayers);
         server.Connect("127.0.0.1", port);
 
         server.playerTimeout += (player, sender) =>
@@ -123,7 +125,7 @@ public class Server : MonoBehaviour
             masterServerData = mgr.MasterServerRegisterData(server, serverId, serverName, type, mode, public_ip_addr, false, 0);
             Debug.Log("Registered with: " + public_ip_addr + " as our IP");
         }
-        
+
         mgr.Initialize(server, masterServerHost, masterServerPort, masterServerData);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -142,5 +144,5 @@ public class Server : MonoBehaviour
         });
     }
 
-   
+
 }

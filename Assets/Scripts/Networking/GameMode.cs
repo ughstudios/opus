@@ -62,15 +62,17 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void ResetServer()
     {
-
-
         if (!networkObject.IsServer)
             return;
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            NetworkManager.Instance.Disconnect();
+            GameObject serverObject = GameObject.FindWithTag("HostServer");
+            Server serverScript = serverObject.GetComponent<Server>();
+            serverScript.StopServer();
+            Destroy(serverObject);
 
+            //NetworkManager.Instance.Disconnect();
             SceneManager.LoadScene("Server");
 
             serverHasBeenReset = true;
