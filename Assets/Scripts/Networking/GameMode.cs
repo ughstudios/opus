@@ -8,6 +8,7 @@ using BeardedManStudios;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine.SceneManagement;
+using Steamworks;
 
 public class GameMode : GameModeBehavior, IUserAuthenticator
 {
@@ -27,6 +28,19 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         networkObject.matchTimer = initialMatchTimer;
 
 
+    }
+
+    public override void AllPlayersLeaveLobby(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            ClientConnect clientScript = FindObjectOfType<ClientConnect>();
+            Debug.Log("client lobby before  leaving: " + clientScript.ourLobbyId.Value);
+            clientScript.GetLobby().Leave();
+            clientScript.ourLobbyId = new SteamId();
+            Debug.Log("client lobby after leaving: " + clientScript.ourLobbyId.Value);
+
+        });
     }
 
     void Update()
@@ -83,6 +97,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
+            networkObject.SendRpc(RPC_ALL_PLAYERS_LEAVE_LOBBY, Receivers.All);
+
             DeleteObjects(NetworkManager.Instance.Networker.Players);
 
             Debug.Log("about to disconnect server.");
@@ -94,12 +110,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
             serverHasBeenReset = true;
             status = Server.AuthStatus.Available;
-
-            if (NetworkManager.Instance)
-            {
-                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
-            }
-
         }
 
     }
