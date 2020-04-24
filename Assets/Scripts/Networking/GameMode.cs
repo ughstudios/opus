@@ -75,7 +75,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     }
 
-    void DeleteObjects(List<NetworkingPlayer> players)
+    void DeleteObjects()
     {
         Debug.Log("deleting terrain and network objects");
         Destroy(FindObjectOfType<TerrainManager>().gameObject);
@@ -84,11 +84,15 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             Destroy(terrain.gameObject);
         }
 
-        foreach (var player in players)
+
+        foreach (GameObject go in GameObject.FindObjectsOfType(typeof(MonoBehaviour)))
         {
-            if (!player.IsHost)
-                cleanupNetworkObjects(player.Networker);
+            if (go != gameObject)
+            {
+                Destroy(go);
+            }
         }
+
 
         foreach (var character in FindObjectsOfType<NewCharacterController>())
         {
