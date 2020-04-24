@@ -66,7 +66,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 networkObject.matchTimer -= Time.deltaTime;
                 if (networkObject.matchTimer < 0)
                 {
-                    Debug.Log("About to reset server");
+                    Debug.Log("Update::About to reset server");
                     ResetServer();
 
                 }
@@ -79,13 +79,13 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         Debug.Log("deleting terrain and network objects");
 
-        NetworkManager networkMgr = FindObjectOfType<NetworkManager>();
-        MainThreadManager mainThreadMgr = FindObjectOfType<MainThreadManager>();
-        if (networkMgr != null && mainThreadMgr != null)
-        {
-            Destroy(networkMgr.gameObject);
-            Destroy(mainThreadMgr.gameObject);
-        }
+        //NetworkManager networkMgr = FindObjectOfType<NetworkManager>();
+        //MainThreadManager mainThreadMgr = FindObjectOfType<MainThreadManager>();
+        //if (networkMgr != null)// && mainThreadMgr != null)
+        //{
+            //Destroy(networkMgr.gameObject);
+            //Destroy(mainThreadMgr.gameObject);
+        //}
         
         foreach (var character in FindObjectsOfType<NewCharacterController>())
         {
@@ -111,6 +111,19 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             DeleteObjects();
 
             Debug.Log("about to disconnect server.");
+
+            lock (NetworkManager.Instance.Networker.Players)
+            {
+                foreach(var player in NetworkManager.Instance.Networker.Players)
+                {
+                    if (player != null)
+                    {
+                        ((IServer)NetworkManager.Instance.Networker).Disconnect(player, true);
+                    }
+                }
+                ((IServer)NetworkManager.Instance.Networker).CommitDisconnects();
+            }
+
             NetworkManager.Instance.Disconnect();
             Debug.Log("server disconnected.");
 
@@ -194,6 +207,15 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     void OnDisable()
     {
         Debug.Log("gamemode.cs disbaled");
+        if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
+        {
+            NetworkManager.Instance.Networker.playerAccepted -= Networker_playerAccepted;
+            NetworkManager.Instance.Networker.playerDisconnected -= Networker_playerDisconnected;
+            NetworkManager.Instance.Networker.playerRejected -= Networker_playerRejected;
+            NetworkManager.Instance.Networker.playerTimeout -= Networker_playerTimeout;
+            NetworkManager.Instance.Networker.playerConnected -= Networker_playerConnected;
+            NetworkManager.Instance.Networker.disconnected -= Networker_disconnected;
+        }
     }
 
     void OnDestroy()
@@ -229,12 +251,18 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     private void Networker_disconnected(NetWorker sender)
     {
-        Debug.Log("Networker disconnected, server should be fully offline now.");
+        MainThreadManager.Run(() =>
+        {
+            Debug.Log("Networker disconnected, server should be fully offline now.");
+        });
     }
 
     private void Networker_playerConnected(NetworkingPlayer player, NetWorker sender)
     {
-
+        MainThreadManager.Run(() =>
+        {
+            Debug.Log("playerConnected");
+        });
     }
 
     private void Networker_playerTimeout(NetworkingPlayer player, NetWorker sender)
@@ -258,6 +286,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         MainThreadManager.Run(() =>
         {
+            Debug.Log("playuer accepted");
             GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
             Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
