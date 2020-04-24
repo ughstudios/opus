@@ -107,7 +107,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             networkObject.SendRpc(RPC_ALL_PLAYERS_LEAVE_LOBBY, Receivers.All);
 
-            DeleteObjects(NetworkManager.Instance.Networker.Players);
+            DeleteObjects();
 
             Debug.Log("about to disconnect server.");
             NetworkManager.Instance.Disconnect();
