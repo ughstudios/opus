@@ -48,8 +48,15 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void Update()
     {
-        if (!networkObject.IsServer)
+        if (networkObject == null)
+        {
             return;
+        }
+
+        if (!networkObject.IsServer)
+        {
+            return;
+        }
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
@@ -62,16 +69,9 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 {
                     Debug.Log("About to reset server");
                     ResetServer();
-                    serverHasBeenReset = true;
-                    networkObject.matchTimer = initialMatchTimer;
                 }
             }
-            else
-            {
-                serverHasBeenReset = false;
-            }
         }
-
 
     }
 
@@ -79,20 +79,13 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         Debug.Log("deleting terrain and network objects");
         Destroy(FindObjectOfType<TerrainManager>().gameObject);
+        Destroy(FindObjectOfType<Server>());
+        Destroy(FindObjectOfType<NetworkManager>());
+        Destroy(FindObjectOfType<MainThreadManager>());
         foreach (var terrain in FindObjectsOfType<Terrain>())
         {
             Destroy(terrain.gameObject);
         }
-
-
-        foreach (GameObject go in GameObject.FindObjectsOfType(typeof(MonoBehaviour)))
-        {
-            if (go != gameObject)
-            {
-                Destroy(go);
-            }
-        }
-
 
         foreach (var character in FindObjectsOfType<NewCharacterController>())
         {
