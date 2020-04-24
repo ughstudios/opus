@@ -159,8 +159,14 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     IEnumerator ResetServerAfterDisconnect()
     {
+        yield return new WaitForSeconds(10);
+
         GameObject serverObject = GameObject.FindWithTag("HostServer");
         Destroy(serverObject);
+
+        yield return new WaitForSeconds(10);
+
+
         Debug.Log("loaded server scene again.");
 
         SceneManager.LoadScene("Server");

@@ -5,10 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void StartGame()
-    {
-        SceneManager.LoadScene("Hex World Map");
-    }
 
     public void QuitGame()
     {
