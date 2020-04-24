@@ -26,7 +26,10 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
-		_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
+		{
+			_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+		}
 	}
 
 	public void StopSnipperAttackNoRb()
@@ -70,7 +73,10 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<PlayerController>().ResetMovementSpeed();
-		_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
+		{
+			_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+		}
 	}
 
 	public void Flame()

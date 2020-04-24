@@ -908,6 +908,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game UI
       objectReference: {fileID: 0}
+    - target: {fileID: 1097213822891016409, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1097213822891016409, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1097213822891016409, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1097213823065238934, guid: 5c3be738c94337945b449df3309e8285,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1018,6 +1033,21 @@ PrefabInstance:
       propertyPath: playersLeft
       value: 
       objectReference: {fileID: 94698886}
+    - target: {fileID: 1097213823982139721, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1097213823982139721, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1097213823982139721, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c3be738c94337945b449df3309e8285, type: 3}
 --- !u!1001 &3464951159812583450

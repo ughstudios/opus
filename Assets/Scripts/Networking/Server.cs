@@ -75,11 +75,6 @@ public class Server : MonoBehaviour
 
     }
 
-    public void StopServer()
-    {
-        server.Disconnect(true);
-    }
-
     public void Host()
     {
 

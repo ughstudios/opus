@@ -18,7 +18,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     public float initialMatchTimer = 300; // Match countdown timer in seconds. 300 seconds = 5 minutes. 
 
     private bool serverHasBeenReset = false;
-
+    private List<NetworkObject> toDelete = new List<NetworkObject>();
 
     protected override void NetworkStart()
     {
@@ -31,7 +31,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     void Update()
     {
-        if (!networkObject.IsOwner)
+        if (!networkObject.IsServer)
             return;
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
@@ -45,6 +45,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                     networkObject.matchTimer -= Time.deltaTime;
                     if (networkObject.matchTimer < 0)
                     {
+                        Debug.Log("About to reset server");
                         ResetServer();
                         serverHasBeenReset = true;
                         networkObject.matchTimer = initialMatchTimer;
@@ -60,20 +61,39 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     }
 
+    void DeleteObjects(List<NetworkingPlayer> players)
+    {
+        Debug.Log("deleting terrain and network objects");
+        Destroy(FindObjectOfType<TerrainManager>().gameObject);
+        foreach (var terrain in FindObjectsOfType<Terrain>())
+        {
+            Destroy(terrain.gameObject);
+        }
+
+        foreach (var player in players)
+        {
+            cleanupNetworkObjects(player.Networker);
+        }
+
+        foreach(var character in FindObjectsOfType<NewCharacterController>())
+        {
+            Destroy(character.gameObject);
+        }
+    }
+
     void ResetServer()
     {
-        if (!networkObject.IsServer)
-            return;
+
+        DeleteObjects(NetworkManager.Instance.Networker.Players);
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            GameObject serverObject = GameObject.FindWithTag("HostServer");
-            Server serverScript = serverObject.GetComponent<Server>();
-            serverScript.StopServer();
-            Destroy(serverObject);
+            Debug.Log("about to disconnect server.");
+            NetworkManager.Instance.Disconnect();
+            Debug.Log("server disconnected.");
 
-            //NetworkManager.Instance.Disconnect();
-            SceneManager.LoadScene("Server");
+
+            StartCoroutine(ResetServerAfterDisconnect());
 
             serverHasBeenReset = true;
             status = Server.AuthStatus.Available;
@@ -85,8 +105,65 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
         }
 
-
     }
+
+    private void cleanupNetworkObjects(NetWorker owner, NetworkingPlayer player = null, List<System.Type> specificBehaviors = null)
+    {
+        if (NetworkManager.Instance == null)
+            return;
+
+        toDelete.Clear();
+        MainThreadManager.Run(() =>
+        {
+            foreach (var no in owner.NetworkObjectList)
+            {
+                if (no == null)
+                    continue;
+
+                if (player != null && no.Owner != player)
+                    continue;
+
+                //delete specific stuff
+                if (specificBehaviors != null)
+                {
+                    INetworkBehavior behav = no.AttachedBehavior;
+
+                    System.Type tempType = behav.GetType();
+                    if (specificBehaviors.Contains(behav.GetType()))
+                        toDelete.Add(no);
+
+                }
+                else
+                {
+                    toDelete.Add(no);
+                }
+            }
+
+            if (toDelete.Count > 0)
+            {
+                for (int i = toDelete.Count - 1; i >= 0; i--)
+                {
+                    owner.NetworkObjectList.Remove(toDelete[i]);
+                    toDelete[i].Destroy();
+                }
+            }
+        });
+    }
+
+    IEnumerator ResetServerAfterDisconnect()
+    {
+        GameObject serverObject = GameObject.FindWithTag("HostServer");
+        Destroy(serverObject);
+        Debug.Log("loaded server scene again.");
+
+        SceneManager.LoadScene("Server");
+
+        Debug.Log("loaded server scene again.");
+
+        yield return new WaitForSeconds(5);
+    }
+
+
 
     void Start()
     {
@@ -161,30 +238,33 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         MainThreadManager.Run(() =>
         {
-            Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
-            NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
-
-            Debug.Log("Disconnect");
-            //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
-            List<NetworkObject> toDelete = new List<NetworkObject>();
-            foreach (var no in sender.NetworkObjectList)
+            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
-                if (no.Owner == player)
+                Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
+                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
+
+                Debug.Log("Disconnect");
+                //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
+                List<NetworkObject> toDelete = new List<NetworkObject>();
+                foreach (var no in sender.NetworkObjectList)
                 {
-                    //Found him
-                    toDelete.Add(no);
-                    Debug.Log("owner found");
+                    if (no.Owner == player)
+                    {
+                        //Found him
+                        toDelete.Add(no);
+                        Debug.Log("owner found");
+                    }
+                    //TODO - Correct issues with disconnecting
                 }
-                //TODO - Correct issues with disconnecting
-            }
 
-            //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
-            if (toDelete.Count > 0)
-            {
-                for (int i = toDelete.Count - 1; i >= 0; i--)
+                //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
+                if (toDelete.Count > 0)
                 {
-                    sender.NetworkObjectList.Remove(toDelete[i]);
-                    toDelete[i].Destroy();
+                    for (int i = toDelete.Count - 1; i >= 0; i--)
+                    {
+                        sender.NetworkObjectList.Remove(toDelete[i]);
+                        toDelete[i].Destroy();
+                    }
                 }
             }
         });
