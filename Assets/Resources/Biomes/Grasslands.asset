@@ -17,8 +17,8 @@ MonoBehaviour:
     type: 2}
   relativeFrequency: 1
   heightmapOctaves: 8
-  minHeight: 0.3
-  maxHeight: 0.5
+  minHeight: 0
+  maxHeight: 0.4
   heightExponent: 1
   detailPrototypes:
   - {fileID: 11400000, guid: 73cbe1b616922fe428f1013a47e56fad, type: 2}

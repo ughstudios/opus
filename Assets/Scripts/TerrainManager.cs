@@ -674,45 +674,58 @@ public class TerrainManager : MonoBehaviour
 
     private List<BiomeStrength> GetBiomes(Vector3 vLoc)
     {
-        List<BiomeStrength> output = new List<BiomeStrength>();
+        List<BiomeStrength> output = new List<BiomeStrength>(biomes.Count);
 
         Vector3 loc = new Vector3(vLoc.x, 0f, vLoc.z);
         Vector3 biomeLoc = loc / biomeCenterSpacing;
         SectionCoord coord = new SectionCoord(Mathf.RoundToInt(biomeLoc.x),
                 Mathf.RoundToInt(biomeLoc.z));
 
+        BiomeCenter center = SafeGetBiomeCenter(coord);
+        float weakDist, dist, totalStrength;
+
+        if (!center.boundsCalculated)
+            CalculateBiomeBounds(coord);
+
+        weakDist = Mathf.Infinity;
+
+        for (int k = 0; weakDist > biomeBlend &&
+                k < center.weakBounds.Count; k++)
+        {
+            dist = center.weakBounds[k].GetDistanceToPoint(loc);
+            if (dist < weakDist)
+                weakDist = dist;
+            
+        }
+        if (weakDist > biomeBlend)
+        {
+            output.Add(new BiomeStrength(center.biome, 1f));
+            return output;
+        }
+
         List<SectionCoord> coords = SectionsInRadius(coord, 2);
-        BiomeCenter center;
-
-        bool weak;
-        float weakDist, dist;
-
         for (int i = 0; i < coords.Count; i++)
         {
             center = SafeGetBiomeCenter(coords[i]);
             if (!center.boundsCalculated)
                 CalculateBiomeBounds(coords[i]);
 
-            weak = true;
             weakDist = Mathf.Infinity;
 
-            for (int k = 0; weak && k < center.properBounds.Count; k++)
+            for (int k = 0; weakDist >= 0.0f && 
+                    k < center.weakBounds.Count; k++)
             {
-                if (weak)
-                {
-                    weak = center.weakBounds[k].GetSide(loc);
-                    dist = center.weakBounds[k].GetDistanceToPoint(loc);
-                    if (dist < weakDist)
-                        weakDist = dist;
-                }
+                dist = center.weakBounds[k].GetDistanceToPoint(loc);
+                if (dist < weakDist)
+                    weakDist = dist;
             }
-            if (weak && weakDist > biomeBlend)
+            if (weakDist > biomeBlend)
             {
                 output.Clear();
                 output.Add(new BiomeStrength(center.biome, 1f));
                 return output;
             }
-            if (weak)
+            if (weakDist >= 0.0f)
             {
                 int j = 0;
                 for (; j < output.Count; j++)
@@ -730,10 +743,16 @@ public class TerrainManager : MonoBehaviour
             }
         }
 
+        totalStrength = 0f;
         for (int i = 0; i < output.Count; i++)
         {
             output[i].strength =
                     Mathf.Pow(Mathf.Clamp01(output[i].strength), 2f);
+            totalStrength += output[i].strength;
+        }
+        for (int i = 0; i < output.Count; i++)
+        {
+            output[i].strength /= totalStrength;
         }
         return output;
     }
@@ -921,7 +940,8 @@ public class TerrainManager : MonoBehaviour
         Vector3 test, next;
         List<BiomeStrength> biomes;
         Biome b = null;
-        int p, ax, az, anx, anz, annx, annz, range, tree, totalTreeFreq, maxX, maxZ;
+        int p, ax, az, anx, anz, annx, annz, range, tree, totalTreeFreq;
+        int maxX, maxZ, maxRange;
         float bx, bz, a, r, str;
         bool canTree;
         next = new Vector3(rng.Value() * (genSettings.length -
@@ -930,6 +950,8 @@ public class TerrainManager : MonoBehaviour
                 minBorderTreeDistance * 2) + minBorderTreeDistance);
         anx = Mathf.FloorToInt(next.x / cellSize);
         anz = Mathf.FloorToInt(next.z / cellSize);
+        maxRange = Mathf.CeilToInt(maxMinTreeDistance / cellSize);
+        range = Mathf.CeilToInt(minTreeDistance / cellSize);
         trees[anx, anz] = unprocessed;
         points[anx, anz] = next;
         toProcess.Add(next);
@@ -943,11 +965,10 @@ public class TerrainManager : MonoBehaviour
             az = Mathf.FloorToInt(test.z / cellSize);
 
             canTree = true;
-            range = Mathf.CeilToInt(maxMinTreeDistance / cellSize);
-            maxX = Mathf.Min(range, numCells - 1 - ax);
-            maxZ = Mathf.Min(range, numCells - 1 - az);
-            for (int x = Mathf.Max(-range, -ax); canTree && x <= maxX; x++)
-                for (int z = Mathf.Max(-range, -az); canTree && z <= maxZ; z++)
+            maxX = Mathf.Min(maxRange, numCells - 1 - ax);
+            maxZ = Mathf.Min(maxRange, numCells - 1 - az);
+            for (int x = Mathf.Max(-maxRange, -ax); canTree && x <= maxX; x++)
+                for (int z = Mathf.Max(-maxRange, -az); canTree && z <= maxZ; z++)
                 {
                     anx = ax + x;
                     anz = az + z;
@@ -1037,7 +1058,6 @@ public class TerrainManager : MonoBehaviour
                 anz = Mathf.FloorToInt(next.z / cellSize);
                 if (trees[anx, anz] != 0)
                     continue;
-                range = Mathf.CeilToInt(minTreeDistance / cellSize);
                 canTree = true;
                 maxX = Mathf.Min(range, numCells - 1 - anx);
                 maxZ = Mathf.Min(range, numCells - 1 - anz);

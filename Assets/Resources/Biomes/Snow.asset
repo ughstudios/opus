@@ -16,7 +16,7 @@ MonoBehaviour:
   terrainLayer: {fileID: 8574412962073106934, guid: b5bf88e84df05804e80e6e2fb1496f4f,
     type: 2}
   relativeFrequency: 1
-  heightmapOctaves: 8
+  heightmapOctaves: 4
   minHeight: 0
   maxHeight: 0.3
   heightExponent: 1

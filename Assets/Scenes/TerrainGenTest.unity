@@ -323,27 +323,26 @@ MonoBehaviour:
   noiseScale: 250
   genSettings:
     length: 64
-    height: 256
-    heightMapRes: 257
-    alphaMapRes: 257
+    height: 128
+    heightMapRes: 129
+    alphaMapRes: 129
     detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
-  genOnStart: 1
+  genOnStart: 0
   updateInterval: 5
   loadedSectionRadius: 5
   maxOffset: 32
   numDetailOctaves: 3
   detailNoiseScale: 25
   maxSimultaneousGens: 8
-  follow:
-  - {fileID: 1880884212}
+  follow: []
   biomes: []
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100
   biomeBlend: 100
   minTreeDistance: 5
-  maxMinTreeDistance: 20
+  maxMinTreeDistance: 50
   minBorderTreeDistance: 0.5
   treeTestPoints: 30
   minBiomeTreeStrength: 0.8
