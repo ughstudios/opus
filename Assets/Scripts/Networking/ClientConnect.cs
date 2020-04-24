@@ -13,6 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Net;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class ClientConnect : MonoBehaviour
 {
@@ -179,11 +180,14 @@ public class ClientConnect : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        foreach (var lobby in lobbyList)
+        if (lobbyList.Length > 0)
         {
-            if (lobby.Id == ourLobbyId)
+            foreach (var lobby in lobbyList)
             {
-                lobby.Leave();
+                if (lobby.Id == ourLobbyId)
+                {
+                    lobby.Leave();
+                }
             }
         }
     }
@@ -278,7 +282,7 @@ public class ClientConnect : MonoBehaviour
         ourLobbyId = lobby.Id;
 
         //if (!ownsLobby)
-            ConnectToServer();
+        ConnectToServer();
     }
 
     public void ConnectToServer()
@@ -317,7 +321,7 @@ public class ClientConnect : MonoBehaviour
                 tryingServer = false;
 
 
-            foreach(var lobby in lobbyList)
+            foreach (var lobby in lobbyList)
             {
                 if (lobby.Id == ourLobbyId)
                 {

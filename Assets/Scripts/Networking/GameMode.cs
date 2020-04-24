@@ -35,6 +35,9 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         MainThreadManager.Run(() =>
         {
             ClientConnect clientScript = FindObjectOfType<ClientConnect>();
+            if (clientScript == null)
+                return;
+
             Debug.Log("client lobby before  leaving: " + clientScript.ourLobbyId.Value);
             clientScript.GetLobby().Leave();
             clientScript.ourLobbyId = new SteamId();
@@ -165,7 +168,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         Destroy(serverObject);
 
         yield return new WaitForSeconds(10);
-
 
         Debug.Log("loaded server scene again.");
 
