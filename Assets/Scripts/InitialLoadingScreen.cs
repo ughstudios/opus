@@ -19,9 +19,12 @@ public class InitialLoadingScreen : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         unityCharacterController = GetComponent<CharacterController>();
 
-        tm = FindObjectOfType<TerrainManager>();
-        tm.follow.Add(gameObject);
-        tm.StartGeneration();
+        if (characterController.networkObject.IsOwner)
+        {
+            tm = FindObjectOfType<TerrainManager>();
+            tm.follow.Add(gameObject);
+            tm.StartGeneration();
+        }
 
     }
 
