@@ -98,7 +98,10 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            networkObject.SendRpc(RPC_ALL_PLAYERS_LEAVE_LOBBY, Receivers.All);
+            if (networkObject != null)
+            {
+                networkObject.SendRpc(RPC_ALL_PLAYERS_LEAVE_LOBBY, Receivers.All);
+            }
 
             DeleteObjects();
 
@@ -107,7 +110,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             Debug.Log("server disconnected.");
 
 
-            Invoke("BootUpServerAgain", 15);
+            StartCoroutine(BootUpServerAgain());
 
             Debug.Log("booting up server again...");
 
@@ -160,6 +163,24 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         });
     }
 
+
+    IEnumerator BootUpServerAgain()
+    {
+        yield return new WaitForSeconds(15);
+
+        GameObject serverObject = GameObject.FindWithTag("HostServer");
+        if (serverObject != null)
+        {
+            Destroy(serverObject);
+        }
+
+        Debug.Log("loaded server scene again.");
+
+        SceneManager.LoadScene("Server");
+
+        Debug.Log("loaded server scene again.");
+    }
+
     void OnDisable()
     {
         Debug.Log("gamemode.cs disbaled");
@@ -170,17 +191,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         Debug.Log("Destroyed gamemode.cs");
     }
 
-    void BootUpServerAgain()
-    {
-        GameObject serverObject = GameObject.FindWithTag("HostServer");
-        Destroy(serverObject);
-
-        Debug.Log("loaded server scene again.");
-
-        SceneManager.LoadScene("Server");
-
-        Debug.Log("loaded server scene again.");
-    }
 
 
 
@@ -200,15 +210,17 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         NetworkManager.Instance.Networker.playerRejected += Networker_playerRejected;
         NetworkManager.Instance.Networker.playerTimeout += Networker_playerTimeout;
         NetworkManager.Instance.Networker.playerConnected += Networker_playerConnected;
-
+        NetworkManager.Instance.Networker.disconnected += Networker_disconnected;
 
 
         //NetworkManager.Instance.Networker.SetUserAuthenticator(this);
 
     }
 
-
-
+    private void Networker_disconnected(NetWorker sender)
+    {
+        Debug.Log("Networker disconnected, server should be fully offline now.");
+    }
 
     private void Networker_playerConnected(NetworkingPlayer player, NetWorker sender)
     {
@@ -266,24 +278,31 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 Debug.Log("Disconnect");
                 //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
                 List<NetworkObject> toDelete = new List<NetworkObject>();
-                foreach (var no in sender.NetworkObjectList)
+
+                if (sender != null && sender.NetworkObjectList.Count > 0)
                 {
-                    if (no.Owner == player)
+                    foreach (var no in sender.NetworkObjectList)
                     {
-                        //Found him
-                        toDelete.Add(no);
-                        Debug.Log("owner found");
+                        if (no.Owner == player)
+                        {
+                            //Found him
+                            toDelete.Add(no);
+                            Debug.Log("owner found");
+                        }
+                        //TODO - Correct issues with disconnecting
                     }
-                    //TODO - Correct issues with disconnecting
                 }
 
                 //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
-                if (toDelete.Count > 0)
+                if (sender != null)
                 {
-                    for (int i = toDelete.Count - 1; i >= 0; i--)
+                    if (toDelete.Count > 0)
                     {
-                        sender.NetworkObjectList.Remove(toDelete[i]);
-                        toDelete[i].Destroy();
+                        for (int i = toDelete.Count - 1; i >= 0; i--)
+                        {
+                            sender.NetworkObjectList.Remove(toDelete[i]);
+                            toDelete[i].Destroy();
+                        }
                     }
                 }
             }
