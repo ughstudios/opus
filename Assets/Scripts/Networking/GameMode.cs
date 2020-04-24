@@ -163,6 +163,16 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         });
     }
 
+    void OnDisable()
+    {
+        Debug.Log("gamemode.cs disbaled");
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("Destroyed gamemode.cs");
+    }
+
     void BootUpServerAgain()
     {
         GameObject serverObject = GameObject.FindWithTag("HostServer");
