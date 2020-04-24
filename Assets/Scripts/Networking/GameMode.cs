@@ -86,7 +86,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
         foreach (var player in players)
         {
-            cleanupNetworkObjects(player.Networker);
+            if (!player.IsHost)
+                cleanupNetworkObjects(player.Networker);
         }
 
         foreach (var character in FindObjectsOfType<NewCharacterController>())
