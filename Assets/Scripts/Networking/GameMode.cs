@@ -36,25 +36,22 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
-            lock (NetworkManager.Instance.Networker.Players)
-            {
-                networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
+            networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
 
-                if (NetworkManager.Instance.Networker.Players.Count >= 2)
+            if (NetworkManager.Instance.Networker.Players.Count >= 2)
+            {
+                networkObject.matchTimer -= Time.deltaTime;
+                if (networkObject.matchTimer < 0)
                 {
-                    networkObject.matchTimer -= Time.deltaTime;
-                    if (networkObject.matchTimer < 0)
-                    {
-                        Debug.Log("About to reset server");
-                        ResetServer();
-                        serverHasBeenReset = true;
-                        networkObject.matchTimer = initialMatchTimer;
-                    }
+                    Debug.Log("About to reset server");
+                    ResetServer();
+                    serverHasBeenReset = true;
+                    networkObject.matchTimer = initialMatchTimer;
                 }
-                else
-                {
-                    serverHasBeenReset = false;
-                }
+            }
+            else
+            {
+                serverHasBeenReset = false;
             }
         }
 
@@ -75,7 +72,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             cleanupNetworkObjects(player.Networker);
         }
 
-        foreach(var character in FindObjectsOfType<NewCharacterController>())
+        foreach (var character in FindObjectsOfType<NewCharacterController>())
         {
             Destroy(character.gameObject);
         }
@@ -84,10 +81,10 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     void ResetServer()
     {
 
-        DeleteObjects(NetworkManager.Instance.Networker.Players);
-
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
+            DeleteObjects(NetworkManager.Instance.Networker.Players);
+
             Debug.Log("about to disconnect server.");
             NetworkManager.Instance.Disconnect();
             Debug.Log("server disconnected.");
@@ -219,7 +216,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
-            Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+            Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].transform.position;
+            Debug.Log("Found spawn points");
 
             //PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;
             NewCharacterController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as NewCharacterController;
