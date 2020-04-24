@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rocks
   m_EditorClassIdentifier: 
   name: Rocks
-  prefab: {fileID: 0}
+  prefab: {fileID: 2072967502910790260, guid: dc90145278c768e4598307fba4f97a53, type: 3}
   bendFactor: 0
   color: {r: 1, g: 1, b: 1, a: 1}
   lightmapColor: {r: 1, g: 1, b: 1, a: 1}

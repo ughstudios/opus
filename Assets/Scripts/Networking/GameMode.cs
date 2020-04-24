@@ -312,7 +312,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
                 Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
-                NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
+                //NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
                 Debug.Log("Disconnect");
                 //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
