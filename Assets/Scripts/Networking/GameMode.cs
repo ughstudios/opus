@@ -109,7 +109,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             Debug.Log("server disconnected.");
 
 
-            StartCoroutine(ResetServerAfterDisconnect());
+            Invoke("BootUpServerAgain", 15);
 
             serverHasBeenReset = true;
             status = Server.AuthStatus.Available;
@@ -160,22 +160,16 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         });
     }
 
-    IEnumerator ResetServerAfterDisconnect()
+    void BootUpServerAgain()
     {
-        yield return new WaitForSeconds(10);
-
         GameObject serverObject = GameObject.FindWithTag("HostServer");
         Destroy(serverObject);
-
-        yield return new WaitForSeconds(10);
 
         Debug.Log("loaded server scene again.");
 
         SceneManager.LoadScene("Server");
 
         Debug.Log("loaded server scene again.");
-
-        yield return new WaitForSeconds(5);
     }
 
 
