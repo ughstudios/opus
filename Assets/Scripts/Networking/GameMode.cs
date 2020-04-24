@@ -25,9 +25,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         base.NetworkStart();
 
-        networkObject.matchTimer = initialMatchTimer;
-
-
     }
 
     public override void AllPlayersLeaveLobby(RpcArgs args)
@@ -58,6 +55,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             return;
         }
 
+        //Debug.Log("Number of game modes" + FindObjectsOfType<GameMode>().Length);
+
         if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
         {
             networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
@@ -69,6 +68,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 {
                     Debug.Log("About to reset server");
                     ResetServer();
+
                 }
             }
         }
@@ -78,19 +78,24 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     void DeleteObjects()
     {
         Debug.Log("deleting terrain and network objects");
-        Destroy(FindObjectOfType<TerrainManager>().gameObject);
-        Destroy(FindObjectOfType<Server>());
-        Destroy(FindObjectOfType<NetworkManager>());
-        Destroy(FindObjectOfType<MainThreadManager>());
-        foreach (var terrain in FindObjectsOfType<Terrain>())
-        {
-            Destroy(terrain.gameObject);
-        }
 
+        NetworkManager networkMgr = FindObjectOfType<NetworkManager>();
+        MainThreadManager mainThreadMgr = FindObjectOfType<MainThreadManager>();
+        if (networkMgr != null && mainThreadMgr != null)
+        {
+            Destroy(networkMgr.gameObject);
+            Destroy(mainThreadMgr.gameObject);
+        }
+        
         foreach (var character in FindObjectsOfType<NewCharacterController>())
         {
-            Destroy(character.gameObject);
+            if (character != null)
+            {
+                Destroy(character.gameObject);
+            }
         }
+
+        //cleanupNetworkObjects(NetworkManager.Instance.Networker);
     }
 
     void ResetServer()
@@ -166,12 +171,14 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
     IEnumerator BootUpServerAgain()
     {
+        Debug.Log("Waiting 15 seconds to reboot...");
         yield return new WaitForSeconds(15);
+        Debug.Log("15 seconds up, beginning reboot sequence...");
 
-        GameObject serverObject = GameObject.FindWithTag("HostServer");
+        Server serverObject = FindObjectOfType<Server>();
         if (serverObject != null)
         {
-            Destroy(serverObject);
+            Destroy(serverObject.gameObject);
         }
 
         Debug.Log("loaded server scene again.");
@@ -179,6 +186,9 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         SceneManager.LoadScene("Server");
 
         Debug.Log("loaded server scene again.");
+
+        Destroy(gameObject);
+
     }
 
     void OnDisable()
@@ -201,7 +211,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             return;
         }
 
-        //networkObject.matchTimer = initialMatchTimer;
+        networkObject.matchTimer = initialMatchTimer;
 
         Debug.Log("Game mode is being initialized!");
 
@@ -250,7 +260,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
-            Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].transform.position;
+            Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
             Debug.Log("Found spawn points");
 
             //PlayerController playerController = NetworkManager.Instance.InstantiatePlayer(position: spawnPoint) as PlayerController;

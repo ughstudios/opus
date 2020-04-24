@@ -61,9 +61,6 @@ public class Server : MonoBehaviour
 
     }
 
-
-
-
     void Start()
     {
         Debug.LogError("Server::Start() called again!");
