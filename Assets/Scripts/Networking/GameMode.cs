@@ -112,6 +112,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
             Invoke("BootUpServerAgain", 15);
 
+            Debug.Log("booting up server again...");
+
             serverHasBeenReset = true;
             status = Server.AuthStatus.Available;
         }
