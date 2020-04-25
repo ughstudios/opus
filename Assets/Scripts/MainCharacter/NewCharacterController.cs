@@ -102,6 +102,11 @@ public class NewCharacterController : DamageableEntity
 
         networkObject.health = health;
         networkObject.isDead = _isDead;
+
+        if (networkObject.IsOwner)
+        {
+            networkObject.SendRpc(RPC_SERVER__ANNOUNCE_PLAYER_NAME, Receivers.AllBuffered, SteamClient.Name);
+        }
     }
 
 

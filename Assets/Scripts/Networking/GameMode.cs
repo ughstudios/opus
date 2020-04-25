@@ -229,8 +229,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     }
 
 
-
-
     void Start()
     {
         if (!networkObject.IsServer)

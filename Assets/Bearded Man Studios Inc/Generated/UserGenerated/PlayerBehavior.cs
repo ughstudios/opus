@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][][][\"float\", \"float\", \"float\", \"bool\", \"bool\", \"int\", \"int\", \"int\"][\"string\", \"string\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"value\"][][][\"x\", \"z\", \"_movementSpeed\", \"_isGrounded\", \"_isAiming\", \"_aimInt\", \"_fireInt\", \"_hasSnipped\"][\"dyingPlayer\", \"killingPlayer\"]]")]
+	[GeneratedRPC("{\"types\":[[\"int\"][\"int\"][\"int\"][][][\"float\", \"float\", \"float\", \"bool\", \"bool\", \"int\", \"int\", \"int\"][\"string\", \"string\"][\"string\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"damage\"][\"amount\"][\"value\"][][][\"x\", \"z\", \"_movementSpeed\", \"_isGrounded\", \"_isAiming\", \"_aimInt\", \"_fireInt\", \"_hasSnipped\"][\"dyingPlayer\", \"killingPlayer\"][\"playerName\"]]")]
 	public abstract partial class PlayerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SERVER__TAKE_DAMAGE = 0 + 5;
@@ -15,6 +15,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		public const byte RPC_FIRE_ANIM = 4 + 5;
 		public const byte RPC_TRIGGER_WALK_ANIM = 5 + 5;
 		public const byte RPC_SERVER__ANNOUNCE_DEATH = 6 + 5;
+		public const byte RPC_SERVER__ANNOUNCE_PLAYER_NAME = 7 + 5;
 		
 		public PlayerNetworkObject networkObject = null;
 
@@ -35,6 +36,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			networkObject.RegisterRpc("FireAnim", FireAnim);
 			networkObject.RegisterRpc("TriggerWalkAnim", TriggerWalkAnim, typeof(float), typeof(float), typeof(float), typeof(bool), typeof(bool), typeof(int), typeof(int), typeof(int));
 			networkObject.RegisterRpc("Server_AnnounceDeath", Server_AnnounceDeath, typeof(string), typeof(string));
+			networkObject.RegisterRpc("Server_AnnouncePlayerName", Server_AnnouncePlayerName, typeof(string));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -142,6 +144,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// </summary>
 		public abstract void Server_AnnounceDeath(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// </summary>
+		public abstract void Server_AnnouncePlayerName(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

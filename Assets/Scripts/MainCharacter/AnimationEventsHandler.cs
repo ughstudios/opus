@@ -28,7 +28,7 @@ public class AnimationEventsHandler : MonoBehaviour
 		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
 		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
 		{
-			_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+			_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class AnimationEventsHandler : MonoBehaviour
 		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
 		{
 			Debug.Log("SteamName" + SteamClient.Name);
-			_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
+			_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName);
 		}
 	}
 
@@ -93,7 +93,7 @@ public class AnimationEventsHandler : MonoBehaviour
 
 	public void StartSniperAttack()
 	{
-		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile(SteamClient.Name);
+		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile(GetComponentInParent<NewCharacterController>().playerName);
 	}
 
 	public void StopSnipperAttack()

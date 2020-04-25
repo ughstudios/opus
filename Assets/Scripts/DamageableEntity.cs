@@ -26,6 +26,9 @@ public class DamageableEntity : PlayerBehavior
     public GameObject GlobalGameUI;
     public float DEATH_UI_MESSAGE_TIMER = 2;
 
+    public string playerName;
+
+    
 
     public void ResetStats()
     {
@@ -67,6 +70,12 @@ public class DamageableEntity : PlayerBehavior
 
 
         GlobalGameUI = GameObject.FindWithTag("Global Game UI");
+    }
+
+    public override void Server_AnnouncePlayerName(RpcArgs args)
+    {
+        string name = args.GetNext<string>();
+        playerName = name;
     }
 
     protected virtual void FixedUpdate()
@@ -112,7 +121,7 @@ public class DamageableEntity : PlayerBehavior
 
             if (networkObject.health <= 0)
             {
-                Debug.Log("DamageableEntity::killingPlayer" + killingPlayer);
+                Debug.Log("DamageableEntity::TakeDamage::killingPlayer: "  + killingPlayer);
                 AnnounceWhoKilledUs(killingPlayer);
             }
             else
@@ -126,7 +135,10 @@ public class DamageableEntity : PlayerBehavior
 
     void AnnounceWhoKilledUs(string killingPlayer)
     {
-        networkObject.SendRpc(RPC_SERVER__ANNOUNCE_DEATH, Receivers.All, SteamClient.Name, killingPlayer);
+        Debug.Log("DamageableEntity::AnnounceWhoKilledUs::killingPlayer " + killingPlayer);
+        Debug.Log("DamageableEntity::AnnounceWhoKilledUs::SteamClient.Name " + SteamClient.Name);
+        
+        networkObject.SendRpc(RPC_SERVER__ANNOUNCE_DEATH, Receivers.All, playerName, killingPlayer);
     }
 
     public override void Server_AnnounceDeath(RpcArgs args)
