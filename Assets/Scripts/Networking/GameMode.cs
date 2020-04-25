@@ -61,6 +61,12 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             networkObject.playerCount = NetworkManager.Instance.Networker.Players.Count;
 
+            if (NetworkManager.Instance.Networker.Players.Count <= 1 && networkObject.matchTimer < initialMatchTimer - 1)
+            {
+                ResetServer();
+            }
+
+
             if (NetworkManager.Instance.Networker.Players.Count >= 2)
             {
                 networkObject.matchTimer -= Time.deltaTime;
