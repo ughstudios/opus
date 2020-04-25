@@ -20,6 +20,8 @@ public class InitialLoadingScreen : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         unityCharacterController = GetComponent<CharacterController>();
 
+        SetupTerrain();
+
     }
 
     void SetupTerrain()
@@ -31,10 +33,8 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        if (tm == null)
+        if (tm != null)
         {
-            if (characterController.networkObject != null && characterController.networkObject.IsOwner)
-                SetupTerrain();
             return;
         }
 

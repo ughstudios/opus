@@ -58,6 +58,7 @@ public class TerrainManager : MonoBehaviour
     private float[,] detailOffsets;
 
     private int totalBiomeFrequency = 0;
+    private bool bGenerationStarted = false;
 
     [System.Serializable]
     public class TerrainSettings
@@ -214,6 +215,13 @@ public class TerrainManager : MonoBehaviour
 #if UNITY_SERVER
         return;
 #endif
+
+        if (bGenerationStarted)
+        {
+            return;
+        }
+
+        bGenerationStarted = true;
 
         if (seed == null)
             seed = "";
