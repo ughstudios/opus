@@ -33,11 +33,6 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        if (tm != null)
-        {
-            return;
-        }
-
         if (tm.TerrainExistsAt(transform.position))
         {
             characterController.enabled = true;
