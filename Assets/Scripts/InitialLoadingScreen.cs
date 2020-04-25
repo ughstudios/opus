@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BeardedManStudios.Forge.Networking.Unity;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Cameras;
@@ -19,11 +20,6 @@ public class InitialLoadingScreen : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         unityCharacterController = GetComponent<CharacterController>();
 
-        if (characterController.networkObject == null || characterController.networkObject.IsOwner)
-        {
-            SetupTerrain();
-        }
-
     }
 
     void SetupTerrain()
@@ -37,7 +33,8 @@ public class InitialLoadingScreen : MonoBehaviour
     {
         if (tm == null)
         {
-            SetupTerrain();
+            if (!NetworkManager.Instance.IsServer && characterController.networkObject.IsOwner)
+                SetupTerrain();
             return;
         }
 
