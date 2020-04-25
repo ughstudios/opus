@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33051584ecb029c4182080af9be916bc, type: 3}
+  m_Name: Rocks 2
+  m_EditorClassIdentifier: 
+  name: Rocks
+  prefab: {fileID: 8982752917371909848, guid: 920b24fb95746e74d990e9344ae895c9, type: 3}
+  bendFactor: 0
+  color: {r: 1, g: 1, b: 1, a: 1}
+  lightmapColor: {r: 1, g: 1, b: 1, a: 1}
+  minHeightScale: 1
+  minWidthScale: 1
+  maxHeightScale: 1.25
+  maxWidthScale: 1.25
+  minDistance: 200
+  relativeFrequency: 1

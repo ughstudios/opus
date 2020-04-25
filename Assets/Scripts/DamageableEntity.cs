@@ -129,6 +129,8 @@ public class DamageableEntity : PlayerBehavior
             string dyingPlayer = args.GetNext<string>();
             string killingPlayer = args.GetNext<string>();
 
+            Debug.Log("dying player: " + dyingPlayer + " killingPlayer: " + killingPlayer);
+
             GameObject go = Instantiate(DeathUI_Announcement_prefab, GlobalGameUI.transform);
             PlayerKilledUI pkilled = go.GetComponent<PlayerKilledUI>();
             pkilled.UpdateUI(dyingPlayer, killingPlayer);
