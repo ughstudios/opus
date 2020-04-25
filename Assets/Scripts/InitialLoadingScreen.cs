@@ -33,7 +33,7 @@ public class InitialLoadingScreen : MonoBehaviour
     {
         if (tm == null)
         {
-            if (!NetworkManager.Instance.IsServer && characterController.networkObject.IsOwner)
+            if (characterController.networkObject != null && characterController.networkObject.IsOwner)
                 SetupTerrain();
             return;
         }
