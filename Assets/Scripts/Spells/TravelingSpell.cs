@@ -99,7 +99,7 @@ public class TravelingSpell : ThrowObjBehavior
 		if (col.gameObject.tag == "Player")
 		{
 			DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
-
+			Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
 			de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
 		}
 			

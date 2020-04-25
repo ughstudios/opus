@@ -38,7 +38,7 @@ public class ClientConnect : MonoBehaviour
     public bool gameFound = false;
     private bool tryingServer = false;
     private bool ownsLobby = false;
-    private Lobby[] lobbyList;
+    private Lobby[] lobbyList = null;
     UDPClient client;
 
     public List<SteamId> allowedSteamIDs;
@@ -180,7 +180,7 @@ public class ClientConnect : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (lobbyList.Length > 0)
+        if (lobbyList != null && lobbyList.Length > 0)
         {
             foreach (var lobby in lobbyList)
             {

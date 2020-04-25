@@ -108,9 +108,16 @@ public class DamageableEntity : PlayerBehavior
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
+            Debug.Log("damageableEntity::TakeDamage::KillingPlayer: " + killingPlayer);
+
             if (networkObject.health <= 0)
             {
+                Debug.Log("DamageableEntity::killingPlayer" + killingPlayer);
                 AnnounceWhoKilledUs(killingPlayer);
+            }
+            else
+            {
+                Debug.Log("damageableentitiy::networkObject.health: " + networkObject.health);
             }
 
             return;
@@ -126,6 +133,11 @@ public class DamageableEntity : PlayerBehavior
     {
         MainThreadManager.Run(() =>
         {
+            if (NetworkManager.Instance != null && NetworkManager.Instance.IsServer)
+            {
+                return;
+            }
+
             string dyingPlayer = args.GetNext<string>();
             string killingPlayer = args.GetNext<string>();
 
@@ -168,7 +180,7 @@ public class DamageableEntity : PlayerBehavior
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);//send to connect screen
 
             //this is to allow proper respawning if player connects after losing
-            if (!NetworkManager.Instance.Networker.IsServer)
+            if (NetworkManager.Instance != null && !NetworkManager.Instance.Networker.IsServer)
             {
                 NetworkManager.Instance.Disconnect();
             }

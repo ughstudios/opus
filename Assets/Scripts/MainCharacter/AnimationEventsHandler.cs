@@ -75,6 +75,7 @@ public class AnimationEventsHandler : MonoBehaviour
 		GetComponentInParent<PlayerController>().ResetMovementSpeed();
 		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
 		{
+			Debug.Log("SteamName" + SteamClient.Name);
 			_throPos.GetComponent<SpellManager>().ThrowSpell(SteamClient.Name);
 		}
 	}
