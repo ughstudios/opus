@@ -533,7 +533,7 @@ public class NewCharacterController : DamageableEntity
                 _pauseMenu.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
             }
-            
+
         }
     }
 
