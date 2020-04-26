@@ -257,6 +257,9 @@ public class ClientConnect : MonoBehaviour
                         //ConnectToServer();
                         lobby.SetGameServer(hostAddress, port);
                         lobby.SetJoinable(false); // lock the lobby once we have started a match. 
+                        lobby.SetInvisible();
+                        lobby.SetPrivate();
+                        lobby.Refresh();
 
                         return;
                     }
