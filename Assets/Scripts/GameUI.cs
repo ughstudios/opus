@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI matchTimer;
     public TextMeshProUGUI playersLeft;
     private GameMode gameMode;
-
+    public GameObject playersKilledScrollBoxContent;
+    public ScrollRect playersKilledScrollBox;
 
     void Start()
     {

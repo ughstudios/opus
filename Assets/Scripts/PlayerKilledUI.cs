@@ -9,6 +9,6 @@ public class PlayerKilledUI : MonoBehaviour
 {
     public void UpdateUI(string dyingPlayer, string killingPlayer)
     {
-        GetComponentInChildren<TextMeshProUGUI>().text = dyingPlayer + " killed by " + killingPlayer;
+        GetComponent<TextMeshProUGUI>().text = dyingPlayer + " killed by " + killingPlayer;
     }
 }

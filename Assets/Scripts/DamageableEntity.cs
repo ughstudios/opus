@@ -28,6 +28,8 @@ public class DamageableEntity : PlayerBehavior
 
     public string playerName;
 
+    public GameObject playersKilledScrollBox;
+
     
 
     public void ResetStats()
@@ -160,7 +162,10 @@ public class DamageableEntity : PlayerBehavior
 
             Debug.Log("dying player: " + dyingPlayer + " killingPlayer: " + killingPlayer);
 
-            GameObject go = Instantiate(DeathUI_Announcement_prefab, GlobalGameUI.transform);
+            GameObject go = Instantiate(DeathUI_Announcement_prefab, GlobalGameUI.GetComponent<GameUI>().playersKilledScrollBoxContent.transform);
+            Canvas.ForceUpdateCanvases();
+            GlobalGameUI.GetComponent<GameUI>().playersKilledScrollBox.normalizedPosition = new Vector2(0, 0);
+
             PlayerKilledUI pkilled = go.GetComponent<PlayerKilledUI>();
             pkilled.UpdateUI(dyingPlayer, killingPlayer);
             
