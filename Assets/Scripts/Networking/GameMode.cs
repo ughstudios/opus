@@ -36,7 +36,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 return;
 
             Debug.Log("client lobby before  leaving: " + clientScript.ourLobbyId.Value);
-            clientScript.GetLobby().Leave();
+            clientScript.LeaveLobby();
             clientScript.ourLobbyId = new SteamId();
             Debug.Log("client lobby after leaving: " + clientScript.ourLobbyId.Value);
 

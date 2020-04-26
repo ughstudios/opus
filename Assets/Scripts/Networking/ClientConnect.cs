@@ -77,7 +77,16 @@ public class ClientConnect : MonoBehaviour
     private void OnDisable()
     {
         SteamClient.Shutdown();
+        UnregisterLobbyEvents();
 
+    }
+
+    void UnregisterLobbyEvents()
+    {
+        SteamMatchmaking.OnLobbyGameCreated -= SteamMatchmaking_OnLobbyGameCreated;
+        SteamMatchmaking.OnLobbyEntered -= SteamMatchmaking_OnLobbyEntered;
+        SteamMatchmaking.OnLobbyCreated -= SteamMatchmaking_OnLobbyCreated;
+        SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
     }
 
     private void Update()
@@ -85,19 +94,20 @@ public class ClientConnect : MonoBehaviour
         SteamClient.RunCallbacks();
     }
 
-    public Lobby GetLobby()
+    public async void LeaveLobby()
     {
+        lobbyList = await SteamMatchmaking.LobbyList.RequestAsync();
         foreach (var lobby in lobbyList)
         {
             if (lobby.Id == ourLobbyId)
             {
-                return lobby;
+                lobby.Leave();
             }
         }
 
-        return new Lobby();
+        UnregisterLobbyEvents();
     }
-
+    
     public async void FindMatch()
     {
         exitGameBtn.enabled = false;
@@ -109,7 +119,6 @@ public class ClientConnect : MonoBehaviour
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
-
 
         Debug.Log("Lobbies Count: " + lobbyList.Length);
 
@@ -180,16 +189,7 @@ public class ClientConnect : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (lobbyList != null && lobbyList.Length > 0)
-        {
-            foreach (var lobby in lobbyList)
-            {
-                if (lobby.Id == ourLobbyId)
-                {
-                    lobby.Leave();
-                }
-            }
-        }
+        LeaveLobby();
     }
 
     private void SteamMatchmaking_OnLobbyEntered(Lobby lobby)
@@ -321,13 +321,7 @@ public class ClientConnect : MonoBehaviour
                 tryingServer = false;
 
 
-            foreach (var lobby in lobbyList)
-            {
-                if (lobby.Id == ourLobbyId)
-                {
-                    lobby.Leave();
-                }
-            }
+            LeaveLobby();
 
 
             SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
