@@ -40,6 +40,7 @@ public class ClientConnect : MonoBehaviour
     private bool ownsLobby = false;
     private Lobby[] lobbyList = null;
     UDPClient client;
+    public Lobby ourlobby;
 
     public List<SteamId> allowedSteamIDs;
 
@@ -197,6 +198,7 @@ public class ClientConnect : MonoBehaviour
         Debug.Log("Joined lobby.");
         lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
 
+        ourlobby = lobby;
         ourLobbyId = lobby.Id;
         isInLobby = true;
 

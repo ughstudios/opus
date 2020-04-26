@@ -26,7 +26,7 @@ public class Chat : MonoBehaviour
     {
         string message = SteamClient.Name + ":" + chatMessageToSend.text;
 
-        client.GetLobby().SendChatString(message);
+        client.ourlobby.SendChatString(message);
         chatMessageToSend.text = "";
 
         chatMessageToSend.DeactivateInputField();
