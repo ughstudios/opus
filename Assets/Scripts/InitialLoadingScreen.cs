@@ -41,7 +41,7 @@ public class InitialLoadingScreen : MonoBehaviour
             SetupTerrain();
         }
 
-        if (tm.TerrainExistsAt(transform.position))
+        if (tm != null && tm.TerrainExistsAt(transform.position))
         {
             characterController.enabled = true;
             capsuleCollider.enabled = true;
