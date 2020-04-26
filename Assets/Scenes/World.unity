@@ -793,9 +793,9 @@ MonoBehaviour:
   noiseScale: 250
   genSettings:
     length: 64
-    height: 256
-    heightMapRes: 257
-    alphaMapRes: 257
+    height: 128
+    heightMapRes: 129
+    alphaMapRes: 129
     detailMapRes: 65
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
@@ -811,9 +811,9 @@ MonoBehaviour:
   biomeCenterSpacing: 250
   maxBiomeCenterOffset: 100
   biomeBlend: 100
-  minTreeDistance: 1
-  maxMinTreeDistance: 20
-  minBorderTreeDistance: 0.5
+  minTreeDistance: 5
+  maxMinTreeDistance: 50
+  minBorderTreeDistance: 1.5
   treeTestPoints: 30
   minBiomeTreeStrength: 0.8
 --- !u!4 &1759155622
