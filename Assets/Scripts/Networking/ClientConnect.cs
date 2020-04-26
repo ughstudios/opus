@@ -106,6 +106,8 @@ public class ClientConnect : MonoBehaviour
             }
         }
 
+        ourlobby.Leave();
+
         UnregisterLobbyEvents();
     }
     
