@@ -318,6 +318,13 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
                 Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
+
+                if (NetworkManager.Instance.Networker.Players.Count <= 0)
+                {
+                    ResetServer();
+                    return;
+                }
+
                 //NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
                 Debug.Log("Disconnect");
