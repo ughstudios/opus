@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[]]")]
+	[GeneratedRPC("{\"types\":[[][]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[][]]")]
 	public abstract partial class GameModeBehavior : NetworkBehavior
 	{
 		public const byte RPC_ALL_PLAYERS_LEAVE_LOBBY = 0 + 5;
+		public const byte RPC_PICK_RANDOM_TERRAIN_SEED = 1 + 5;
 		
 		public GameModeNetworkObject networkObject = null;
 
@@ -23,6 +24,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("AllPlayersLeaveLobby", AllPlayersLeaveLobby);
+			networkObject.RegisterRpc("PickRandomTerrainSeed", PickRandomTerrainSeed);
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -103,6 +105,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// </summary>
 		public abstract void AllPlayersLeaveLobby(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// </summary>
+		public abstract void PickRandomTerrainSeed(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

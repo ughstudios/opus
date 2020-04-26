@@ -21,10 +21,23 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     private bool serverHasBeenReset = false;
     private List<NetworkObject> toDelete = new List<NetworkObject>();
 
+    public int SEED_MIN = 1;
+    public int SEED_MAX = 65000;
+
     protected override void NetworkStart()
     {
         base.NetworkStart();
 
+        if (networkObject.IsOwner)
+        {
+            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered);
+        }
+    }
+
+    public override void PickRandomTerrainSeed(RpcArgs args)
+    {
+        TerrainManager tm = FindObjectOfType<TerrainManager>();
+        tm.seed = Random.Range(SEED_MIN, SEED_MAX).ToString();
     }
 
     public override void AllPlayersLeaveLobby(RpcArgs args)

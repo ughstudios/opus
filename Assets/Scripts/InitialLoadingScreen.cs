@@ -13,6 +13,7 @@ public class InitialLoadingScreen : MonoBehaviour
     private CharacterController unityCharacterController;
     
     private TerrainManager tm;
+    private bool terrainGenerationStarted = false;
 
     void Start()
     {
@@ -20,7 +21,8 @@ public class InitialLoadingScreen : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         unityCharacterController = GetComponent<CharacterController>();
 
-        SetupTerrain();
+        
+        //SetupTerrain();
 
     }
 
@@ -29,10 +31,16 @@ public class InitialLoadingScreen : MonoBehaviour
         tm = FindObjectOfType<TerrainManager>();
         tm.follow.Add(gameObject);
         tm.StartGeneration();
+        terrainGenerationStarted = true;
     }
 
     void Update()
     {
+        if ( tm.seed != "" && !terrainGenerationStarted )
+        {
+            SetupTerrain();
+        }
+
         if (tm.TerrainExistsAt(transform.position))
         {
             characterController.enabled = true;
