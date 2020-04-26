@@ -66,14 +66,17 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
                 ResetServer();
             }
 
-            if (NetworkManager.Instance.Networker.Players.Count >= 2)
+            if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
-                networkObject.matchTimer -= Time.deltaTime;
-                if (networkObject.matchTimer < 0)
+                if (NetworkManager.Instance.Networker.Players.Count >= 2)
                 {
-                    Debug.Log("Update::About to reset server");
-                    ResetServer();
+                    networkObject.matchTimer -= Time.deltaTime;
+                    if (networkObject.matchTimer < 0)
+                    {
+                        Debug.Log("Update::About to reset server");
+                        ResetServer();
 
+                    }
                 }
             }
         }
