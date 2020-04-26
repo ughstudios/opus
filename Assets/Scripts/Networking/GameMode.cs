@@ -21,6 +21,8 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     private bool serverHasBeenReset = false;
     private List<NetworkObject> toDelete = new List<NetworkObject>();
 
+    private string seedValue;
+
     public int SEED_MIN = 1;
     public int SEED_MAX = 65000;
 
@@ -28,16 +30,19 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         base.NetworkStart();
 
+
         if (networkObject.IsOwner)
         {
-            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered);
+            seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
+            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);
         }
     }
 
     public override void PickRandomTerrainSeed(RpcArgs args)
     {
+        string seedNumber = args.GetNext<string>();
         TerrainManager tm = FindObjectOfType<TerrainManager>();
-        tm.seed = Random.Range(SEED_MIN, SEED_MAX).ToString();
+        tm.seed = seedNumber;
     }
 
     public override void AllPlayersLeaveLobby(RpcArgs args)

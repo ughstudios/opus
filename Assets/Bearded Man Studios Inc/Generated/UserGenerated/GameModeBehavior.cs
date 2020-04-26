@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[][]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[][]]")]
+	[GeneratedRPC("{\"types\":[[][\"string\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[][\"seedValue\"]]")]
 	public abstract partial class GameModeBehavior : NetworkBehavior
 	{
 		public const byte RPC_ALL_PLAYERS_LEAVE_LOBBY = 0 + 5;
@@ -24,7 +24,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("AllPlayersLeaveLobby", AllPlayersLeaveLobby);
-			networkObject.RegisterRpc("PickRandomTerrainSeed", PickRandomTerrainSeed);
+			networkObject.RegisterRpc("PickRandomTerrainSeed", PickRandomTerrainSeed, typeof(string));
 
 			networkObject.onDestroy += DestroyGameObject;
 
