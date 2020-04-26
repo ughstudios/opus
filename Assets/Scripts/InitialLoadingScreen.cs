@@ -20,15 +20,15 @@ public class InitialLoadingScreen : MonoBehaviour
         characterController = GetComponent<NewCharacterController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         unityCharacterController = GetComponent<CharacterController>();
+        tm = FindObjectOfType<TerrainManager>();
 
-        
+
         //SetupTerrain();
 
     }
 
     void SetupTerrain()
     {
-        tm = FindObjectOfType<TerrainManager>();
         tm.follow.Add(gameObject);
         tm.StartGeneration();
         terrainGenerationStarted = true;
