@@ -36,7 +36,7 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        if ( tm.seed != "" && !terrainGenerationStarted )
+        if ( tm != null && tm.seed != "" && !terrainGenerationStarted )
         {
             SetupTerrain();
         }
