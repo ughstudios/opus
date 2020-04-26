@@ -14,6 +14,7 @@ using System.IO;
 using System.Net;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Runtime.Remoting;
 
 public class ClientConnect : MonoBehaviour
 {
@@ -278,6 +279,8 @@ public class ClientConnect : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyGameCreated(Lobby lobby, uint ip, ushort port, SteamId steamid)
     {
+        SteamMatchmaking.OnLobbyGameCreated -= SteamMatchmaking_OnLobbyGameCreated;
+
         Debug.Log("Lobby owner has found us a server, connecting.");
         var parsedIP = IPAddress.Parse(ip.ToString()).ToString();
         Debug.Log("IP: " + parsedIP);
@@ -319,6 +322,8 @@ public class ClientConnect : MonoBehaviour
 
     private void Client_disconnected(NetWorker sender)
     {
+        client.disconnected -= Client_disconnected;
+
         MainThreadManager.Run(() =>
         {
             Cursor.lockState = CursorLockMode.None;
@@ -341,6 +346,8 @@ public class ClientConnect : MonoBehaviour
 
     private void Client_connectAttemptFailed(NetWorker sender)
     {
+        client.connectAttemptFailed -= Client_connectAttemptFailed;
+
         MainThreadManager.Run(() =>
         {
             Debug.LogError("Connect attempt failed.");
@@ -351,6 +358,8 @@ public class ClientConnect : MonoBehaviour
 
     public void OnAccepted(NetWorker sender)
     {
+        client.serverAccepted -= OnAccepted;
+
         /*MainThreadManager.Run(() =>
         {
             Debug.Log("Accepted");
