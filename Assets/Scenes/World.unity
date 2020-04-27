@@ -15,16 +15,16 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.48235297, g: 0.50980395, b: 0.5176471, a: 1}
+  m_FogColor: {r: 0.5161979, g: 0.6919595, b: 0.754717, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.00005
   m_LinearFogStart: 0
-  m_LinearFogEnd: 1000
+  m_LinearFogEnd: 500
   m_AmbientSkyColor: {r: 0.39607844, g: 0.4392157, b: 0.45882353, a: 1}
   m_AmbientEquatorColor: {r: 0.20392157, g: 0.21568628, b: 0.21568628, a: 1}
   m_AmbientGroundColor: {r: 0.14117648, g: 0.14509805, b: 0.14901961, a: 1}
-  m_AmbientIntensity: 1
-  m_AmbientMode: 1
+  m_AmbientIntensity: 1.12
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 980c935fd9e655a4a9b624f533125c13, type: 2}
   m_HaloStrength: 0.5
@@ -55,7 +55,7 @@ LightmapSettings:
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
-    m_Resolution: 2
+    m_Resolution: 0.5
     m_BakeResolution: 160
     m_AtlasSize: 4096
     m_AO: 1
@@ -1676,6 +1676,11 @@ PrefabInstance:
     - target: {fileID: 130451063280497641, guid: 5c3be738c94337945b449df3309e8285,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7693516128934543118, guid: 5c3be738c94337945b449df3309e8285,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

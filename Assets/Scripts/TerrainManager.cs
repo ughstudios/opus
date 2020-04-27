@@ -504,7 +504,7 @@ public class TerrainManager : MonoBehaviour
 
         GameObject obj = Terrain.CreateTerrainGameObject(data);
         sec.terrain = obj.GetComponent<Terrain>();
-        
+
         //sec.terrain.treeBillboardDistance = 150;
 
         sec.terrain.allowAutoConnect = true;
