@@ -26,9 +26,18 @@ public class AnimationEventsHandler : MonoBehaviour
 	{
 		GetComponent<Animator>().SetBool("isThrowing", false);
 		GetComponentInParent<NewCharacterController>().ResetMovementSpeed();
-		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
+
+		if (GetComponentInParent<NewCharacterController>().networkObject != null)
 		{
-			_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName);
+			if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
+			{
+				_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName, GetComponentInParent<NewCharacterController>()._idNum);
+			}
+		}
+		
+		if(GetComponentInParent<NewCharacterController>().networkObject == null) 
+		{
+			_throPos.GetComponent<SpellManager>().ThrowSpell();//this is for testing outside of network play
 		}
 	}
 
@@ -76,7 +85,7 @@ public class AnimationEventsHandler : MonoBehaviour
 		if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
 		{
 			Debug.Log("SteamName" + SteamClient.Name);
-			_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName);
+			_throPos.GetComponent<SpellManager>().ThrowSpell(GetComponentInParent<NewCharacterController>().playerName, GetComponentInParent<NewCharacterController>()._idNum);
 		}
 	}
 
@@ -93,7 +102,18 @@ public class AnimationEventsHandler : MonoBehaviour
 
 	public void StartSniperAttack()
 	{
-		_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile(GetComponentInParent<NewCharacterController>().playerName);
+		if (GetComponentInParent<NewCharacterController>().networkObject != null)
+		{
+			if (GetComponentInParent<NewCharacterController>().networkObject.IsOwner)
+			{
+				_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile(GetComponentInParent<NewCharacterController>().playerName, GetComponentInParent<NewCharacterController>()._idNum);
+			}
+		}
+
+		if (GetComponentInParent<NewCharacterController>().networkObject == null)
+		{
+			_throPos.GetComponent<SpellManager>().ThrowSnipperPorjectile();//this is for testing outside of network play
+		}
 	}
 
 	public void StopSnipperAttack()

@@ -15,14 +15,14 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.47450984, g: 0.63529414, b: 0.7372549, a: 0}
+  m_FogColor: {r: 0.48235297, g: 0.50980395, b: 0.5176471, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.00005
   m_LinearFogStart: 0
   m_LinearFogEnd: 1000
-  m_AmbientSkyColor: {r: 0.3529412, g: 0.5411765, b: 0.6666667, a: 1}
-  m_AmbientEquatorColor: {r: 0.3019608, g: 0.23529412, b: 0.19607843, a: 1}
-  m_AmbientGroundColor: {r: 0.21176471, g: 0.1764706, b: 0.13725491, a: 1}
+  m_AmbientSkyColor: {r: 0.39607844, g: 0.4392157, b: 0.45882353, a: 1}
+  m_AmbientEquatorColor: {r: 0.20392157, g: 0.21568628, b: 0.21568628, a: 1}
+  m_AmbientGroundColor: {r: 0.14117648, g: 0.14509805, b: 0.14901961, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 655552845}
-  m_IndirectSpecularColor: {r: 0.19253647, g: 0.32504854, b: 0.4385551, a: 1}
+  m_IndirectSpecularColor: {r: 0.16613644, g: 0.18945655, b: 0.2004749, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -377,22 +377,22 @@ PrefabInstance:
     - target: {fileID: 1085461326358753027, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.81915206
+      value: -0.000000042675254
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753027, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.21643965
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753027, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.976296
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753027, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.57357645
+      value: -0.000000009460877
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753027, guid: f3b761e243908254ebba706146135423,
         type: 3}
@@ -417,12 +417,12 @@ PrefabInstance:
     - target: {fileID: 1085461326358753026, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.9490197
+      value: 0.9176471
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753026, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.95294124
+      value: 0.7372549
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753026, guid: f3b761e243908254ebba706146135423,
         type: 3}
@@ -432,7 +432,7 @@ PrefabInstance:
     - target: {fileID: 1085461326358753026, guid: f3b761e243908254ebba706146135423,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.93725497
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1085461326358753026, guid: f3b761e243908254ebba706146135423,
         type: 3}

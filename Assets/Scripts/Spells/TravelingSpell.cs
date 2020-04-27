@@ -9,7 +9,8 @@ public class TravelingSpell : ThrowObjBehavior
 	[SerializeField] float _speed = 80f;
 	[SerializeField] float	_duration = 0.0f,
 							_initDuration = 0.0f,
-							_destroyTimeMargin = 2.0f;
+							_destroyTimeMargin = 2.0f,
+							_maxLifeTime = 6.0f;
 
 	[SerializeField] int _damageAmount = 5;
 	Transform _firePos = null;
@@ -18,6 +19,7 @@ public class TravelingSpell : ThrowObjBehavior
 							_reverse = false;
 
 	public string playerWhoSpawnedUs;
+	public uint _netId;
 
 	protected override void NetworkStart()
 	{
@@ -42,9 +44,6 @@ public class TravelingSpell : ThrowObjBehavior
 
 	void Update()
 	{
-
-		//transform.position += (transform.forward * _speed * Time.deltaTime);
-
 		if (networkObject != null)
 		{
 			if (!networkObject.IsOwner)
@@ -72,8 +71,23 @@ public class TravelingSpell : ThrowObjBehavior
 
 			if (_duration <= -destroyTime)
 			{
-				networkObject.Destroy();
+				if (networkObject != null)
+					networkObject.Destroy();
+				else
+					Destroy(gameObject);
 			}
+		}
+
+		//in case someone fires into the sky to prevent the spell from traveling forever
+		_maxLifeTime -= Time.deltaTime;
+
+		if (_maxLifeTime <= 0.0f)
+		{
+			if (networkObject != null)
+				networkObject.Destroy();
+			else
+				Destroy(gameObject);
+
 		}
 	}
 
@@ -98,9 +112,13 @@ public class TravelingSpell : ThrowObjBehavior
 
 		if (col.gameObject.tag == "Player")
 		{
-			DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
-			Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
-			de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
+			if(col.gameObject.GetComponent<NewCharacterController>().playerName != playerWhoSpawnedUs)//so we can't hurt ourselves with our own attacks 
+			{
+				DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
+				Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
+				de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
+				GetComponent<Collider>().enabled = false;
+			}
 		}
 			
 	}

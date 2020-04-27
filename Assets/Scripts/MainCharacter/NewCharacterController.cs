@@ -80,6 +80,7 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] GameObject _chat;
     [SerializeField] TMP_InputField _chatInput;
     [SerializeField] GameObject _pauseMenu;
+    public uint _idNum;
 
     void Awake()
     {
@@ -173,6 +174,9 @@ public class NewCharacterController : DamageableEntity
                 _anim.SetInteger("fireInt", networkObject.fireInt);
                 _anim.SetInteger("aimInt", networkObject.aimInt);
                 _anim.SetInteger("hasSnipped", networkObject.hasSnipped);
+
+                _idNum = networkObject.NetworkId;
+                Destroy(_camera.GetComponentInChildren<AudioListener>());//Turn this off from other cams, will give log a few times until destroyed
             }
         }
 
@@ -480,10 +484,10 @@ public class NewCharacterController : DamageableEntity
             _camera.SetActive(false);
         }
 
-        if (networkObject.IsServer)
-        {
-            _camera.SetActive(false);
-        }
+        //if (networkObject.IsServer)
+        //{
+        //    _camera.SetActive(false);
+        //}
 
         if (networkObject.IsOwner)
         {
@@ -506,7 +510,7 @@ public class NewCharacterController : DamageableEntity
         if (health <= 100 && health >= 0)
             _healthCanvasValue = (float)health / 100;
 
-        _healthTransform.transform.localScale = new Vector3(_healthCanvasValue, 1, 1);
+        _healthTransform.transform.localScale = new Vector3(1, _healthCanvasValue, 1);
     }
 
     void Die()

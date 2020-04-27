@@ -764,7 +764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hostAddress: 
   port: 15937
-  masterServerHost: 45.63.11.159
+  masterServerHost: 13.90.19.77
   masterServerPort: 15940
   steamDevAppID: 480
   networkManagerPrefab: {fileID: 9112252649110997610, guid: aa7ff14af1e48074f8c7772f20a55889,

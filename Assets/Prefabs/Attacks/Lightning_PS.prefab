@@ -91,19 +91,6 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &5324413976403033323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123814328819167340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f4dd9f7d3e108249ac0b0a5a967e76d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _damage: 1
 --- !u!1 &1765364573954701677
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +106,7 @@ GameObject:
   - component: {fileID: 1084057488}
   - component: {fileID: 1084057489}
   m_Layer: 0
-  m_Name: Lightening_PS
+  m_Name: Lightning_PS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4916,7 +4903,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1084057489
 MonoBehaviour:
@@ -4938,6 +4925,7 @@ MonoBehaviour:
   _didHit: 0
   _useGravity: 0
   _reverse: 0
+  playerWhoSpawnedUs: 
 --- !u!1001 &660811782700318890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5012,12 +5000,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89b3cc45b9ce5f443873c8e47bb20498, type: 3}
---- !u!1 &1123814328819167340 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 482795543777276102, guid: 89b3cc45b9ce5f443873c8e47bb20498,
-    type: 3}
-  m_PrefabInstance: {fileID: 660811782700318890}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1123814328819167347 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 482795543777276121, guid: 89b3cc45b9ce5f443873c8e47bb20498,

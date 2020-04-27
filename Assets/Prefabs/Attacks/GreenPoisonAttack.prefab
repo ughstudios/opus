@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3109514018544717777}
   - component: {fileID: 3109514018544717788}
   m_Layer: 0
-  m_Name: GreenPosionAttack
+  m_Name: GreenPoisonAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -80,10 +80,11 @@ MonoBehaviour:
   _duration: 0
   _initDuration: 0
   _destroyTimeMargin: 2
-  _damageAmount: 10
+  _damageAmount: 5
   _didHit: 0
   _useGravity: 1
   _reverse: 0
+  playerWhoSpawnedUs: 
 --- !u!1001 &3109514017712772584
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ public class DamageableEntity : PlayerBehavior
         if (networkObject != null)
             networkObject.health = MaxEverything;
 
-        if (networkObject.IsOwner)
+        if (networkObject != null && networkObject.IsOwner)
         {
             networkObject.SendRpc(RPC_SERVER__ANNOUNCE_PLAYER_NAME, Receivers.AllBuffered, SteamClient.Name);
         }
