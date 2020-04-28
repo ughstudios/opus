@@ -18,4 +18,6 @@ public class Biome : ScriptableObject
             new List<DetailPrototypeData>();
     public List<TreePrototypeData> treePrototypes =
             new List<TreePrototypeData>();
+
+    public GameObject ambientPrefab;
 }

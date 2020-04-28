@@ -349,6 +349,10 @@ public class TerrainManager : MonoBehaviour
 
         float[,] heightmap = null;
         float[,,] alphamaps = null;
+        int bx, bz;
+        float height;
+        Vector3 targLoc;
+        List<SectionCoord> biomeCenters;
 
         List<Biome> containedBiomes = null;
         List<DetailPrototypeData> detailPrototypeDatas = null;
@@ -513,6 +517,29 @@ public class TerrainManager : MonoBehaviour
                 genSettings.length / 2);
         yield return null;
         sec.terrain.Flush();
+        yield return null;
+        bx = Mathf.RoundToInt((coord.x * genSettings.length) /
+                biomeCenterSpacing);
+        bz = Mathf.RoundToInt((coord.z * genSettings.length) /
+                biomeCenterSpacing);
+        biomeCenters = SectionsInRadius(new SectionCoord(bx, bx), 2);
+        for (int i = 0; i < biomeCenters.Count; i++)
+        {
+            BiomeCenter center = SafeGetBiomeCenter(biomeCenters[i]);
+            if (center.biome.ambientPrefab == null)
+                continue;
+            height = sec.terrain.SampleHeight(center.center);
+            targLoc = new Vector3(center.center.x, height, center.center.z +
+                    sec.terrain.GetPosition().y);
+            if (sec.terrain.terrainData.bounds.Contains(targLoc -
+                    sec.terrain.transform.position))
+            {
+                Instantiate(center.biome.ambientPrefab, targLoc,
+                        Quaternion.identity, sec.terrain.transform);
+            }
+        }
+
+        yield return null;
         terrains.Add(coord, sec);
         if (numGenThreads > 0)
             numGenThreads--;
@@ -584,7 +611,7 @@ public class TerrainManager : MonoBehaviour
         float nz = center.coord.z * biomeCenterSpacing + ((rng.Value() *
                 maxBiomeCenterOffset * 2) - maxBiomeCenterOffset);
 
-        center.center = new Vector3(nx, 0f, nz);
+        center.center = new Vector3(nx, 1f, nz);
 
         int index = (int)(rng.ValueUInt() % totalBiomeFrequency);
         for (int i = 0; i < biomes.Count; i++)
@@ -1174,7 +1201,7 @@ public class TerrainManager : MonoBehaviour
         TerrainSection sec = terrains[coord];
         if (sec == null || sec.terrain == null)
             return Mathf.NegativeInfinity;
-        return sec.terrain.SampleHeight(vLoc);
+        return sec.terrain.SampleHeight(vLoc) + sec.terrain.GetPosition().y;
     }
 
     public void DestroyAll()
