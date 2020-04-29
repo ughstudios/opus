@@ -556,6 +556,7 @@ public class TerrainManager : MonoBehaviour
                 bd.biome = center.biome;
                 bd.center = targLoc;
                 bd.boundaries = center.properBounds.Values.ToList();
+                SimplifyConvexPlanes(bd.boundaries, bd.center);
             }
         }
 
@@ -708,6 +709,7 @@ public class TerrainManager : MonoBehaviour
             weakBounds.Add(new Plane(plane.normal,
                     middle - plane.normal * (biomeBlend / 2f)));
         }
+        SimplifyConvexPlanes(weakBounds, self);
         lock (target)
         {
             if (!target.boundsCalculated)
@@ -717,6 +719,33 @@ public class TerrainManager : MonoBehaviour
                 target.boundsCalculated = true;
             }
         }
+    }
+
+    private void SimplifyConvexPlanes(List<Plane> planes, Vector3 testPoint)
+    {
+        List<Vector3> points = new List<Vector3>();
+        for (int i = 0; i < planes.Count; i++)
+        {
+            points.Add(planes[i].ClosestPointOnPlane(testPoint));
+        }
+        for (int i = 0; i < planes.Count; i++)
+            for (int j = i + 1; j < planes.Count; j++)
+            {
+                if (!planes[i].GetSide(points[j]))
+                {
+                    planes.RemoveAt(j);
+                    points.RemoveAt(j);
+                    j--;
+                    continue;
+                }
+                if (!planes[j].GetSide(points[i]))
+                {
+                    planes.RemoveAt(i);
+                    points.RemoveAt(i);
+                    i--;
+                    break;
+                }
+            }
     }
 
     private List<BiomeStrength> GetBiomes(Vector3 vLoc)
