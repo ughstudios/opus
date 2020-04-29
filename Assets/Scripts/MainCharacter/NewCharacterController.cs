@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using BeardedManStudios.Forge.Networking;
 using UnityEngine.SceneManagement;
@@ -28,7 +29,8 @@ public class NewCharacterController : DamageableEntity
 
     [SerializeField]
     float _movementSpeed = 12.0f,
-                            _initMovementSpeed = 0.0f;
+                            _initMovementSpeed = 0.0f,
+                            _runSpeed = 24f;
 
     [SerializeField] float _gravity = -9.81f;
 
@@ -40,8 +42,6 @@ public class NewCharacterController : DamageableEntity
                             _comingDown = false;
 
     [SerializeField] float _jumpHeight = 20f;
-
-    //[SerializeField] Animator _anim = null;
 
     //for attacks
     [SerializeField] bool _isAiming = false;
@@ -72,7 +72,15 @@ public class NewCharacterController : DamageableEntity
     //UI refill indicators
     public RectTransform _poisonReflillTransform = null,
                             _fireReflillTransform = null,
-                            _healthTransform = null;
+                            _healthTransform = null,
+                            _staminaTransform = null;
+    [SerializeField] GameObject _staminaObj = null;
+    [SerializeField] bool   _isRunning = false,
+                            _staminaIsFull = false;
+    [SerializeField] float  _staminaLevel = 4.0f,
+                            _initStaminaLevel = 0.0f;
+    [SerializeField] Image _staminaImageToChange = null;
+    [SerializeField] Sprite[] _staminaImages = new Sprite[2];
 
     [SerializeField] float _healthCanvasValue;
 
@@ -97,6 +105,7 @@ public class NewCharacterController : DamageableEntity
         _initMovementSpeed = _movementSpeed;
         _initPoisonCoolDownTime = _poisonCoolDownTime;
         _initFireCoolTime = _fireCoolDownTime;
+        _initStaminaLevel = _staminaLevel;
 
         SetMaterialCollection();
     }
@@ -222,6 +231,7 @@ public class NewCharacterController : DamageableEntity
         SnipAttack();
         HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
         HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
+        HudHorizontalMeter(_staminaTransform, _staminaLevel, _initStaminaLevel);//For sprinting
         Die();
         TogglePauseMenu();
     }
@@ -273,9 +283,52 @@ public class NewCharacterController : DamageableEntity
 
     void MovePlayer(float x, float z)
     {
+
+        if (Input.GetKey(KeyCode.LeftControl))
+            _staminaObj.SetActive(true);
+        else
+            _staminaObj.SetActive(false);
+
+        if (Input.GetKey(KeyCode.LeftControl) && _staminaIsFull)
+        {
+            _staminaImageToChange.sprite = _staminaImages[0];
+
+            if (_staminaLevel > 0)
+            {
+                _isRunning = true;
+                _staminaLevel -= Time.deltaTime;
+
+                if (_staminaLevel <= 0.0f)
+                {
+                    _staminaIsFull = false;
+                    _isRunning = false;
+                }
+            }
+        }
+        else {
+
+            _isRunning = false;
+            _staminaImageToChange.sprite = _staminaImages[1];
+
+            if (_staminaLevel < _initStaminaLevel)
+            {
+                _staminaLevel += Time.deltaTime;
+            }
+
+            if (_staminaLevel >= _initStaminaLevel) _staminaIsFull = true;
+        }
+        
+
         _moveInput = transform.right * x + transform.forward * z;
 
-        _charController.Move(_moveInput * _movementSpeed * Time.deltaTime);
+        if (_isRunning)
+        {
+            _charController.Move(_moveInput * _runSpeed * Time.deltaTime);
+        }
+        else
+        {
+            _charController.Move(_moveInput * _movementSpeed * Time.deltaTime);
+        }
 
         _velocity.y += _gravity * Time.deltaTime;
 
@@ -524,6 +577,13 @@ public class NewCharacterController : DamageableEntity
         float poisonRefillVal = attackCoolDownTime;
 
         hudAttackTransform.transform.localScale = new Vector3(1, poisonRefillVal, 1);
+    }
+
+    void HudHorizontalMeter(Transform boostTransform, float boostCoolDownTime, float divisibleBy)
+    {
+        float horizontalRefillVal = boostCoolDownTime/divisibleBy;
+
+        boostTransform.transform.localScale = new Vector3(horizontalRefillVal, 1, 1);
     }
 
     void SyncWithNetworkViaFixedUpate()
