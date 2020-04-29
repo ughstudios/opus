@@ -82,12 +82,21 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] GameObject _pauseMenu;
     public uint _idNum;
 
+    //To show enemies different from us
+    [SerializeField] bool _enemiesMaterialChanged = false;
+    [SerializeField] SkinnedMeshRenderer _enemyRenderer;
+    [SerializeField] Material _enemyMaterial;
+    [SerializeField] Material[] _enemyMaterialsHolder;
+
+
     void Awake()
     {
         _charController = GetComponent<CharacterController>();
         _initMovementSpeed = _movementSpeed;
         _initPoisonCoolDownTime = _poisonCoolDownTime;
         _initFireCoolTime = _fireCoolDownTime;
+
+        SetMaterialCollection();
     }
 
     protected override void NetworkStart()
@@ -199,6 +208,35 @@ public class NewCharacterController : DamageableEntity
     {
         base.FixedUpdate();
         SyncWithNetworkViaFixedUpate();
+    }
+
+    void SetMaterialCollection()//this is to set the new material to place on "Enemies" on our end
+    {
+        _enemyMaterialsHolder = new Material[_enemyRenderer.materials.Length];
+
+        int matEl = 0;
+
+        foreach (Material item in _enemyRenderer.materials)
+        {
+            if (matEl < _enemyRenderer.materials.Length - 1)
+            {
+                _enemyMaterialsHolder[matEl] = item;
+            }
+            else
+            {
+                _enemyMaterialsHolder[matEl] = _enemyMaterial;
+            }
+
+            matEl++;
+        }
+    }
+    void ChangeEnemiesMaterial()
+    {
+        if (!_enemiesMaterialChanged)
+        {
+            _enemyRenderer.materials = _enemyMaterialsHolder;
+            _enemiesMaterialChanged = true;
+        }
     }
 
     void PhysicsCheck()
@@ -482,12 +520,9 @@ public class NewCharacterController : DamageableEntity
             //camera and canvas
             _hudCanvas.SetActive(false);
             _camera.SetActive(false);
-        }
 
-        //if (networkObject.IsServer)
-        //{
-        //    _camera.SetActive(false);
-        //}
+            ChangeEnemiesMaterial();
+        }
 
         if (networkObject.IsOwner)
         {
