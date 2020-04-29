@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Steamworks;
 using System;
+using UnityEngine.Rendering.PostProcessing;
 
 public class NewCharacterController : DamageableEntity
 {
@@ -87,6 +88,7 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] SkinnedMeshRenderer _enemyRenderer;
     [SerializeField] Material _enemyMaterial;
     [SerializeField] Material[] _enemyMaterialsHolder;
+    [SerializeField] PostProcessVolume postProcessVolume;
 
 
     void Awake()
@@ -126,7 +128,18 @@ public class NewCharacterController : DamageableEntity
         _chatInput.ActivateInputField();
     }
 
-    // Update is called once per frame
+
+    void UpdatePlayerPostProcessing()
+    {
+        TerrainManager tm = FindObjectOfType<TerrainManager>();
+        var biome = tm.GetBiome(transform.position);
+        if (postProcessVolume.profile != biome.postProcessing)
+        {
+            postProcessVolume.profile = biome.postProcessing;
+        }
+        
+    }
+
     void Update()
     {
         var x = CrossPlatformInputManager.GetAxisRaw("Horizontal");
@@ -134,10 +147,19 @@ public class NewCharacterController : DamageableEntity
 
         Animations(x, z);
 
+        if (SceneManager.GetActiveScene().name == "TerrainGenTest")
+        {
+            UpdatePlayerPostProcessing();
+        }
+
+
         if (networkObject != null)
         {
             if (networkObject.IsOwner)
             {
+
+                UpdatePlayerPostProcessing();
+
                 //networkObject.SendRpc(RPC_TRIGGER_WALK_ANIM,Receivers.All,x,z,_movementSpeed,_isGrounded,_isAiming,_aimInt,_fireInt,_hasSnipped);
 
                 if (!_chat.activeSelf)

@@ -24,3 +24,6 @@ MonoBehaviour:
   treePrototypes:
   - {fileID: 11400000, guid: 58da74bbf024b1f468ebfeb7cf302877, type: 2}
   - {fileID: 11400000, guid: 0ca8c4a5b2493e842993b926ee0410da, type: 2}
+  postProcessing: {fileID: 11400000, guid: bc96bf931d005734e8570128f19eae98, type: 2}
+  ambientPrefab: {fileID: 4185061771792407657, guid: 2d4f0961d354c694f8934e788001c928,
+    type: 3}

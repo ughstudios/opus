@@ -25,3 +25,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a70858e9abaef64da9c12c9e8a87e31, type: 2}
   - {fileID: 11400000, guid: 4198e5bb4288fde46a6dc1b89fbf3ef8, type: 2}
   - {fileID: 11400000, guid: c02faff144cd2f64ea286be263c5fc61, type: 2}
+  postProcessing: {fileID: 11400000, guid: ebca967abd53e924aaeedd60a5343c18, type: 2}
+  ambientPrefab: {fileID: 4185061771792407657, guid: 2d4f0961d354c694f8934e788001c928,
+    type: 3}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 [CreateAssetMenu(fileName = "New Biome", menuName ="Biome")]
 public class Biome : ScriptableObject
@@ -18,6 +19,8 @@ public class Biome : ScriptableObject
             new List<DetailPrototypeData>();
     public List<TreePrototypeData> treePrototypes =
             new List<TreePrototypeData>();
+
+    public PostProcessProfile postProcessing;
 
     public GameObject ambientPrefab;
 }
