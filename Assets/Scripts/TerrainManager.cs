@@ -202,6 +202,13 @@ public class TerrainManager : MonoBehaviour
         }
     }
 
+    public class BiomeData : MonoBehaviour
+    {
+        public Biome biome;
+        public Vector3 center;
+        public List<Plane> boundaries;
+    }
+
     private void Start()
     {
         if (genOnStart)
@@ -352,6 +359,8 @@ public class TerrainManager : MonoBehaviour
         int bx, bz;
         float height;
         Vector3 targLoc;
+        GameObject go;
+        BiomeData bd;
         List<SectionCoord> biomeCenters;
 
         List<Biome> containedBiomes = null;
@@ -526,16 +535,27 @@ public class TerrainManager : MonoBehaviour
         for (int i = 0; i < biomeCenters.Count; i++)
         {
             BiomeCenter center = SafeGetBiomeCenter(biomeCenters[i]);
-            if (center.biome.ambientPrefab == null)
-                continue;
             height = sec.terrain.SampleHeight(center.center);
             targLoc = new Vector3(center.center.x, height, center.center.z +
                     sec.terrain.GetPosition().y);
             if (sec.terrain.terrainData.bounds.Contains(targLoc -
                     sec.terrain.transform.position))
             {
-                Instantiate(center.biome.ambientPrefab, targLoc,
-                        Quaternion.identity, sec.terrain.transform);
+                if (center.biome.ambientPrefab != null)
+                {
+                    go = Instantiate(center.biome.ambientPrefab, targLoc,
+                            Quaternion.identity, sec.terrain.transform);
+                }
+                else
+                {
+                    go = new GameObject();
+                    go.transform.position = targLoc;
+                    go.transform.parent = sec.terrain.transform;
+                }
+                bd = go.AddComponent<TerrainManager.BiomeData>();
+                bd.biome = center.biome;
+                bd.center = targLoc;
+                bd.boundaries = center.properBounds.Values.ToList();
             }
         }
 
