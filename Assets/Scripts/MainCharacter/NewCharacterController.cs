@@ -197,13 +197,16 @@ public class NewCharacterController : DamageableEntity
 
         }
         postProcessVolume.weight = remainder;
-        int idx = ambienceManager.m_globalSequences.Length;
-        Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
-        foreach (var sequence in biome.globalSounds)
-        {
-            //ambienceManager.m_globalSequences[idx++] = sequence;
-        }
 
+        if (previousBiome != biome)
+        {
+            int idx = ambienceManager.m_globalSequences.Length;
+            Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
+            foreach (var sequence in biome.globalSounds)
+            {
+                //ambienceManager.m_globalSequences[idx++] = sequence;
+            }
+        }
         previousBiome = biome;
     }
 
