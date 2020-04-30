@@ -23,7 +23,7 @@ MonoBehaviour:
   m_showFunctionDebugsOnly: 0
   m_smartConsoleClean: 0
   m_isProceduralCreatedProfile: 1
-  m_systemTypes: 0
+  m_systemTypes: 4
   m_lightingEditMode: 0
   m_selectedRenderPipeline: 0
   m_targetPlatform: 0
@@ -3430,25 +3430,25 @@ MonoBehaviour:
     customProceduralGroundColor: {r: 0.36899996, g: 0.34899998, b: 0.34099993, a: 1}
     customEnableSunDisk: 1
     skyboxExposure: 0.7
-    skyboxGroundIntensity: 0
-    skyboxRotation: 0
-    skyboxPitch: 110
+    skyboxGroundIntensity: 1
+    skyboxRotation: 330
+    skyboxPitch: 50
     skyMultiplier: 0.25
     shadowStrength: 1
     indirectLightMultiplier: 1
-    sunColor: {r: 0.9607844, g: 0.98823535, b: 1, a: 1}
-    shadowDistance: 150
+    sunColor: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+    shadowDistance: 15
     sunRotation: {x: 171.5, y: 0, z: 0}
-    isProceduralSkybox: 0
+    isProceduralSkybox: 1
     sunIntensity: 1
     LWRPSunIntensity: 0.8
     HDRPSunIntensity: 0.8
     temperature: 6500
     useTempature: 0
-    fogColor: {r: 0.7803922, g: 0.89019614, b: 0.9568628, a: 0}
-    fogDistance: 1000
+    fogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    fogDistance: 300
     nearFogDistance: 0
-    fogDensity: 0
+    fogDensity: 0.01
     includeSunInBaking: 1
     horizonSkyEnabled: 0
     scaleHorizonObjectWithFog: 0
@@ -3460,20 +3460,20 @@ MonoBehaviour:
     followPlayer: 0
     horizonPosition: {x: 0, y: 0, z: 0}
     horizonUpdateTime: 0
-    shadowmaskMode: 1
+    shadowmaskMode: 0
     shadowType: 2
-    shadowResolution: 2
-    shadowProjection: 0
-    ambientMode: 1
+    shadowResolution: 0
+    shadowProjection: 1
+    ambientMode: 2
     skyColor:
       serializedVersion: 2
-      rgba: 5525321
+      rgba: 4282530102
     equatorColor:
       serializedVersion: 2
-      rgba: 5656391
+      rgba: 4280360733
     groundColor:
       serializedVersion: 2
-      rgba: 2171169
+      rgba: 4278716939
     lwrpSkyColor:
       serializedVersion: 2
       rgba: 8025197
@@ -3485,7 +3485,7 @@ MonoBehaviour:
       rgba: 5526612
     hDRISkybox: {fileID: 8900000, guid: b13537580b5eb0e409efbb1b0b82e52f, type: 3}
     shadowQuality: 5
-    fogType: 3
+    fogType: 0
     cascadeCount: 3
     enableSunDisk: 1
     isGlobal: 1
@@ -4076,7 +4076,7 @@ MonoBehaviour:
     shadowQuality: 5
     fogType: 3
     cascadeCount: 3
-    enableSunDisk: 0
+    enableSunDisk: 1
     isGlobal: 1
     blendDistance: 0
     weight: 1
@@ -8710,7 +8710,8 @@ MonoBehaviour:
     maximumIterationCount: 16
     thickness: 8
     colorGradingMode: 1
-    customPostProcessingProfile: {fileID: 0}
+    customPostProcessingProfile: {fileID: 11400000, guid: 015211855c5691d458b1fcb6ff2d3326,
+      type: 2}
     maxBlurSize: 1
     spaceReflectionResolution: 0
     screenSpaceReflectionPreset: 1

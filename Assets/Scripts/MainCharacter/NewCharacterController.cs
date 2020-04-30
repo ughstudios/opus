@@ -9,6 +9,9 @@ using TMPro;
 using Steamworks;
 using System;
 using UnityEngine.Rendering.PostProcessing;
+using AmbientSounds;
+using System.Linq;
+using System.Reflection;
 
 public class NewCharacterController : DamageableEntity
 {
@@ -97,7 +100,10 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] Material _enemyMaterial;
     [SerializeField] Material[] _enemyMaterialsHolder;
     [SerializeField] PostProcessVolume postProcessVolume;
+    [SerializeField] TerrainManager tm;
+    [SerializeField] AmbienceManager ambienceManager;
 
+    private Biome previousBiome;
 
     void Awake()
     {
@@ -108,6 +114,9 @@ public class NewCharacterController : DamageableEntity
         _initStaminaLevel = _staminaLevel;
 
         SetMaterialCollection();
+        tm = FindObjectOfType<TerrainManager>();
+        ambienceManager = FindObjectOfType<AmbienceManager>();
+        ambienceManager.m_playerObject = transform;
     }
 
     protected override void NetworkStart()
@@ -140,13 +149,29 @@ public class NewCharacterController : DamageableEntity
 
     void UpdatePlayerPostProcessing()
     {
-        TerrainManager tm = FindObjectOfType<TerrainManager>();
-        var biome = tm.GetBiome(transform.position);
-        if (postProcessVolume.profile != biome.postProcessing)
+        if (tm == null)
         {
-            postProcessVolume.profile = biome.postProcessing;
+            tm = FindObjectOfType<TerrainManager>();
         }
-        
+        var biome = tm.GetBiome(transform.position);
+        if (previousBiome != biome)
+        {
+            if (postProcessVolume.profile != biome.postProcessing)
+            {
+                postProcessVolume.profile = biome.postProcessing;
+            }
+
+            int idx = ambienceManager.m_globalSequences.Length;
+            Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
+            foreach (var sequence in biome.globalSounds)
+            {
+                //ambienceManager.m_globalSequences[idx++] = sequence;
+            }
+
+            previousBiome = biome;
+
+        }
+
     }
 
     void Update()
