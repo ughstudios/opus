@@ -105,7 +105,7 @@ public class NewCharacterController : DamageableEntity
     private Dictionary<Biome, PostProcessVolume> ppVolumes = 
             new Dictionary<Biome, PostProcessVolume>();
 
-    private Biome previousBiome;
+    private Biome previousBiome = null;
 
     void Awake()
     {
@@ -118,6 +118,8 @@ public class NewCharacterController : DamageableEntity
         SetMaterialCollection();
         tm = FindObjectOfType<TerrainManager>();
         ambienceManager = FindObjectOfType<AmbienceManager>();
+        if (ambienceManager == null)
+            ambienceManager = gameObject.AddComponent<AmbienceManager>();
         ambienceManager.m_playerObject = transform;
     }
 
@@ -200,14 +202,26 @@ public class NewCharacterController : DamageableEntity
 
         if (previousBiome != biome)
         {
+            if (previousBiome != null)
+                for (int i = 0; i < previousBiome.globalSounds.Length; i++)
+                {
+                    AmbienceManager.RemoveSequence(previousBiome.globalSounds[i]);
+                }
+            if (biome != null)
+                for (int i = 0; i < biome.globalSounds.Length; i++)
+                {
+                    AmbienceManager.AddSequence(biome.globalSounds[i]);
+                }
+            /*
             int idx = ambienceManager.m_globalSequences.Length;
             Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
             foreach (var sequence in biome.globalSounds)
             {
                 //ambienceManager.m_globalSequences[idx++] = sequence;
             }
+            */
+            previousBiome = biome;
         }
-        previousBiome = biome;
     }
 
     void Update()
