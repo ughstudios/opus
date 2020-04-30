@@ -360,9 +360,14 @@ public class NewCharacterController : DamageableEntity
     {
 
         if (Input.GetKey(KeyCode.LeftControl))
+        {
             _staminaObj.SetActive(true);
+        }
         else
+        {
             _staminaObj.SetActive(false);
+        }
+            
 
         if (Input.GetKey(KeyCode.LeftControl) && _staminaIsFull)
         {
@@ -373,6 +378,8 @@ public class NewCharacterController : DamageableEntity
                 _isRunning = true;
                 _staminaLevel -= Time.deltaTime;
 
+                _anim.speed = 2.0f;
+
                 if (_staminaLevel <= 0.0f)
                 {
                     _staminaIsFull = false;
@@ -381,6 +388,8 @@ public class NewCharacterController : DamageableEntity
             }
         }
         else {
+
+            _anim.speed = 1f;
 
             _isRunning = false;
             _staminaImageToChange.sprite = _staminaImages[1];
@@ -629,8 +638,8 @@ public class NewCharacterController : DamageableEntity
             else _anim.SetInteger("runningVal", 0);
 
 
-            if (x > 0) _anim.SetInteger("horizontalVal", 1);
-            else if (x < 0) _anim.SetInteger("horizontalVal", -1);
+            if (x > 0 && z == 0) _anim.SetInteger("horizontalVal", 1);
+            else if (x < 0 && z == 0) _anim.SetInteger("horizontalVal", -1);
             else _anim.SetInteger("horizontalVal", 0);
         }
         else
