@@ -210,6 +210,8 @@ MonoBehaviour:
   _enemyMaterial: {fileID: 2100000, guid: 97ac7f76ca0db0b46b73c683279632bb, type: 2}
   _enemyMaterialsHolder: []
   postProcessVolume: {fileID: 7243470942956303489}
+  tm: {fileID: 0}
+  ambienceManager: {fileID: 0}
 --- !u!1 &205084692479509330
 GameObject:
   m_ObjectHideFlags: 0
@@ -4230,6 +4232,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5023793991626746760, guid: 96dbe8e0dbc3f224c85a2635ef2f021b,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96dbe8e0dbc3f224c85a2635ef2f021b, type: 3}
 --- !u!224 &7049839419983177085 stripped
@@ -4464,6 +4471,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2550959510167204050, guid: 96e6ad0fe97a1754a8705f40854f7286,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -105
+      objectReference: {fileID: 0}
     - target: {fileID: 2550959510654984435, guid: 96e6ad0fe97a1754a8705f40854f7286,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4493,11 +4505,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 29.899902
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550959510167204050, guid: 96e6ad0fe97a1754a8705f40854f7286,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -105
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96e6ad0fe97a1754a8705f40854f7286, type: 3}
