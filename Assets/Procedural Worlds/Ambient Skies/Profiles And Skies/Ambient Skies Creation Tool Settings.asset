@@ -16,5 +16,5 @@ MonoBehaviour:
   m_selectedHDRI: 8
   m_selectedProcedural: 1
   m_selectedGradient: 1
-  m_selectedPostProcessing: 1
+  m_selectedPostProcessing: 14
   m_selectedLighting: 0
