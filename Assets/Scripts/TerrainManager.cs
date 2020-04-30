@@ -118,7 +118,7 @@ public class TerrainManager : MonoBehaviour
         public bool boundsCalculated = false;
     }
 
-    private class BiomeStrength
+    public class BiomeStrength
     {
         public Biome biome;
         public float strength;
@@ -748,7 +748,7 @@ public class TerrainManager : MonoBehaviour
             }
     }
 
-    private List<BiomeStrength> GetBiomes(Vector3 vLoc)
+    public List<BiomeStrength> GetBiomes(Vector3 vLoc)
     {
         List<BiomeStrength> output = new List<BiomeStrength>(biomes.Count);
 

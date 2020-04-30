@@ -102,6 +102,8 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] PostProcessVolume postProcessVolume;
     [SerializeField] TerrainManager tm;
     [SerializeField] AmbienceManager ambienceManager;
+    private Dictionary<Biome, PostProcessVolume> ppVolumes = 
+            new Dictionary<Biome, PostProcessVolume>();
 
     private Biome previousBiome;
 
@@ -150,28 +152,59 @@ public class NewCharacterController : DamageableEntity
     void UpdatePlayerPostProcessing()
     {
         if (tm == null)
-        {
             tm = FindObjectOfType<TerrainManager>();
-        }
-        var biome = tm.GetBiome(transform.position);
-        if (previousBiome != biome)
+        if (tm == null)
+            return;
+        Biome biome = tm.GetBiome(transform.position);
+        List<TerrainManager.BiomeStrength> biomes = 
+                tm.GetBiomes(transform.position);
+        PostProcessVolume ppv;
+        float remainder = 0.0f;
+
+        for (int i = 0; i < biomes.Count; i++)
         {
-            if (postProcessVolume.profile != biome.postProcessing)
+            if (!ppVolumes.ContainsKey(biomes[i].biome))
             {
-                postProcessVolume.profile = biome.postProcessing;
+                if (biomes[i].biome.postProcessing != null)
+                {
+                    ppv = postProcessVolume.gameObject.
+                            AddComponent<PostProcessVolume>();
+                    ppv.isGlobal = postProcessVolume.isGlobal;
+                    ppv.priority = postProcessVolume.priority;
+                    ppv.weight = biomes[i].strength;
+                    ppv.profile = biomes[i].biome.postProcessing;
+                }
+                else
+                    ppv = null;
+                ppVolumes.Add(biomes[i].biome, ppv);
             }
-
-            int idx = ambienceManager.m_globalSequences.Length;
-            Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
-            foreach (var sequence in biome.globalSounds)
-            {
-                //ambienceManager.m_globalSequences[idx++] = sequence;
-            }
-
-            previousBiome = biome;
-
         }
 
+        List<KeyValuePair<Biome, PostProcessVolume>> ppvs = ppVolumes.ToList();
+        for (int i = 0; i < ppvs.Count; i++)
+        {
+            ppvs[i].Value.weight = 0.0f;
+            for (int j = 0; j < biomes.Count; j++)
+            {
+                if (ppvs[i].Key == biomes[j].biome)
+                {
+                    if (ppvs[i].Value != null)
+                        ppvs[i].Value.weight = biomes[j].strength;
+                    else
+                        remainder += biomes[j].strength;
+                }
+            }
+
+        }
+        postProcessVolume.weight = remainder;
+        int idx = ambienceManager.m_globalSequences.Length;
+        Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
+        foreach (var sequence in biome.globalSounds)
+        {
+            //ambienceManager.m_globalSequences[idx++] = sequence;
+        }
+
+        previousBiome = biome;
     }
 
     void Update()
