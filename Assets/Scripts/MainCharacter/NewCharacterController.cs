@@ -106,6 +106,9 @@ public class NewCharacterController : DamageableEntity
             new Dictionary<Biome, PostProcessVolume>();
 
     private Biome previousBiome = null;
+    private bool isPaused = false;
+    private bool isChatting = false;
+    private PlayerCamera pCam;
 
     void Awake()
     {
@@ -121,6 +124,8 @@ public class NewCharacterController : DamageableEntity
         if (ambienceManager == null)
             ambienceManager = gameObject.AddComponent<AmbienceManager>();
         ambienceManager.m_playerObject = transform;
+
+        pCam = GetComponentInChildren<PlayerCamera>();
     }
 
     protected override void NetworkStart()
@@ -226,9 +231,12 @@ public class NewCharacterController : DamageableEntity
 
     void Update()
     {
-        var x = CrossPlatformInputManager.GetAxisRaw("Horizontal");
-        var z = CrossPlatformInputManager.GetAxisRaw("Vertical");
-
+        float x = 0.0f, z = 0.0f;
+        if (!isPaused && !isChatting)
+        {
+            x = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+            z = CrossPlatformInputManager.GetAxisRaw("Vertical");
+        }
         Animations(x, z);
 
         if (SceneManager.GetActiveScene().name == "TerrainGenTest")
@@ -256,12 +264,19 @@ public class NewCharacterController : DamageableEntity
                     if (!_chatInput.isFocused)
                     {
                         FocusChat();
+                        isChatting = true;
+                        pCam.isChatting = true;
                     }
                 }
 
                 if (_chatInput.isFocused)
                 {
                     return;
+                }
+                else
+                {
+                    isChatting = false;
+                    pCam.isChatting = false;
                 }
 
 
@@ -298,12 +313,18 @@ public class NewCharacterController : DamageableEntity
         PhysicsCheck();
         MovePlayer(x, z);
         RotateChild(x, z);
-        StartJump();
-        StartThrowAttack();
+        if (!isPaused && !isChatting)
+        {
+            StartJump();
+            StartThrowAttack();
+        }
         PoisonCoolDown();
-        FireIntAttack();
-        if (_canAim) Aim();
-        SnipAttack();
+        if (!isPaused && !isChatting)
+        {
+            FireIntAttack();
+            if (_canAim) Aim();
+            SnipAttack();
+        }
         HudAttackMeter(_poisonReflillTransform, _poisonCoolDownTime);//For base attack, poison
         HudAttackMeter(_fireReflillTransform, _fireCanvasVal);//For fire attacke
         HudHorizontalMeter(_staminaTransform, _staminaLevel, _initStaminaLevel);//For sprinting
@@ -731,12 +752,18 @@ public class NewCharacterController : DamageableEntity
                 Cursor.visible = true;
                 _pauseMenu.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
+                isPaused = true;
+                if (pCam != null)
+                    pCam.isPaused = true;
             }
             else
             {
                 Cursor.visible = false;
                 _pauseMenu.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
+                isPaused = false;
+                if (pCam != null)
+                    pCam.isPaused = false;
             }
 
         }

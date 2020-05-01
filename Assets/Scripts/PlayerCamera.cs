@@ -14,6 +14,8 @@ public class PlayerCamera : MonoBehaviour
 							m_TiltMax = 45.0f;
 
 	[SerializeField] GameObject _firePosition = null;
+	public bool isPaused = false;
+	public bool isChatting = false;
 
 	private void Start()
 	{
@@ -23,6 +25,8 @@ public class PlayerCamera : MonoBehaviour
 
 	void Update()
     {
+		if (isPaused || isChatting)
+			return;
 		HandleXRotation();
 
 		var x = CrossPlatformInputManager.GetAxis("Mouse X");
