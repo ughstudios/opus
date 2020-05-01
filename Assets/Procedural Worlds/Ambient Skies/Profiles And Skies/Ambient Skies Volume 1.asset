@@ -23,7 +23,7 @@ MonoBehaviour:
   m_showFunctionDebugsOnly: 0
   m_smartConsoleClean: 0
   m_isProceduralCreatedProfile: 1
-  m_systemTypes: 4
+  m_systemTypes: 1
   m_lightingEditMode: 0
   m_selectedRenderPipeline: 0
   m_targetPlatform: 0
@@ -659,7 +659,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_useSkies: 1
-  m_usePostFX: 1
+  m_usePostFX: 0
   m_useLighting: 1
   m_skyProfiles:
   - name: Sky Five Low
@@ -5840,7 +5840,7 @@ MonoBehaviour:
     shadowQuality: 5
     fogType: 3
     cascadeCount: 3
-    enableSunDisk: 1
+    enableSunDisk: 0
     isGlobal: 1
     blendDistance: 0
     weight: 1
