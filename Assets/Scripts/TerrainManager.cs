@@ -57,6 +57,8 @@ public class TerrainManager : MonoBehaviour
     private float[,] offsets;
     private float[,] detailOffsets;
 
+    private bool genStarted = false;
+
     private int totalBiomeFrequency = 0;
 
     [System.Serializable]
@@ -221,6 +223,9 @@ public class TerrainManager : MonoBehaviour
 #if UNITY_SERVER
         return;
 #endif
+        if (genStarted)
+            return;
+        genStarted = true;
 
         if (seed == null)
             seed = "";
