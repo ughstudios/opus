@@ -130,6 +130,13 @@ public class DamageableEntity : PlayerBehavior
             {
                 Debug.Log("DamageableEntity::TakeDamage::killingPlayer: "  + killingPlayer);
                 AnnounceWhoKilledUs(killingPlayer);
+                foreach (var character in FindObjectsOfType<NewCharacterController>())
+                {
+                    if (character.playerName == killingPlayer)
+                    {
+                        character.GetComponentInChildren<Camera>().enabled = true;
+                    }
+                }
             }
             else
             {
