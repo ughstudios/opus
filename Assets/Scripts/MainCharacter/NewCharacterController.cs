@@ -78,9 +78,11 @@ public class NewCharacterController : DamageableEntity
                             _healthTransform = null,
                             _staminaTransform = null;
     [SerializeField] GameObject _staminaObj = null;
-    [SerializeField] bool   _isRunning = false,
+    [SerializeField]
+    bool _isRunning = false,
                             _staminaIsFull = false;
-    [SerializeField] float  _staminaLevel = 4.0f,
+    [SerializeField]
+    float _staminaLevel = 4.0f,
                             _initStaminaLevel = 0.0f;
     [SerializeField] Image _staminaImageToChange = null;
     [SerializeField] Sprite[] _staminaImages = new Sprite[2];
@@ -102,7 +104,7 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] PostProcessVolume postProcessVolume;
     [SerializeField] TerrainManager tm;
     [SerializeField] AmbienceManager ambienceManager;
-    private Dictionary<Biome, PostProcessVolume> ppVolumes = 
+    private Dictionary<Biome, PostProcessVolume> ppVolumes =
             new Dictionary<Biome, PostProcessVolume>();
 
     private Biome previousBiome = null;
@@ -120,6 +122,11 @@ public class NewCharacterController : DamageableEntity
 
         SetMaterialCollection();
         tm = FindObjectOfType<TerrainManager>();
+
+#if UNITY_SERVER
+            return;
+#endif
+
         ambienceManager = FindObjectOfType<AmbienceManager>();
         if (ambienceManager == null)
             ambienceManager = gameObject.AddComponent<AmbienceManager>();
@@ -163,7 +170,7 @@ public class NewCharacterController : DamageableEntity
         if (tm == null)
             return;
         Biome biome = tm.GetBiome(transform.position);
-        List<TerrainManager.BiomeStrength> biomes = 
+        List<TerrainManager.BiomeStrength> biomes =
                 tm.GetBiomes(transform.position);
         PostProcessVolume ppv;
         float remainder = 0.0f;
@@ -388,7 +395,7 @@ public class NewCharacterController : DamageableEntity
         {
             _staminaObj.SetActive(false);
         }
-            
+
 
         if (Input.GetKey(KeyCode.LeftControl) && _staminaIsFull)
         {
@@ -408,7 +415,8 @@ public class NewCharacterController : DamageableEntity
                 }
             }
         }
-        else {
+        else
+        {
 
             _anim.speed = 1f;
 
@@ -422,7 +430,7 @@ public class NewCharacterController : DamageableEntity
 
             if (_staminaLevel >= _initStaminaLevel) _staminaIsFull = true;
         }
-        
+
 
         _moveInput = transform.right * x + transform.forward * z;
 
@@ -686,7 +694,7 @@ public class NewCharacterController : DamageableEntity
 
     void HudHorizontalMeter(Transform boostTransform, float boostCoolDownTime, float divisibleBy)
     {
-        float horizontalRefillVal = boostCoolDownTime/divisibleBy;
+        float horizontalRefillVal = boostCoolDownTime / divisibleBy;
 
         boostTransform.transform.localScale = new Vector3(horizontalRefillVal, 1, 1);
     }
@@ -776,7 +784,7 @@ public class NewCharacterController : DamageableEntity
 
     public void QuitGame()
     {
-#if UNITY_EDITOR 
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
