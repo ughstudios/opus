@@ -23,7 +23,7 @@ MonoBehaviour:
   m_showFunctionDebugsOnly: 0
   m_smartConsoleClean: 0
   m_isProceduralCreatedProfile: 1
-  m_systemTypes: 1
+  m_systemTypes: 0
   m_lightingEditMode: 0
   m_selectedRenderPipeline: 0
   m_targetPlatform: 0
@@ -1109,7 +1109,7 @@ MonoBehaviour:
     customProceduralGroundColor: {r: 0, g: 0, b: 0, a: 1}
     customEnableSunDisk: 1
     skyboxExposure: 0.8
-    skyboxGroundIntensity: 1
+    skyboxGroundIntensity: 1.12
     skyboxRotation: 0
     skyboxPitch: 133
     skyMultiplier: 0.3
@@ -1129,7 +1129,7 @@ MonoBehaviour:
     nearFogDistance: 10
     fogDensity: 0.005
     includeSunInBaking: 1
-    horizonSkyEnabled: 0
+    horizonSkyEnabled: 1
     scaleHorizonObjectWithFog: 1
     horizonScattering: 1
     horizonFogDensity: 1
@@ -1143,7 +1143,7 @@ MonoBehaviour:
     shadowType: 2
     shadowResolution: 2
     shadowProjection: 0
-    ambientMode: 1
+    ambientMode: 2
     skyColor:
       serializedVersion: 2
       rgba: 4285948748
@@ -5774,7 +5774,7 @@ MonoBehaviour:
     defaultDensityScale: {x: 10000, y: 10000, z: 10000}
     showSettings: 0
     useSkies: 0
-    skyboxGroundIntensity: 0
+    skyboxGroundIntensity: 1.12
     skyboxRotation: 0
     skyboxPitch: 167
     shadowStrength: 1
@@ -5818,7 +5818,7 @@ MonoBehaviour:
     shadowType: 2
     shadowResolution: 2
     shadowProjection: 0
-    ambientMode: 1
+    ambientMode: 2
     skyColor:
       serializedVersion: 2
       rgba: 2693907
@@ -5838,7 +5838,7 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 591879
     shadowQuality: 5
-    fogType: 3
+    fogType: 2
     cascadeCount: 3
     enableSunDisk: 0
     isGlobal: 1

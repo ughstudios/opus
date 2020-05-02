@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ambient Skies Creation Tool Settings
   m_EditorClassIdentifier: 
   m_selectedSystem: 0
-  m_selectedHDRI: 0
+  m_selectedHDRI: 1
   m_selectedProcedural: 7
   m_selectedGradient: 1
   m_selectedPostProcessing: 14
