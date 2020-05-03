@@ -3378,7 +3378,7 @@ MonoBehaviour:
   findMatchBtn: {fileID: 1349210405}
   exitGameBtn: {fileID: 1785119119}
   lobbyCountText: {fileID: 1293394869}
-  maxLobbyMembers: 5
+  maxLobbyMembers: 1
   LOBBY_CHECK_TIMER: 5
   gameFound: 0
 --- !u!1 &1023210836

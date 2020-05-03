@@ -94,6 +94,8 @@ public class Server : MonoBehaviour
         var availablePort = (ushort)GetFirstAvailablePort(port, 100);
         port = availablePort;
         server = new UDPServer(MaxPlayers);
+        server.bindSuccessful += Server_bindSuccessful;
+
         server.Connect("127.0.0.1", port);
 
         server.playerTimeout += (player, sender) =>
@@ -128,9 +130,6 @@ public class Server : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
-        server.bindSuccessful += Server_bindSuccessful;
-
-
     }
 
     private void Server_bindSuccessful(NetWorker sender)
@@ -141,7 +140,7 @@ public class Server : MonoBehaviour
         {
             Debug.Log("Server is running!");
 
-            NetworkManager.Instance.InstantiateGameMode();
+
 
         });
     }

@@ -30,12 +30,6 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         base.NetworkStart();
 
-
-        if (networkObject != null && networkObject.IsOwner)
-        {
-            seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
-            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);
-        }
     }
 
     public override void PickRandomTerrainSeed(RpcArgs args)
@@ -255,6 +249,13 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         if (!networkObject.IsServer)
         {
             return;
+        }
+
+        if (networkObject.IsOwner)
+        {
+            seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
+            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);
+
         }
 
         networkObject.matchTimer = initialMatchTimer;
