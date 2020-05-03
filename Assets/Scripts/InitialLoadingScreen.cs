@@ -11,7 +11,7 @@ public class InitialLoadingScreen : MonoBehaviour
     private CapsuleCollider capsuleCollider;
     public GameObject LoadingScreenUI;
     private CharacterController unityCharacterController;
-    
+
     private TerrainManager tm;
     private bool terrainGenerationStarted = false;
 
@@ -36,7 +36,12 @@ public class InitialLoadingScreen : MonoBehaviour
 
     void Update()
     {
-        if ( tm != null && tm.seed != "" && !terrainGenerationStarted )
+        if (characterController != null && characterController.networkObject != null && !characterController.networkObject.IsOwner)
+        {
+            return;
+        }
+
+        if (tm != null && tm.seed != "" && !terrainGenerationStarted)
         {
             SetupTerrain();
         }
