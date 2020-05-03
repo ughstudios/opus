@@ -27,6 +27,10 @@ public class GameUI : MonoBehaviour
             return;
         }
 
+        if (gameMode.networkObject == null) // Race condition
+        {
+            return;
+        }
 
         TimeSpan time = TimeSpan.FromSeconds(gameMode.networkObject.matchTimer);
         string stringTime = time.ToString(@"hh\:mm\:ss");

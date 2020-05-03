@@ -31,7 +31,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         base.NetworkStart();
 
 
-        if (networkObject.IsOwner)
+        if (networkObject != null && networkObject.IsOwner)
         {
             seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
             networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);

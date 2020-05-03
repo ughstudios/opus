@@ -22,6 +22,8 @@ public class Server : MonoBehaviour
     //public string masterServerHost = "127.0.0.1";
     public ushort masterServerPort = 15940;
     bool serverStarted = false;
+    public int serverFrameRate = 30;
+
 
     public enum AuthStatus
     {
@@ -65,8 +67,12 @@ public class Server : MonoBehaviour
     {
         Debug.LogError("Server::Start() called again!");
 
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = serverFrameRate;
+
         Host();
         serverStarted = true;
+
 
         DontDestroyOnLoad(gameObject);
 
@@ -124,6 +130,7 @@ public class Server : MonoBehaviour
 
         server.bindSuccessful += Server_bindSuccessful;
 
+
     }
 
     private void Server_bindSuccessful(NetWorker sender)
@@ -133,6 +140,9 @@ public class Server : MonoBehaviour
         MainThreadManager.Run(() =>
         {
             Debug.Log("Server is running!");
+
+            NetworkManager.Instance.InstantiateGameMode();
+
         });
     }
 

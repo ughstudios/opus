@@ -80,9 +80,12 @@ public class DamageableEntity : PlayerBehavior
 
     public override void Server_AnnouncePlayerName(RpcArgs args)
     {
-        string name = args.GetNext<string>();
-        Debug.Log("Steam name: " + name);
-        playerName = name;
+        MainThreadManager.Run(() =>
+        {
+            string name = args.GetNext<string>();
+            Debug.Log("Steam name: " + name);
+            playerName = name;
+        });
     }
 
     protected virtual void FixedUpdate()
@@ -124,15 +127,15 @@ public class DamageableEntity : PlayerBehavior
         {
             networkObject.SendRpc(RPC_SERVER__TAKE_DAMAGE, Receivers.All, damage);
 
-            Debug.Log("damageableEntity::TakeDamage::KillingPlayer: " + killingPlayer);
+            //Debug.Log("damageableEntity::TakeDamage::KillingPlayer: " + killingPlayer);
 
             if (networkObject.health <= 0)
             {
-                Debug.Log("DamageableEntity::TakeDamage::killingPlayer: "  + killingPlayer);
+                //Debug.Log("DamageableEntity::TakeDamage::killingPlayer: "  + killingPlayer);
                 AnnounceWhoKilledUs(killingPlayer);
                 foreach (var character in FindObjectsOfType<NewCharacterController>())
                 {
-                    if (character.playerName == killingPlayer)
+                    if (character != null && character.playerName == killingPlayer)
                     {
                         character.GetComponentInChildren<Camera>().enabled = true;
                     }
@@ -140,7 +143,7 @@ public class DamageableEntity : PlayerBehavior
             }
             else
             {
-                Debug.Log("damageableentitiy::networkObject.health: " + networkObject.health);
+                //Debug.Log("damageableentitiy::networkObject.health: " + networkObject.health);
             }
 
             return;
@@ -149,10 +152,13 @@ public class DamageableEntity : PlayerBehavior
 
     void AnnounceWhoKilledUs(string killingPlayer)
     {
-        Debug.Log("DamageableEntity::AnnounceWhoKilledUs::killingPlayer " + killingPlayer);
-        Debug.Log("DamageableEntity::AnnounceWhoKilledUs::SteamClient.Name " + SteamClient.Name);
-        
-        networkObject.SendRpc(RPC_SERVER__ANNOUNCE_DEATH, Receivers.All, playerName, killingPlayer);
+        //Debug.Log("DamageableEntity::AnnounceWhoKilledUs::killingPlayer " + killingPlayer);
+        //Debug.Log("DamageableEntity::AnnounceWhoKilledUs::SteamClient.Name " + SteamClient.Name);
+
+        if (networkObject != null)
+        {
+            networkObject.SendRpc(RPC_SERVER__ANNOUNCE_DEATH, Receivers.All, playerName, killingPlayer);
+        }
     }
 
     public override void Server_AnnounceDeath(RpcArgs args)
@@ -167,7 +173,7 @@ public class DamageableEntity : PlayerBehavior
             string dyingPlayer = args.GetNext<string>();
             string killingPlayer = args.GetNext<string>();
 
-            Debug.Log("dying player: " + dyingPlayer + " killingPlayer: " + killingPlayer);
+            //Debug.Log("dying player: " + dyingPlayer + " killingPlayer: " + killingPlayer);
 
             GameObject go = Instantiate(DeathUI_Announcement_prefab, GlobalGameUI.GetComponent<GameUI>().playersKilledScrollBoxContent.transform);
             Canvas.ForceUpdateCanvases();

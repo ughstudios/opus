@@ -1990,6 +1990,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameModeInstantiation
       objectReference: {fileID: 0}
+    - target: {fileID: 7878685735679671026, guid: aa66506e871b8d74c9d2d6ace66c1031,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1343058722388437892, guid: aa66506e871b8d74c9d2d6ace66c1031,
         type: 3}
       propertyPath: m_LocalPosition.x

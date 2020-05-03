@@ -7,7 +7,6 @@ public class InstantiateGameMode : MonoBehaviour
 {
     void Start()
     {
-		
 		if (NetworkManager.Instance != null)
 		{
 			if (NetworkManager.Instance.IsServer)

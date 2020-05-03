@@ -128,24 +128,24 @@ public class ClientConnect : MonoBehaviour
 
         foreach (Lobby lobby in lobbyList)
         {
-            Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
-            Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
+            //Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
+            //Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
             if (lobby.MemberCount < lobby.MaxMembers)
             {
-                Debug.Log("LobbyMemberCount < MaxMembers");
+                //Debug.Log("LobbyMemberCount < MaxMembers");
                 if (steamDevAppID == 480)
                 {
-                    Debug.Log("AppID is 480, using dev code.");
+                    //Debug.Log("AppID is 480, using dev code.");
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
-                        Debug.Log("Joining a lobby (480 app id).");
+                        //Debug.Log("Joining a lobby (480 app id).");
                         ourLobbyId = lobby.Id;
                         await lobby.Join();
                     }
                 }
                 else
                 {
-                    Debug.Log("Joining a lobby, not 480. Using production code.");
+                    //Debug.Log("Joining a lobby, not 480. Using production code.");
                     ourLobbyId = lobby.Id;
                     await lobby.Join();
                 }
@@ -154,11 +154,11 @@ public class ClientConnect : MonoBehaviour
 
         if (!isInLobby)
         {
-            Debug.Log("Couldn't find a lobby, creating our own.");
+            //Debug.Log("Couldn't find a lobby, creating our own.");
             var lobbyr = await SteamMatchmaking.CreateLobbyAsync(maxLobbyMembers);
             if (!lobbyr.HasValue)
             {
-                Debug.Log("Couldn't create lobby.");
+                //Debug.Log("Couldn't create lobby.");
                 return;
             }
 
@@ -176,7 +176,8 @@ public class ClientConnect : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
-        Debug.Log("Someone joined a lobby: " + friend.Name);
+        //Debug.Log("Someone joined a lobby: " + friend.Name);
+        Debug.Log("Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers);
         lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
 
         if (lobby.IsOwnedBy(SteamClient.SteamId))
@@ -188,7 +189,7 @@ public class ClientConnect : MonoBehaviour
     private void SteamMatchmaking_OnLobbyCreated(Result result, Lobby lobby)
     {
         ourLobbyId = lobby.Id;
-        Debug.Log("lobby created");
+        //Debug.Log("lobby created");
     }
 
     private void OnApplicationQuit()

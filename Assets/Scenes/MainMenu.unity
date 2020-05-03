@@ -3370,7 +3370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hostAddress: 
   port: 15937
-  masterServerHost: 13.90.19.77
+  masterServerHost: 45.63.11.159
   masterServerPort: 15940
   steamDevAppID: 480
   networkManagerPrefab: {fileID: 9112252649110997610, guid: aa7ff14af1e48074f8c7772f20a55889,
@@ -3378,7 +3378,7 @@ MonoBehaviour:
   findMatchBtn: {fileID: 1349210405}
   exitGameBtn: {fileID: 1785119119}
   lobbyCountText: {fileID: 1293394869}
-  maxLobbyMembers: 1
+  maxLobbyMembers: 5
   LOBBY_CHECK_TIMER: 5
   gameFound: 0
 --- !u!1 &1023210836
