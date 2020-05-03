@@ -108,11 +108,13 @@ public class TravelingSpell : ThrowObjBehavior
 		float time = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().time;
 		_duration = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().main.duration;
 		_initDuration = gameObject.transform.GetChild(1).transform.gameObject.GetComponent<ParticleSystem>().main.duration;
-		_didHit = true;
+		
 
-		if (col.gameObject.tag == "Player")
+		if (col.gameObject.tag == "Player" && !_didHit)
 		{
-			if(col.gameObject.GetComponent<NewCharacterController>().playerName != playerWhoSpawnedUs)//so we can't hurt ourselves with our own attacks 
+			_didHit = true;
+
+			if (col.gameObject.GetComponent<NewCharacterController>().playerName != playerWhoSpawnedUs)//so we can't hurt ourselves with our own attacks 
 			{
 				DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
 				Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
@@ -120,7 +122,9 @@ public class TravelingSpell : ThrowObjBehavior
 				GetComponent<Collider>().enabled = false;
 			}
 		}
-			
+
+		_didHit = true;
+
 	}
 
 	public void SetSpeed(float speed)

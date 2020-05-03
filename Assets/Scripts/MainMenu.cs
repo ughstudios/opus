@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] GameObject controls = null;
+
+    public void ShowControls(bool show)
+    {
+        controls.SetActive(show);
+    }
 
     public void QuitGame()
     {
