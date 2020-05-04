@@ -13,7 +13,6 @@ public class InitialLoadingScreen : MonoBehaviour
     private CharacterController unityCharacterController;
 
     private TerrainManager tm;
-    private bool terrainGenerationStarted = false;
 
     void Start()
     {
@@ -23,28 +22,11 @@ public class InitialLoadingScreen : MonoBehaviour
         tm = FindObjectOfType<TerrainManager>();
 
 
-        //SetupTerrain();
-
-    }
-
-    void SetupTerrain()
-    {
-        tm.follow.Add(gameObject);
-        tm.StartGeneration();
-        terrainGenerationStarted = true;
     }
 
     void Update()
     {
-        if (characterController != null && characterController.networkObject != null && !characterController.networkObject.IsOwner)
-        {
-            return;
-        }
-
-        if (tm != null && tm.seed != "" && !terrainGenerationStarted)
-        {
-            SetupTerrain();
-        }
+        
 
         if (tm != null && tm.TerrainExistsAt(transform.position))
         {

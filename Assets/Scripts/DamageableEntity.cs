@@ -83,7 +83,7 @@ public class DamageableEntity : PlayerBehavior
         MainThreadManager.Run(() =>
         {
             string name = args.GetNext<string>();
-            Debug.Log("Steam name: " + name);
+            //Debug.Log("Steam name: " + name);
             playerName = name;
         });
     }

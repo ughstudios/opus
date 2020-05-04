@@ -30,6 +30,12 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         base.NetworkStart();
 
+        if (networkObject.IsOwner)
+        {
+            seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
+            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);
+        }
+
     }
 
     public override void PickRandomTerrainSeed(RpcArgs args)
@@ -251,12 +257,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             return;
         }
 
-        if (networkObject.IsOwner)
-        {
-            seedValue = Random.Range(SEED_MIN, SEED_MAX).ToString();
-            networkObject.SendRpc(RPC_PICK_RANDOM_TERRAIN_SEED, Receivers.AllBuffered, seedValue);
-
-        }
+        
 
         networkObject.matchTimer = initialMatchTimer;
 
@@ -311,7 +312,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
     {
         MainThreadManager.Run(() =>
         {
-            Debug.Log("playuer accepted");
+            Debug.Log("player accepted");
             GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
             Vector3 spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
@@ -323,7 +324,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
             playerController.networkObject.position = spawnPoint;
             playerController.networkObject.AssignOwnership(player);
 
-            Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
+            //Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
             NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
             Debug.Log("Player Connected: " + player.Ip);
@@ -336,7 +337,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
         {
             if (NetworkManager.Instance != null && NetworkManager.Instance.Networker != null)
             {
-                Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
+                //Debug.Log("Player Count: " + NetworkManager.Instance.Networker.Players.Count);
 
                 if (NetworkManager.Instance.Networker.Players.Count <= 0)
                 {
@@ -346,7 +347,7 @@ public class GameMode : GameModeBehavior, IUserAuthenticator
 
                 //NetworkManager.Instance.UpdateMasterServerListing(NetworkManager.Instance.Networker, "Opus", "BattleRoyale", "Solo");
 
-                Debug.Log("Disconnect");
+                //Debug.Log("Disconnect");
                 //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
                 List<NetworkObject> toDelete = new List<NetworkObject>();
 
