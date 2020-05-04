@@ -46,6 +46,7 @@ public class ClientConnect : MonoBehaviour
     public List<SteamId> allowedSteamIDs;
 
     public Text findOrCancelMatchText;
+    private bool bConnected;
 
     private void Start()
     {
@@ -123,7 +124,13 @@ public class ClientConnect : MonoBehaviour
         LeaveLobby();
         lobbyCountText.text = "";
         findOrCancelMatchText.text = "FIND MATCH";
-        
+        bConnected = false;
+        if (client.IsConnected)
+        {
+            client.Disconnect(true);
+            client = null;
+        }
+
         findMatchBtn.onClick.RemoveListener(CancelMatch);
         findMatchBtn.onClick.AddListener(FindMatch);
     }
@@ -322,12 +329,18 @@ public class ClientConnect : MonoBehaviour
 
     public void ConnectToServer()
     {
+        if (bConnected)
+        {
+            return;
+        }
+
         client = new UDPClient();
         //client.SetUserAuthenticator(this);
         client.serverAccepted += OnAccepted;
         client.connectAttemptFailed += Client_connectAttemptFailed;
         client.disconnected += Client_disconnected;
         client.Connect(hostAddress, port);
+        bConnected = true;
 
         if (!client.IsBound)
         {
@@ -347,6 +360,7 @@ public class ClientConnect : MonoBehaviour
     private void Client_disconnected(NetWorker sender)
     {
         client.disconnected -= Client_disconnected;
+        bConnected = false;
 
         MainThreadManager.Run(() =>
         {
@@ -356,7 +370,6 @@ public class ClientConnect : MonoBehaviour
             Debug.LogError("Disconnected");
             if (ownsLobby)
                 tryingServer = false;
-
 
             LeaveLobby();
 
@@ -371,6 +384,7 @@ public class ClientConnect : MonoBehaviour
     private void Client_connectAttemptFailed(NetWorker sender)
     {
         client.connectAttemptFailed -= Client_connectAttemptFailed;
+        bConnected = false;
 
         MainThreadManager.Run(() =>
         {
