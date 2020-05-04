@@ -45,6 +45,7 @@ public class ClientConnect : MonoBehaviour
 
     public List<SteamId> allowedSteamIDs;
 
+    public Text findOrCancelMatchText;
 
     private void Start()
     {
@@ -64,6 +65,9 @@ public class ClientConnect : MonoBehaviour
 
     private void OnEnable()
     {
+
+        findMatchBtn.onClick.AddListener(FindMatch);
+
         try
         {
             SteamClient.Init(steamDevAppID);
@@ -109,13 +113,31 @@ public class ClientConnect : MonoBehaviour
 
         ourlobby.Leave();
 
+        ourLobbyId = new SteamId();
+        ourlobby = new Lobby();
         UnregisterLobbyEvents();
     }
     
+    public void CancelMatch()
+    {
+        LeaveLobby();
+        lobbyCountText.text = "";
+        findOrCancelMatchText.text = "FIND MATCH";
+        
+        findMatchBtn.onClick.RemoveListener(CancelMatch);
+        findMatchBtn.onClick.AddListener(FindMatch);
+    }
+
+
     public async void FindMatch()
     {
-        exitGameBtn.enabled = false;
-        findMatchBtn.enabled = false;
+        findMatchBtn.onClick.RemoveListener(FindMatch);
+        findMatchBtn.onClick.AddListener(CancelMatch);
+
+        findOrCancelMatchText.text = "CANCEL FINDING MATCH";
+
+        //exitGameBtn.enabled = false;
+        //findMatchBtn.enabled = false;
         //allowedSteamIDs.Clear();
 
         lobbyList = await SteamMatchmaking.LobbyList.RequestAsync();
@@ -169,6 +191,7 @@ public class ClientConnect : MonoBehaviour
 
         }
 
+        
 
 
     }
