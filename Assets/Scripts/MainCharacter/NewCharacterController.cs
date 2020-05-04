@@ -143,20 +143,19 @@ public class NewCharacterController : DamageableEntity
     protected override void Start()
     {
         base.Start();
-        StartCoroutine(SetEnemyMaterialIfNotOwner());
-
+        
+        networkObject.ownershipChanged += NetworkObject_ownershipChanged;
     }
 
-    IEnumerator SetEnemyMaterialIfNotOwner()
+    private void NetworkObject_ownershipChanged(NetWorker sender)
     {
-        yield return new WaitForSeconds(5);
-
         if (!networkObject.IsOwner)
         {
             ChangeEnemiesMaterial();
         }
     }
 
+ 
     protected override void NetworkStart()
     {
         base.NetworkStart();
