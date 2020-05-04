@@ -278,13 +278,14 @@ public class ClientConnect : MonoBehaviour
                         hostAddress = server.Address;
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
-                        tryingServer = true;
                         //ConnectToServer();
                         lobby.SetGameServer(hostAddress, port);
                         lobby.SetJoinable(false); // lock the lobby once we have started a match. 
                         lobby.SetInvisible();
                         lobby.SetPrivate();
                         lobby.Refresh();
+                        gameFound = true;
+                        tryingServer = true;
 
                         return;
                     }
@@ -310,7 +311,6 @@ public class ClientConnect : MonoBehaviour
         Debug.Log("IP: " + parsedIP);
         hostAddress = parsedIP;
         this.port = port;
-        gameFound = true;
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
