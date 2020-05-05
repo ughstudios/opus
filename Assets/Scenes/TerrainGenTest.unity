@@ -120,6 +120,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &226770602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 151136363384072058, guid: 2afc16c52161e664ba506385a00d2346,
+    type: 3}
+  m_PrefabInstance: {fileID: 1526027966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &226770607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226770602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0c0b8c913871148aaf9d64a463b29a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadingScreenUI: {fileID: 1392132461}
 --- !u!1 &318956001
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,6 +278,12 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!1 &1392132461 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8310491779951364453, guid: 2afc16c52161e664ba506385a00d2346,
+    type: 3}
+  m_PrefabInstance: {fileID: 1526027966}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1445307538
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +394,16 @@ PrefabInstance:
     - target: {fileID: 151136363384072061, guid: 2afc16c52161e664ba506385a00d2346,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 151136363384072062, guid: 2afc16c52161e664ba506385a00d2346,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5545924736973130063, guid: 2afc16c52161e664ba506385a00d2346,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6831066038012283707, guid: 2afc16c52161e664ba506385a00d2346,
@@ -523,9 +558,9 @@ MonoBehaviour:
   genSettings:
     length: 64
     height: 128
-    heightMapRes: 129
-    alphaMapRes: 129
-    detailMapRes: 65
+    heightMapRes: 65
+    alphaMapRes: 65
+    detailMapRes: 33
     detailMapResPerPatch: 16
   automaticUpdatesStart: 1
   genOnStart: 0
@@ -534,6 +569,7 @@ MonoBehaviour:
   maxOffset: 32
   numDetailOctaves: 3
   detailNoiseScale: 25
+  detectMaxSimultaneousGens: 1
   maxSimultaneousGens: 8
   follow: []
   biomes: []

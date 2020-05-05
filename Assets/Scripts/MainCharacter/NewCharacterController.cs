@@ -143,8 +143,8 @@ public class NewCharacterController : DamageableEntity
     protected override void Start()
     {
         base.Start();
-        
-        networkObject.ownershipChanged += NetworkObject_ownershipChanged;
+        if (networkObject != null)
+            networkObject.ownershipChanged += NetworkObject_ownershipChanged;
     }
 
     private void NetworkObject_ownershipChanged(NetWorker sender)
@@ -269,6 +269,12 @@ public class NewCharacterController : DamageableEntity
 
         if (SceneManager.GetActiveScene().name == "TerrainGenTest")
         {
+            if (!generationStarted)
+            {
+                tm.follow.Add(gameObject);
+                tm.StartGeneration();
+                generationStarted = true;
+            }
             UpdatePlayerPostProcessing();
         }
 

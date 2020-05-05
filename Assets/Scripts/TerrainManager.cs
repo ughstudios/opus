@@ -22,6 +22,7 @@ public class TerrainManager : MonoBehaviour
     public int numDetailOctaves = 3;
     public float detailNoiseScale = 25f;
 
+    public bool detectMaxSimultaneousGens = true;
     public int maxSimultaneousGens = 8;
     public List<GameObject> follow = new List<GameObject>();
 
@@ -333,7 +334,10 @@ public class TerrainManager : MonoBehaviour
     {
         while (toCreate.Count > 0)
         {
-            while (numGenThreads < maxSimultaneousGens && toCreate.Count > 0)
+            while (((!detectMaxSimultaneousGens && numGenThreads < 
+                    maxSimultaneousGens) || (detectMaxSimultaneousGens && 
+                    numGenThreads < (SystemInfo.processorCount / 2 + 1))) && 
+                    toCreate.Count > 0)
             {
                 numGenThreads++;
                 SectionCoord coord = toCreate.Dequeue();
@@ -341,7 +345,10 @@ public class TerrainManager : MonoBehaviour
                 generating.Add(coord);
                 yield return null;
             }
-            yield return new WaitUntil(() => numGenThreads < maxSimultaneousGens);
+            yield return new WaitUntil(() => (!detectMaxSimultaneousGens && 
+                    numGenThreads < maxSimultaneousGens) || 
+                    (detectMaxSimultaneousGens && numGenThreads < 
+                    (SystemInfo.processorCount / 2 + 1)));
         }
         createRunning = false;
     }
@@ -683,18 +690,19 @@ public class TerrainManager : MonoBehaviour
             return;
 
         List<BiomeCenter> neighbors = new List<BiomeCenter>();
+        List<SectionCoord> coords;
         Dictionary<SectionCoord, Plane> properBounds =
                 new Dictionary<SectionCoord, Plane>();
         List<Plane> weakBounds = new List<Plane>();
         Plane plane;
         Vector3 self = target.center;
         Vector3 other, middle;
-        for (int i = 0; i < 9; i++)
+
+        coords = SectionsInRadius(coord, 2.75f);
+
+        for (int i = 1; i < coords.Count; i++)
         {
-            if (i == 4)
-                continue;
-            neighbors.Add(SafeGetBiomeCenter(new SectionCoord(coord.x +
-                    (i % 3) - 1, coord.z + (i / 3) - 1)));
+            neighbors.Add(SafeGetBiomeCenter(coords[i]));
         }
 
         for (int i = 0; i < neighbors.Count; i++)
@@ -784,7 +792,7 @@ public class TerrainManager : MonoBehaviour
             return output;
         }
 
-        List<SectionCoord> coords = SectionsInRadius(coord, 2);
+        List<SectionCoord> coords = SectionsInRadius(coord, 2.75f);
         for (int i = 0; i < coords.Count; i++)
         {
             center = SafeGetBiomeCenter(coords[i]);
@@ -1192,9 +1200,9 @@ public class TerrainManager : MonoBehaviour
         return treeInstances;
     }
 
-    private List<SectionCoord> SectionsInRadius(SectionCoord coord, int radius)
+    private List<SectionCoord> SectionsInRadius(SectionCoord coord, float radius)
     {
-        int dist = radius * 2 + 1;
+        int dist = Mathf.CeilToInt(radius * 2 + 1);
         List<SectionCoord> sections = new List<SectionCoord>(dist * dist);
 
         int x, z, dir;
