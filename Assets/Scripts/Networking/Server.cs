@@ -22,6 +22,8 @@ public class Server : MonoBehaviour
     //public string masterServerHost = "127.0.0.1";
     public ushort masterServerPort = 15940;
     bool serverStarted = false;
+    public int serverFrameRate = 30;
+
 
     public enum AuthStatus
     {
@@ -65,8 +67,12 @@ public class Server : MonoBehaviour
     {
         Debug.LogError("Server::Start() called again!");
 
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = serverFrameRate;
+
         Host();
         serverStarted = true;
+
 
         DontDestroyOnLoad(gameObject);
 
@@ -88,6 +94,8 @@ public class Server : MonoBehaviour
         var availablePort = (ushort)GetFirstAvailablePort(port, 100);
         port = availablePort;
         server = new UDPServer(MaxPlayers);
+        server.bindSuccessful += Server_bindSuccessful;
+
         server.Connect("127.0.0.1", port);
 
         server.playerTimeout += (player, sender) =>
@@ -122,8 +130,6 @@ public class Server : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
-        server.bindSuccessful += Server_bindSuccessful;
-
     }
 
     private void Server_bindSuccessful(NetWorker sender)
@@ -133,6 +139,9 @@ public class Server : MonoBehaviour
         MainThreadManager.Run(() =>
         {
             Debug.Log("Server is running!");
+
+
+
         });
     }
 

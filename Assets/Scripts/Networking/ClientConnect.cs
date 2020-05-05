@@ -45,6 +45,8 @@ public class ClientConnect : MonoBehaviour
 
     public List<SteamId> allowedSteamIDs;
 
+    public Text findOrCancelMatchText;
+    private bool bConnected;
 
     private void Start()
     {
@@ -64,6 +66,9 @@ public class ClientConnect : MonoBehaviour
 
     private void OnEnable()
     {
+
+        findMatchBtn.onClick.AddListener(FindMatch);
+
         try
         {
             SteamClient.Init(steamDevAppID);
@@ -109,13 +114,37 @@ public class ClientConnect : MonoBehaviour
 
         ourlobby.Leave();
 
+        ourLobbyId = new SteamId();
+        ourlobby = new Lobby();
         UnregisterLobbyEvents();
     }
     
+    public void CancelMatch()
+    {
+        LeaveLobby();
+        lobbyCountText.text = "";
+        findOrCancelMatchText.text = "FIND MATCH";
+        bConnected = false;
+        if (client.IsConnected)
+        {
+            client.Disconnect(true);
+            client = null;
+        }
+
+        findMatchBtn.onClick.RemoveListener(CancelMatch);
+        findMatchBtn.onClick.AddListener(FindMatch);
+    }
+
+
     public async void FindMatch()
     {
-        exitGameBtn.enabled = false;
-        findMatchBtn.enabled = false;
+        findMatchBtn.onClick.RemoveListener(FindMatch);
+        findMatchBtn.onClick.AddListener(CancelMatch);
+
+        findOrCancelMatchText.text = "CANCEL FINDING MATCH";
+
+        //exitGameBtn.enabled = false;
+        //findMatchBtn.enabled = false;
         //allowedSteamIDs.Clear();
 
         lobbyList = await SteamMatchmaking.LobbyList.RequestAsync();
@@ -128,24 +157,24 @@ public class ClientConnect : MonoBehaviour
 
         foreach (Lobby lobby in lobbyList)
         {
-            Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
-            Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
+            //Debug.Log("LobbyMemberCount: " + lobby.MemberCount);
+            //Debug.Log("LobbyMaxMembers: " + lobby.MaxMembers);
             if (lobby.MemberCount < lobby.MaxMembers)
             {
-                Debug.Log("LobbyMemberCount < MaxMembers");
+                //Debug.Log("LobbyMemberCount < MaxMembers");
                 if (steamDevAppID == 480)
                 {
-                    Debug.Log("AppID is 480, using dev code.");
+                    //Debug.Log("AppID is 480, using dev code.");
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
-                        Debug.Log("Joining a lobby (480 app id).");
+                        //Debug.Log("Joining a lobby (480 app id).");
                         ourLobbyId = lobby.Id;
                         await lobby.Join();
                     }
                 }
                 else
                 {
-                    Debug.Log("Joining a lobby, not 480. Using production code.");
+                    //Debug.Log("Joining a lobby, not 480. Using production code.");
                     ourLobbyId = lobby.Id;
                     await lobby.Join();
                 }
@@ -154,11 +183,11 @@ public class ClientConnect : MonoBehaviour
 
         if (!isInLobby)
         {
-            Debug.Log("Couldn't find a lobby, creating our own.");
+            //Debug.Log("Couldn't find a lobby, creating our own.");
             var lobbyr = await SteamMatchmaking.CreateLobbyAsync(maxLobbyMembers);
             if (!lobbyr.HasValue)
             {
-                Debug.Log("Couldn't create lobby.");
+                //Debug.Log("Couldn't create lobby.");
                 return;
             }
 
@@ -169,6 +198,7 @@ public class ClientConnect : MonoBehaviour
 
         }
 
+        
 
 
     }
@@ -176,7 +206,8 @@ public class ClientConnect : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
-        Debug.Log("Someone joined a lobby: " + friend.Name);
+        //Debug.Log("Someone joined a lobby: " + friend.Name);
+        Debug.Log("Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers);
         lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
 
         if (lobby.IsOwnedBy(SteamClient.SteamId))
@@ -188,7 +219,7 @@ public class ClientConnect : MonoBehaviour
     private void SteamMatchmaking_OnLobbyCreated(Result result, Lobby lobby)
     {
         ourLobbyId = lobby.Id;
-        Debug.Log("lobby created");
+        //Debug.Log("lobby created");
     }
 
     private void OnApplicationQuit()
@@ -254,13 +285,14 @@ public class ClientConnect : MonoBehaviour
                         hostAddress = server.Address;
                         Debug.Log("hostAddress: " + server.Address);
                         port = server.Port;
-                        tryingServer = true;
                         //ConnectToServer();
                         lobby.SetGameServer(hostAddress, port);
                         lobby.SetJoinable(false); // lock the lobby once we have started a match. 
                         lobby.SetInvisible();
                         lobby.SetPrivate();
                         lobby.Refresh();
+                        gameFound = true;
+                        tryingServer = true;
 
                         return;
                     }
@@ -286,7 +318,6 @@ public class ClientConnect : MonoBehaviour
         Debug.Log("IP: " + parsedIP);
         hostAddress = parsedIP;
         this.port = port;
-        gameFound = true;
 
         GetComponent<Canvas>().enabled = false; // Delete the canvas
 
@@ -298,12 +329,18 @@ public class ClientConnect : MonoBehaviour
 
     public void ConnectToServer()
     {
+        if (bConnected)
+        {
+            return;
+        }
+
         client = new UDPClient();
         //client.SetUserAuthenticator(this);
         client.serverAccepted += OnAccepted;
         client.connectAttemptFailed += Client_connectAttemptFailed;
         client.disconnected += Client_disconnected;
         client.Connect(hostAddress, port);
+        bConnected = true;
 
         if (!client.IsBound)
         {
@@ -323,6 +360,7 @@ public class ClientConnect : MonoBehaviour
     private void Client_disconnected(NetWorker sender)
     {
         client.disconnected -= Client_disconnected;
+        bConnected = false;
 
         MainThreadManager.Run(() =>
         {
@@ -332,7 +370,6 @@ public class ClientConnect : MonoBehaviour
             Debug.LogError("Disconnected");
             if (ownsLobby)
                 tryingServer = false;
-
 
             LeaveLobby();
 
@@ -347,6 +384,7 @@ public class ClientConnect : MonoBehaviour
     private void Client_connectAttemptFailed(NetWorker sender)
     {
         client.connectAttemptFailed -= Client_connectAttemptFailed;
+        bConnected = false;
 
         MainThreadManager.Run(() =>
         {

@@ -111,6 +111,9 @@ public class NewCharacterController : DamageableEntity
     private bool isPaused = false;
     private bool isChatting = false;
     private PlayerCamera pCam;
+    public GameObject LoadingScreenUI;
+    private bool generationStarted = false;
+
 
     void Awake()
     {
@@ -121,7 +124,9 @@ public class NewCharacterController : DamageableEntity
         _initStaminaLevel = _staminaLevel;
 
         SetMaterialCollection();
+
         tm = FindObjectOfType<TerrainManager>();
+
 
 #if UNITY_SERVER
             return;
@@ -135,6 +140,22 @@ public class NewCharacterController : DamageableEntity
         pCam = GetComponentInChildren<PlayerCamera>();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        if (networkObject != null)
+            networkObject.ownershipChanged += NetworkObject_ownershipChanged;
+    }
+
+    private void NetworkObject_ownershipChanged(NetWorker sender)
+    {
+        if (!networkObject.IsOwner)
+        {
+            ChangeEnemiesMaterial();
+        }
+    }
+
+ 
     protected override void NetworkStart()
     {
         base.NetworkStart();
@@ -248,6 +269,12 @@ public class NewCharacterController : DamageableEntity
 
         if (SceneManager.GetActiveScene().name == "TerrainGenTest")
         {
+            if (!generationStarted)
+            {
+                tm.follow.Add(gameObject);
+                tm.StartGeneration();
+                generationStarted = true;
+            }
             UpdatePlayerPostProcessing();
         }
 
@@ -256,6 +283,22 @@ public class NewCharacterController : DamageableEntity
         {
             if (networkObject.IsOwner)
             {
+
+                if (!generationStarted)
+                {
+                    tm.follow.Add(gameObject);
+                    tm.StartGeneration();
+                    generationStarted = true;
+                }
+
+                if (LoadingScreenUI != null && tm.TerrainExistsAt(transform.position))
+                {
+                    GetComponent<CapsuleCollider>().enabled = true;
+                    GetComponent<CharacterController>().enabled = true;
+                    
+                    Destroy(LoadingScreenUI);
+                }
+
 
                 UpdatePlayerPostProcessing();
 
@@ -314,6 +357,8 @@ public class NewCharacterController : DamageableEntity
 
                 _idNum = networkObject.NetworkId;
                 Destroy(_camera.GetComponentInChildren<AudioListener>());//Turn this off from other cams, will give log a few times until destroyed
+                
+
             }
         }
 
@@ -716,7 +761,6 @@ public class NewCharacterController : DamageableEntity
             _hudCanvas.SetActive(false);
             _camera.SetActive(false);
 
-            ChangeEnemiesMaterial();
         }
 
         if (networkObject.IsOwner)
