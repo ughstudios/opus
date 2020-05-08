@@ -12,6 +12,7 @@ using UnityEngine.Rendering.PostProcessing;
 using AmbientSounds;
 using System.Linq;
 using System.Reflection;
+using UnityEngine.Profiling;
 
 public class NewCharacterController : DamageableEntity
 {
@@ -186,6 +187,7 @@ public class NewCharacterController : DamageableEntity
 
     void UpdatePlayerPostProcessing()
     {
+        
         if (tm == null)
             tm = FindObjectOfType<TerrainManager>();
         if (tm == null)
@@ -259,6 +261,7 @@ public class NewCharacterController : DamageableEntity
 
     void Update()
     {
+        
         float x = 0.0f, z = 0.0f;
         if (!isPaused && !isChatting)
         {

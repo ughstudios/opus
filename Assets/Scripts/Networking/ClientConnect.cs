@@ -113,6 +113,8 @@ public class ClientConnect : MonoBehaviour
         }
 
         ourlobby.Leave();
+        gameFound = true;
+        isInLobby = false;
 
         ourLobbyId = new SteamId();
         ourlobby = new Lobby();
@@ -125,14 +127,12 @@ public class ClientConnect : MonoBehaviour
         lobbyCountText.text = "";
         findOrCancelMatchText.text = "FIND MATCH";
         bConnected = false;
-        if (client.IsConnected)
-        {
-            client.Disconnect(true);
-            client = null;
-        }
+        
 
         findMatchBtn.onClick.RemoveListener(CancelMatch);
         findMatchBtn.onClick.AddListener(FindMatch);
+
+        gameFound = false;
     }
 
 
@@ -141,7 +141,7 @@ public class ClientConnect : MonoBehaviour
         findMatchBtn.onClick.RemoveListener(FindMatch);
         findMatchBtn.onClick.AddListener(CancelMatch);
 
-        findOrCancelMatchText.text = "CANCEL FINDING MATCH";
+        findOrCancelMatchText.text = "CANCEL";
 
         //exitGameBtn.enabled = false;
         //findMatchBtn.enabled = false;
@@ -167,7 +167,7 @@ public class ClientConnect : MonoBehaviour
                     //Debug.Log("AppID is 480, using dev code.");
                     if (lobby.GetData("lobbyName").Contains("opus"))
                     {
-                        //Debug.Log("Joining a lobby (480 app id).");
+                        Debug.Log("Joining a lobby (480 app id).");
                         ourLobbyId = lobby.Id;
                         await lobby.Join();
                     }
@@ -197,8 +197,6 @@ public class ClientConnect : MonoBehaviour
             lobby.SetData("lobbyName", "opus");
 
         }
-
-        
 
 
     }
@@ -372,7 +370,7 @@ public class ClientConnect : MonoBehaviour
                 tryingServer = false;
 
             LeaveLobby();
-
+            
 
             SceneManager.LoadScene("MainMenu"); // load main menu when disconnected
 
