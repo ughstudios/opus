@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef10665206340ef4abef84478f51f06f, type: 3}
   m_Name: Random Birds
   m_EditorClassIdentifier: 
-  m_requirements: 2
+  m_requirements: 0
   m_valuesMix: 0
   m_values:
   - m_name: Time of Day
@@ -64,13 +64,10 @@ MonoBehaviour:
   m_syncGroup: 
   m_syncType: 0
   m_eventsWhilePlaying: []
+  m_valuesWhilePlaying: []
   m_OnPlayClip:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: AmbientSounds.Sequence+PlayEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   m_OnStopClip:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: AmbientSounds.Sequence+PlayEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null

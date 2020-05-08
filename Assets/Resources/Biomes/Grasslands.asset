@@ -26,6 +26,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 829520c9e8f7eb94882d3f7248eeb8b4, type: 2}
   postProcessing: {fileID: 11400000, guid: ebca967abd53e924aaeedd60a5343c18, type: 2}
   globalSounds:
-  - {fileID: 11400000, guid: 3720782efc9cff941bcd43d5a993b6c3, type: 2}
+  - {fileID: 11400000, guid: ded0d373ec88b1745aee3202dbf51bf1, type: 2}
+  - {fileID: 11400000, guid: 6c3038ec9c3de3b48b8dc9cf98dbaf5e, type: 2}
   ambientPrefab: {fileID: 4185061771792407657, guid: 2d4f0961d354c694f8934e788001c928,
     type: 3}
