@@ -80,12 +80,17 @@ public class DamageableEntity : PlayerBehavior
 
     public override void Server_AnnouncePlayerName(RpcArgs args)
     {
+        string name = args.GetNext<string>();
+        //Debug.Log("Steam name: " + name);
+        playerName = name;
+        /* Possible issue with forge
         MainThreadManager.Run(() =>
         {
             string name = args.GetNext<string>();
             //Debug.Log("Steam name: " + name);
             playerName = name;
         });
+        */
     }
 
     protected virtual void FixedUpdate()
