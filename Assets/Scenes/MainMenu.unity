@@ -6020,11 +6020,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 405479589}
     m_Modifications:
-    - target: {fileID: 8212569199982297148, guid: 31c9b97b49dfa2f4a88feac9da6219c7,
-        type: 3}
-      propertyPath: m_Name
-      value: FlameAttack
-      objectReference: {fileID: 0}
     - target: {fileID: 8209340260406284366, guid: 31c9b97b49dfa2f4a88feac9da6219c7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6079,6 +6074,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8212569199982297148, guid: 31c9b97b49dfa2f4a88feac9da6219c7,
+        type: 3}
+      propertyPath: m_Name
+      value: FlameAttack
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31c9b97b49dfa2f4a88feac9da6219c7, type: 3}

@@ -62,6 +62,8 @@ public class TerrainManager : MonoBehaviour
 
     private int totalBiomeFrequency = 0;
 
+    public Material terrainMaterial;
+
     [System.Serializable]
     public class TerrainSettings
     {
@@ -531,6 +533,7 @@ public class TerrainManager : MonoBehaviour
         sec.terrain = obj.GetComponent<Terrain>();
 
         sec.terrain.treeBillboardDistance = 150;
+        sec.terrain.materialTemplate = terrainMaterial;
 
         sec.terrain.allowAutoConnect = true;
         obj.transform.position = new Vector3(coord.x * genSettings.length -
