@@ -987,6 +987,7 @@ MonoBehaviour:
   minBorderTreeDistance: 1.5
   treeTestPoints: 30
   minBiomeTreeStrength: 0.8
+  terrainMaterial: {fileID: 2100000, guid: 259f775e513e5054aa7371fe5e274c3e, type: 2}
 --- !u!4 &1759155622
 Transform:
   m_ObjectHideFlags: 0
