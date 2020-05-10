@@ -4832,7 +4832,7 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6f642d515f676f34d8167da6a80d231d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4921,11 +4921,13 @@ MonoBehaviour:
   _duration: 0
   _initDuration: 0
   _destroyTimeMargin: 4
+  _maxLifeTime: 6
   _damageAmount: 20
   _didHit: 0
   _useGravity: 0
   _reverse: 0
   playerWhoSpawnedUs: 
+  _netId: 0
 --- !u!1001 &660811782700318890
 PrefabInstance:
   m_ObjectHideFlags: 0
