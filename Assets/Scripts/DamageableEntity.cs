@@ -70,22 +70,23 @@ public class DamageableEntity : PlayerBehavior
         if (networkObject != null)
             networkObject.health = MaxEverything;
 
-        if (networkObject != null && networkObject.IsOwner)
-        {
-            networkObject.SendRpc(RPC_SERVER__ANNOUNCE_PLAYER_NAME, Receivers.AllBuffered, SteamClient.Name);
-        }
-
+        
         GlobalGameUI = GameObject.FindWithTag("Global Game UI");
     }
 
     public override void Server_AnnouncePlayerName(RpcArgs args)
     {
+        string name = args.GetNext<string>();
+        //Debug.Log("Steam name: " + name);
+        playerName = name;
+        /* Possible issue with forge
         MainThreadManager.Run(() =>
         {
             string name = args.GetNext<string>();
             //Debug.Log("Steam name: " + name);
             playerName = name;
         });
+        */
     }
 
     protected virtual void FixedUpdate()

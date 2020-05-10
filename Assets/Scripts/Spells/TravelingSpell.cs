@@ -114,13 +114,10 @@ public class TravelingSpell : ThrowObjBehavior
 		{
 			_didHit = true;
 
-			if (col.gameObject.GetComponent<NewCharacterController>().playerName != playerWhoSpawnedUs)//so we can't hurt ourselves with our own attacks 
-			{
-				DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
-				Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
-				de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
-				GetComponent<Collider>().enabled = false;
-			}
+			DamageableEntity de = col.gameObject.GetComponent<DamageableEntity>();
+			Debug.Log("TravellingSpell::playerWhoSpawnedUs: " + playerWhoSpawnedUs);
+			de.TakeDamage(playerWhoSpawnedUs, _damageAmount);
+			GetComponent<Collider>().enabled = false;
 		}
 
 		_didHit = true;

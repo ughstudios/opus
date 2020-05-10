@@ -12,6 +12,9 @@ using UnityEngine.Rendering.PostProcessing;
 using AmbientSounds;
 using System.Linq;
 using System.Reflection;
+using UnityEngine.Profiling;
+using UnityEditor;
+using Unity.Profiling;
 
 public class NewCharacterController : DamageableEntity
 {
@@ -153,9 +156,13 @@ public class NewCharacterController : DamageableEntity
         {
             ChangeEnemiesMaterial();
         }
+        else
+        {
+            networkObject.SendRpc(RPC_SERVER__ANNOUNCE_PLAYER_NAME, Receivers.AllBuffered, SteamClient.Name);
+        }
     }
 
- 
+
     protected override void NetworkStart()
     {
         base.NetworkStart();
@@ -170,10 +177,6 @@ public class NewCharacterController : DamageableEntity
         networkObject.health = health;
         networkObject.isDead = _isDead;
 
-        if (networkObject.IsOwner)
-        {
-            networkObject.SendRpc(RPC_SERVER__ANNOUNCE_PLAYER_NAME, Receivers.AllBuffered, SteamClient.Name);
-        }
     }
 
 
@@ -182,7 +185,6 @@ public class NewCharacterController : DamageableEntity
         _chatInput.Select();
         _chatInput.ActivateInputField();
     }
-
 
     void UpdatePlayerPostProcessing()
     {
@@ -236,15 +238,22 @@ public class NewCharacterController : DamageableEntity
         if (previousBiome != biome)
         {
             if (previousBiome != null)
+            {
+
                 for (int i = 0; i < previousBiome.globalSounds.Length; i++)
                 {
                     AmbienceManager.RemoveSequence(previousBiome.globalSounds[i]);
                 }
+
+            }
             if (biome != null)
+            {
                 for (int i = 0; i < biome.globalSounds.Length; i++)
                 {
+                    Debug.Log(" BSequence Name: " + biome.globalSounds[i].name);
                     AmbienceManager.AddSequence(biome.globalSounds[i]);
                 }
+            }
             /*
             int idx = ambienceManager.m_globalSequences.Length;
             Array.Resize(ref ambienceManager.m_globalSequences, idx + biome.globalSounds.Length);
@@ -255,10 +264,16 @@ public class NewCharacterController : DamageableEntity
             */
             previousBiome = biome;
         }
+
     }
+
+
+
+
 
     void Update()
     {
+
         float x = 0.0f, z = 0.0f;
         if (!isPaused && !isChatting)
         {
@@ -275,6 +290,7 @@ public class NewCharacterController : DamageableEntity
                 tm.StartGeneration();
                 generationStarted = true;
             }
+
             UpdatePlayerPostProcessing();
         }
 
@@ -295,7 +311,7 @@ public class NewCharacterController : DamageableEntity
                 {
                     GetComponent<CapsuleCollider>().enabled = true;
                     GetComponent<CharacterController>().enabled = true;
-                    
+
                     Destroy(LoadingScreenUI);
                 }
 
@@ -357,7 +373,7 @@ public class NewCharacterController : DamageableEntity
 
                 _idNum = networkObject.NetworkId;
                 Destroy(_camera.GetComponentInChildren<AudioListener>());//Turn this off from other cams, will give log a few times until destroyed
-                
+
 
             }
         }

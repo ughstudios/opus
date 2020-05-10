@@ -12,15 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef10665206340ef4abef84478f51f06f, type: 3}
   m_Name: Random Crickets
   m_EditorClassIdentifier: 
-  m_requirements: 2
+  m_requirements: 0
   m_valuesMix: 0
-  m_values:
-  - m_name: Time of Day
-    m_min: 0.4
-    m_max: 0.7
-    m_minFalloff: 0.1
-    m_maxFalloff: 0.1
-    m_invert: 0
+  m_values: []
   m_eventsMix: 0
   m_events: []
   m_clipData:
@@ -56,7 +50,7 @@ MonoBehaviour:
   m_randomPlaybackSpeed: 0
   m_minMaxPlaybackSpeed: {x: 0, y: 1}
   m_modifiers: []
-  m_outputType: 2
+  m_outputType: 0
   m_outputPrefab: {fileID: 1298190303267636, guid: e445a510da371ca4eb145221286a7347,
     type: 3}
   m_outputDirect: 0
@@ -68,13 +62,10 @@ MonoBehaviour:
   m_syncGroup: 
   m_syncType: 0
   m_eventsWhilePlaying: []
+  m_valuesWhilePlaying: []
   m_OnPlayClip:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: AmbientSounds.Sequence+PlayEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   m_OnStopClip:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: AmbientSounds.Sequence+PlayEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
