@@ -25,7 +25,7 @@ MonoBehaviour:
   m_isProceduralCreatedProfile: 1
   m_systemTypes: 0
   m_lightingEditMode: 0
-  m_selectedRenderPipeline: 0
+  m_selectedRenderPipeline: 1
   m_targetPlatform: 0
   m_useTimeOfDay: 1
   m_vSyncMode: 0
@@ -659,7 +659,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_useSkies: 1
-  m_usePostFX: 0
+  m_usePostFX: 1
   m_useLighting: 1
   m_skyProfiles:
   - name: Sky Five Low
@@ -1129,7 +1129,7 @@ MonoBehaviour:
     nearFogDistance: 10
     fogDensity: 0.005
     includeSunInBaking: 1
-    horizonSkyEnabled: 1
+    horizonSkyEnabled: 0
     scaleHorizonObjectWithFog: 1
     horizonScattering: 1
     horizonFogDensity: 1
@@ -3485,7 +3485,7 @@ MonoBehaviour:
       rgba: 5526612
     hDRISkybox: {fileID: 8900000, guid: b13537580b5eb0e409efbb1b0b82e52f, type: 3}
     shadowQuality: 5
-    fogType: 0
+    fogType: 3
     cascadeCount: 3
     enableSunDisk: 1
     isGlobal: 1
@@ -5838,7 +5838,7 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 591879
     shadowQuality: 5
-    fogType: 2
+    fogType: 3
     cascadeCount: 3
     enableSunDisk: 0
     isGlobal: 1

@@ -125,7 +125,7 @@ public class ClientConnect : MonoBehaviour
         lobbyCountText.text = "";
         findOrCancelMatchText.text = "FIND MATCH";
         bConnected = false;
-        if (client.IsConnected)
+        if (client != null && client.IsConnected)
         {
             client.Disconnect(true);
             client = null;
