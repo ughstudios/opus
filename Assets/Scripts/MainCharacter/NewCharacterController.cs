@@ -99,7 +99,8 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] GameObject _pauseMenu;
     public uint _idNum;
 
-    public GameObject _skinToDisable = null;//this is for the 'enemies' to show enemies different from us
+    public GameObject _playerSkin = null;//this is for the 'enemies' to show enemies different from us
+    public GameObject _enemySkin = null;//this is for the 'enemies' to show enemies different from us
 
     [SerializeField] PostProcessVolume postProcessVolume;
     [SerializeField] TerrainManager tm;
@@ -748,7 +749,8 @@ public class NewCharacterController : DamageableEntity
             //camera and canvas
             _hudCanvas.SetActive(false);
             _camera.SetActive(false);
-            _skinToDisable.SetActive(false);
+            _playerSkin.SetActive(false);
+            _enemySkin.SetActive(true);
             
         }
 
@@ -759,7 +761,8 @@ public class NewCharacterController : DamageableEntity
 
             _hudCanvas.SetActive(true);
             _camera.SetActive(true);
-            _skinToDisable.SetActive(true);
+            _playerSkin.SetActive(true);
+            _enemySkin.SetActive(false);
         }
 
     }
