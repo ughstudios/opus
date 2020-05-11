@@ -112,7 +112,7 @@ public class ClientConnect : MonoBehaviour
             }
         }
 
-
+        lobbyCountText.text = "";
         ourlobby.Leave();
         gameFound = true;
         isInLobby = false;
@@ -151,6 +151,7 @@ public class ClientConnect : MonoBehaviour
         lobbyList = await SteamMatchmaking.LobbyList.RequestAsync();
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
+        SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
 
@@ -202,6 +203,10 @@ public class ClientConnect : MonoBehaviour
 
     }
 
+    private void SteamMatchmaking_OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    {
+        lobbyCountText.text = "Lobby Count: " + lobby.MemberCount + "/" + lobby.MaxMembers;
+    }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
