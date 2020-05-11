@@ -99,11 +99,8 @@ public class NewCharacterController : DamageableEntity
     [SerializeField] GameObject _pauseMenu;
     public uint _idNum;
 
-    //To show enemies different from us
-    [SerializeField] bool _enemiesMaterialChanged = false;
-    [SerializeField] SkinnedMeshRenderer _enemyRenderer;
-    [SerializeField] Material _enemyMaterial;
-    [SerializeField] Material[] _enemyMaterialsHolder;
+    public GameObject _skinToDisable = null;//this is for the 'enemies' to show enemies different from us
+
     [SerializeField] PostProcessVolume postProcessVolume;
     [SerializeField] TerrainManager tm;
     [SerializeField] AmbienceManager ambienceManager;
@@ -125,8 +122,6 @@ public class NewCharacterController : DamageableEntity
         _initPoisonCoolDownTime = _poisonCoolDownTime;
         _initFireCoolTime = _fireCoolDownTime;
         _initStaminaLevel = _staminaLevel;
-
-        SetMaterialCollection();
 
         tm = FindObjectOfType<TerrainManager>();
 
@@ -154,7 +149,7 @@ public class NewCharacterController : DamageableEntity
     {
         if (!networkObject.IsOwner)
         {
-            ChangeEnemiesMaterial();
+            
         }
         else
         {
@@ -297,9 +292,10 @@ public class NewCharacterController : DamageableEntity
 
         if (networkObject != null)
         {
+
             if (networkObject.IsOwner)
             {
-
+                
                 if (!generationStarted)
                 {
                     tm.follow.Add(gameObject);
@@ -357,9 +353,13 @@ public class NewCharacterController : DamageableEntity
                 networkObject.fireInt = _anim.GetInteger("fireInt");
                 networkObject.aimInt = _anim.GetInteger("aimInt");
                 networkObject.hasSnipped = _anim.GetInteger("hasSnipped");
+
+              
             }
             else
             {
+   
+
                 health = networkObject.health;
 
                 _anim.SetBool("onGround", networkObject.onGround);
@@ -373,7 +373,7 @@ public class NewCharacterController : DamageableEntity
 
                 _idNum = networkObject.NetworkId;
                 Destroy(_camera.GetComponentInChildren<AudioListener>());//Turn this off from other cams, will give log a few times until destroyed
-
+                
 
             }
         }
@@ -406,34 +406,6 @@ public class NewCharacterController : DamageableEntity
         SyncWithNetworkViaFixedUpate();
     }
 
-    void SetMaterialCollection()//this is to set the new material to place on "Enemies" on our end
-    {
-        _enemyMaterialsHolder = new Material[_enemyRenderer.materials.Length];
-
-        int matEl = 0;
-
-        foreach (Material item in _enemyRenderer.materials)
-        {
-            if (matEl < _enemyRenderer.materials.Length - 1)
-            {
-                _enemyMaterialsHolder[matEl] = item;
-            }
-            else
-            {
-                _enemyMaterialsHolder[matEl] = _enemyMaterial;
-            }
-
-            matEl++;
-        }
-    }
-    void ChangeEnemiesMaterial()
-    {
-        if (!_enemiesMaterialChanged)
-        {
-            _enemyRenderer.materials = _enemyMaterialsHolder;
-            _enemiesMaterialChanged = true;
-        }
-    }
 
     void PhysicsCheck()
     {
@@ -776,7 +748,8 @@ public class NewCharacterController : DamageableEntity
             //camera and canvas
             _hudCanvas.SetActive(false);
             _camera.SetActive(false);
-
+            _skinToDisable.SetActive(false);
+            
         }
 
         if (networkObject.IsOwner)
@@ -786,6 +759,7 @@ public class NewCharacterController : DamageableEntity
 
             _hudCanvas.SetActive(true);
             _camera.SetActive(true);
+            _skinToDisable.SetActive(true);
         }
 
     }

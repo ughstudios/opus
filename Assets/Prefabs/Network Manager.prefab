@@ -46,16 +46,12 @@ MonoBehaviour:
   AnimTestObjNetworkObject:
   - {fileID: 1616854526290373057, guid: 420ab84ae7797d04aa5b5be9954d50dd, type: 3}
   ChatManagerNetworkObject: []
-  CubeForgeGameNetworkObject: []
   ExampleProximityPlayerNetworkObject: []
   FlameAttacckNetworkObject: []
   GameModeNetworkObject:
   - {fileID: 3415037556922266389, guid: 52ea8becaa09d964abbeb33a19f1fbd7, type: 3}
-  InstantiateFirePosNetworkObject: []
-  InstatiateSpellPosNetworkObject: []
-  NetworkCameraNetworkObject: []
   PlayerNetworkObject:
-  - {fileID: 151136363384072058, guid: 2afc16c52161e664ba506385a00d2346, type: 3}
+  - {fileID: 386460806627812475, guid: 007a84065f4e42746b429249054d865b, type: 3}
   TestNetworkObject: []
   ThrowObjNetworkObject:
   - {fileID: 3109514018544717776, guid: b01db0a63a4aebd438b52466ef5ce83d, type: 3}
