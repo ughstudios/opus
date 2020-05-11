@@ -112,6 +112,7 @@ public class ClientConnect : MonoBehaviour
             }
         }
 
+
         ourlobby.Leave();
         gameFound = true;
         isInLobby = false;
